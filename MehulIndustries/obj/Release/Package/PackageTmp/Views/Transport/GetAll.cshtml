@@ -1,0 +1,56 @@
+﻿@model IEnumerable<ViewModels.Transport>
+
+@Styles.Render("~/Content/css/datatablecss")
+@*<link href="@Url.Content("~/Content/plugins/datatables/jquery.dataTables.min.css")" rel="stylesheet" type="text/css" />
+<link href="@Url.Content("~/Content/plugins/datatables/buttons.bootstrap.min.css")" rel="stylesheet" type="text/css" />
+<link href="@Url.Content("~/Content/plugins/datatables/fixedHeader.bootstrap.min.css")" rel="stylesheet" type="text/css" />
+<link href="@Url.Content("~/Content/plugins/datatables/responsive.bootstrap.min.css")" rel="stylesheet" type="text/css" />
+<link href="@Url.Content("~/Content/plugins/datatables/scroller.bootstrap.min.css")" rel="stylesheet" type="text/css" />*@
+
+<table id="tblTransport" class="table table-striped table-bordered">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Address</th>
+            <th>Contact Person</th>
+            <th>Mobile Number</th>
+            <th>Phone</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @if (Model != null)
+        {
+            foreach (var transport in Model)
+            {
+                <tr data-empid="@transport.ID">
+                    <td>@transport.Name</td>
+                    <td>@transport.Address</td>
+                    <td>@transport.ContactPerson</td>
+                    <td>@transport.Mobile</td>
+                    <td>@transport.Phone</td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+@Scripts.Render("~/Content/js/datatablejs")
+@*<script src="@Url.Content("~/Content/plugins/datatables/jquery.dataTables.min.js")"></script>
+<script src="@Url.Content("~/Content/plugins/datatables/dataTables.bootstrap.js")"></script>
+<script src="@Url.Content("~/Content/plugins/datatables/dataTables.buttons.min.js")"></script>
+<script src="@Url.Content("~/Content/plugins/datatables/buttons.bootstrap.min.js")"></script>
+<script src="@Url.Content("~/Content/plugins/datatables/pdfmake.min.js")"></script>
+<script src="@Url.Content("~/Content/plugins/datatables/vfs_fonts.js")"></script>
+<script src="@Url.Content("~/Content/plugins/datatables/buttons.html5.min.js")"></script>
+<script src="@Url.Content("~/Content/plugins/datatables/buttons.print.min.js")"></script>
+<script src="@Url.Content("~/Content/plugins/datatables/dataTables.fixedHeader.min.js")"></script>
+<script src="@Url.Content("~/Content/plugins/datatables/dataTables.keyTable.min.js")"></script>
+<script src="@Url.Content("~/Content/plugins/datatables/dataTables.responsive.min.js")"></script>
+<script src="@Url.Content("~/Content/plugins/datatables/responsive.bootstrap.min.js")"></script>
+<script src="@Url.Content("~/Content/plugins/datatables/dataTables.scroller.min.js")"></script>*@
+
+<script>
+    $(document).ready(function () {
+        $('#tblTransport').DataTable();
+    });
+</script>

@@ -1,0 +1,306 @@
+﻿@model IEnumerable<ViewModels.Batch>
+@{
+    ViewBag.Title = "Grinding";
+    Layout = "~/Views/Shared/_Dashboard.cshtml";
+}
+
+@Styles.Render("~/Content/css/customsweetswitcheryselect2css")
+<div class="row">
+    <div class="col-md-10 col-md-offset-1">
+        <div class="portlet">
+            <div class="portlet-heading bg-primary">
+                <h3 class="portlet-title">
+                    Grinding Process
+                </h3>
+                <div class="portlet-widgets">
+                    @*<button type="button" data-assignbatch class="btn btn-default waves-effect waves-light">Assign Selected Batch</button>*@
+                    <span class="divider"></span>
+                    <a data-toggle="collapse" data-parent="#accordion1" href="#bg-primary" class="" aria-expanded="true"><i class="ion-minus-round"></i></a>
+                </div>
+                <div class="clearfix"></div>
+            </div>
+            <div id="bg-primary" class="panel-collapse collapse in" aria-expanded="true">
+                <div class="portlet-body">
+                    <table class="table table-striped table-bordered" id="tblGrinding">
+                        <thead>
+                            <tr>
+                                <td>
+                                    Batch No
+                                </td>
+                                <td>Batch Qty</td>
+                                <td>
+                                    Assigned To
+                                </td>
+                                <td>
+                                    Product
+                                </td>
+                                <td>
+                                    Shade
+                                </td>
+                                <td>
+                                    Has HymenGuage? (Min - Max)
+                                </td>
+                                <td>
+                                    Reading 1
+                                </td>
+                                <td>
+                                    Reading 2
+                                </td>
+                                <td>
+                                    Has Pigment Dispersion?
+                                </td>
+                                <td>
+                                    Is Grinding Done?
+                                </td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model != null)
+                            {
+                                foreach (var batch in Model)
+                                {
+
+                                    <tr data-itemid="@batch.ID">
+                                        <td>
+                                            @batch.BatchNo
+                                        </td>
+                                        <td>@batch.ProductionQty</td>
+                                        @*<td>
+                                                @batch.EmployeeName
+                                            </td>*@
+                                        <td>
+                                            @if (ViewBag.Employees != null)
+                                            {
+                                                @Html.DropDownList("ddlEmployee", new SelectList(ViewBag.Employees, "ID", "Name",batch.EmployeeID), "-- Select Employee --", new { @class = "form-control" })
+                                            }
+                                            else
+                                            {
+                                                @Html.DropDownList("ddlEmployee", new List<SelectListItem>(), new { @class = "form-control" })
+                                            }
+                                        </td>
+                                        <td data-productid="@batch.ProductID">
+                                            @batch.ProductName
+                                        </td>
+                                        <td data-shadeid="@batch.ShadeID">
+                                            @batch.ShadeName
+                                        </td>
+                                        <td>
+                                            <div class="checkbox checkbox-primary text-center">
+                                                <input data-minguage="@batch.MinHymenGuage" data-maxguage="@batch.MaxHymenGuage" disabled id="@("HasHymenGuage"+batch.ID)" type="checkbox" checked="@batch.HasHymenGuage" name="@("HasHymenGuage" + batch.ID)">
+                                                <label for="@("HasHymenGuage" + batch.ID)">
+                                                    @if (batch.HasHymenGuage)
+                                                    {
+                                                        @((batch.MinHymenGuage + " - " + batch.MaxHymenGuage).Trim())
+                                                    }
+                                                </label>
+                                            </div>
+                                        </td>
+                                        @if (batch.HasHymenGuage)
+                                        {
+                                            <td>
+                                                <input type="text" class="form-control" />
+                                            </td>
+                                            <td>
+                                                <input type="text" class="form-control" />
+                                            </td>
+                                        }
+                                        else
+                                        {
+                                            <td></td>
+                                            <td></td>
+                                        }
+                                        <td>
+                                            <div class="checkbox checkbox-primary text-center">
+                                                <input disabled id="@("HasPigmentDispersion" + batch.ID)" checked="@batch.HasPigmentDispersion" type="checkbox" name="@("HasPigmentDispersion" + batch.ID)">
+                                                <label for="@("HasPigmentDispersion" + batch.ID)">
+
+                                                </label>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            @if (batch.GrindingStartDate.HasValue)
+                                            {
+                                                <button type="button" data-assignbatch class="btn btn-success waves-effect waves-light">Done</button>
+                                            }
+                                            else
+                                            {
+                                                <button type="button" data-startbatch class="btn btn-primary waves-effect waves-light">Start & Print</button>
+                                            }
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                        <tfoot></tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="stockcomfirm-modal" class="modal-demo">
+    <button type="button" class="close" onclick="Custombox.close();">
+        <span>&times;</span><span class="sr-only">Close</span>
+    </button>
+    <h4 class="custom-modal-title">Confirm Grinding</h4>
+    <div class="custom-modal-text" id="DivConfirmGrinding" style="max-height:500px;overflow:auto;">
+
+    </div>
+</div>
+@Scripts.Render("~/Content/css/customsweetswitcheryselect2js")
+
+<script>
+    $(document).ready(function () {
+        var currRow = "";
+        $('#tblGrinding button[data-startbatch]').on('click', function () {
+            if ($(this).parent().parent().find('td:eq(2) select').val() == "") {
+                swal({
+                    title: "Opppsss",
+                    text: "Please select employee.",
+                    type: "error"
+                }, function () {
+                });
+                return false;
+            }
+            currRow = $(this).parent().parent();
+            swal({
+                title: "Please confirm?",
+                text: "Are you sure want to start this batch?",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "Yes, Start it!",
+                cancelButtonText: "No, cancel plz!",
+                closeOnConfirm: false,
+                closeOnCancel: false
+            }, function (isConfirm) {
+                if (isConfirm) {
+                    $.ajax({
+                        type: "GET",
+                        url: "@Url.Action("StartGrinding","Production")",
+                        data: {
+                            ID: $(currRow).data('itemid'),
+                            ProductID: $(currRow).find('td:eq(3)').data('productid'),
+                            ShadeID: $(currRow).find('td:eq(4)').data('shadeid'),
+                            EmployeeID: $(currRow).find('td:eq(2) select').val(),
+                        },
+                        success: function (response) {
+                            if (response.IsSuccess == true) {
+                                swal({
+                                    title: "Started!",
+                                    text: "Batch is Started successfully.",
+                                    type: "success"
+                                }, function () {
+                                    var _relativeBaseDirectory = '@(Url.Action("","")=="/"?"":Url.Action("",""))';
+                                    window.open(
+                                   _relativeBaseDirectory + response.ResponseValue,
+                                  '_blank'
+                                );
+                                    window.location.reload(true);
+                                });
+                            }
+                            else {
+                                swal("Opssss!", response.ResponseValue, "error");
+                            }
+                        }
+                    });
+
+                } else {
+                    swal("Cancelled", "Batch is not Started :)", "error");
+                }
+            });
+        });
+
+        $('#tblGrinding button[data-assignbatch]').on('click', function () {
+            clickedButton = this;
+            confirmGrinding(this);
+        });
+
+        $('body').on('click', '[data-donegrinding]', finalGrinding);
+    });
+
+    var clickedButton = "";
+
+    var confirmGrinding = function (ctrl) {
+        
+        if ($(clickedButton).parent().parent().find('td:eq(6) input[type="text"]').val() == "") {
+            swal({
+                title: "Opppsss",
+                text: "Please enter proper value in reading 1.",
+                type: "error"
+            }, function () {
+            });
+            return false;
+        }
+        if ($(clickedButton).parent().parent().find('td:eq(7) input[type="text"]').val() == "") {
+            swal({
+                title: "Opppsss",
+                text: "Please enter proper value in reading 2.",
+                type: "error"
+            }, function () {
+            });
+            return false;
+        }
+        if ($(clickedButton).parent().parent().find('td:eq(7) input[type="text"]').val() > $(clickedButton).parent().parent().find('td:eq(5) input[type="checkbox"]').data('maxguage') ||
+            $(clickedButton).parent().parent().find('td:eq(7) input[type="text"]').val() < $(clickedButton).parent().parent().find('td:eq(5) input[type="checkbox"]').data('minguage')) {
+            swal({
+                title: "Opppsss",
+                text: "Reading 2 can not be less then " + $(clickedButton).parent().parent().find('td:eq(5) input[type="checkbox"]').data('minguage') +
+                    " and can not be greater then " + $(clickedButton).parent().parent().find('td:eq(5) input[type="checkbox"]').data('maxguage') + ".",
+                type: "error"
+            }, function () {
+            });
+            return false;
+        }
+        $.ajax({
+            type: "GET",
+            data: { BatchID: $(ctrl).parent().parent().data('itemid') },
+            url: "@Url.Action("GetGrindingStock","Production")",
+            success: function (response) {
+                $('#DivConfirmGrinding').html(response);
+                Custombox.open({
+                    animation: 'rotatedown',
+                    plugin: 'custommodal',
+                    overlayspeed: '100',
+                    overlaycolor: '#36404a',
+                    target: '#stockcomfirm-modal'
+                });
+            }
+        });
+    }
+
+    var finalGrinding = function () {
+        Custombox.close('#stockcomfirm-modal');
+        var batchData = {};
+        batchData.ID = $(clickedButton).parent().parent().data('itemid');
+       
+        batchData.ProductID = $(clickedButton).parent().parent().find('td:eq(3)').data('productid');
+        batchData.ShadeID = $(clickedButton).parent().parent().find('td:eq(4)').data('shadeid');
+        if ($(clickedButton).parent().parent().find('td:eq(5) input[type="checkbox"]').is(':checked')) {
+            batchData.HasHymenGuage = true;
+            batchData.MinHymenGuage = $(clickedButton).parent().parent().find('td:eq(6) input[type="text"]').val();
+            batchData.MaxHymenGuage = $(clickedButton).parent().parent().find('td:eq(7) input[type="text"]').val();
+        }
+        $.ajax({
+            type: "POST",
+            data: JSON.stringify({ batch: batchData }),
+            contentType: 'application/json',
+            url: '@Url.Action("GrindingDone","Production")',
+            success: function (result) {
+                if (result.IsSuccess) {
+                    window.location.reload(true);
+                }
+                else {
+                    swal({
+                        title: "Opppsss",
+                        text: (result.ResponseValue ? result.ResponseValue : "Error while saving data, Please try after sometime."),
+                        type: "error"
+                    }, function () {
+                    });
+                }
+            }
+        });
+
+    }
+</script>

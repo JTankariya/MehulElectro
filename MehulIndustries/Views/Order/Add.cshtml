@@ -1,0 +1,121 @@
+﻿@model ViewModels.Order
+@{
+    ViewBag.Title = "Add";
+    Layout = "~/Views/Shared/_Dashboard.cshtml";
+    if (Model != null && Model.ID == 0)
+    {
+        Model.OrderDate = DateTime.Now;
+    }
+}
+
+@Styles.Render("~/Content/css/customsweetcss")
+
+
+<div class="row">
+    <div class="col-lg-offset-1 col-lg-10">
+        <div class="card-box">
+            <h4 class="m-t-0 header-title"><b>Order Enter Form</b></h4>
+            <p class="text-muted font-13 m-b-30">
+                Add/Edit Orders here
+            </p>
+            @Html.Partial("_OrderDetail", Model)
+        </div>
+    </div>
+</div>
+
+<div id="custom-modal" class="modal-demo">
+    <button type="button" class="close" onclick="Custombox.close();">
+        <span>&times;</span><span class="sr-only">Close</span>
+    </button>
+    <h4 class="custom-modal-title">Order</h4>
+    <div class="custom-modal-text" id="AllOrder" style="max-height:500px;overflow:auto;">
+
+    </div>
+</div>
+@Scripts.Render("~/Content/css/customsweetjs")
+<script src="@Url.Content("~/Content/plugins/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js")"></script>
+<script src="@Url.Content("~/Content/plugins/bootstrap-inputmask/bootstrap-inputmask.min.js")" type="text/javascript"></script>
+<script>
+    function OrderAdded(response) {
+        swal({
+            title: "Information",
+            text: "Order is saved successfully.",
+            type: "success"
+        }, function () {
+            $('#btnAdd')[0].click();
+        });
+    }
+
+    
+    $(document).ready(function () {
+        $('#btnView').click(function () {
+            $.ajax({
+                type: "GET",
+                url: "@Url.Action("GetAll", "Order")",
+                success: function (response) {
+                    $('#AllOrder').html(response);
+                    Custombox.open({
+                        animation: 'rotatedown',
+                        plugin: 'custommodal',
+                        overlayspeed: '100',
+                        overlaycolor: '#36404a',
+                        target: '#custom-modal'
+                    });
+                    $('body').on('dblclick', '#tblOrder tbody tr', function () {
+                        window.location.href = '@Url.Action("Add", "Order", new { Id = "REPLACE" })'.replace('REPLACE', $(this).data('empid'));
+                    });
+                }
+            });
+
+        });
+        $('#btnDelete').click(function () {
+            if ($('#ID').val() == "0") {
+                swal("Please select any record First!", "In order to delete emplyee, You need to select an Order first.")
+            }
+            else {
+                if ($('#tblPackings').find('input:disabled').length > 0) {
+                    swal("Opppsss", "You can not delete this order as some of this order items is already dispatched or moved to production.")
+                }
+                else {
+                    swal({
+                        title: "Are you sure want to delete this Order?",
+                        text: "You will not be able to recover this record!",
+                        type: "warning",
+                        showCancelButton: true,
+                        confirmButtonColor: "#DD6B55",
+                        confirmButtonText: "Yes, delete it!",
+                        cancelButtonText: "No, cancel plz!",
+                        closeOnConfirm: false,
+                        closeOnCancel: false
+                    }, function (isConfirm) {
+                        if (isConfirm) {
+                            $.ajax({
+                                type: "GET",
+                                url: "@Url.Action("Delete", "Order")",
+                                data: { ID: $('#ID').val() },
+                                success: function (response) {
+                                    if (response.IsSuccess == true) {
+                                        swal({
+                                            title: "Deleted!",
+                                            text: "Order is deleted Successfully.",
+                                            type: "success"
+                                        }, function () {
+                                            $('#btnAdd')[0].click();
+                                        });
+                                    }
+                                    else {
+                                        swal("Opssss!", "Something seems wrong while deleting Order.", "error");
+                                    }
+                                }
+                            });
+
+                        } else {
+                            swal("Cancelled", "Order is safe :)", "error");
+                        }
+                    });
+                }
+
+            }
+        });
+    });
+</script>

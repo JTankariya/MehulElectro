@@ -1,0 +1,38 @@
+﻿@model IEnumerable<ViewModels.Employee>
+
+@Styles.Render("~/Content/css/datatablecss")
+
+<table id="tblEmployee" class="table table-striped table-bordered">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Mobile Number</th>
+            <th>User Name</th>
+            <th>Email Id</th>
+            <th>Type</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @if (Model != null)
+        {
+            foreach (var emp in Model)
+            {
+                <tr data-empid="@emp.ID">
+                    <td>@emp.Name</td>
+                    <td>@emp.MobileNo</td>
+                    <td>@emp.UserName</td>
+                    <td>@emp.EmailId</td>
+                    <td>@emp.Type</td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+@Scripts.Render("~/Content/js/datatablejs")
+
+<script>
+    $(document).ready(function () {
+        $('#tblEmployee').DataTable();
+    });
+</script>

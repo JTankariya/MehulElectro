@@ -1,0 +1,172 @@
+﻿@model IEnumerable<ViewModels.Batch>
+@{
+    ViewBag.Title = "Shading";
+    Layout = "~/Views/Shared/_Dashboard.cshtml";
+}
+
+@Styles.Render("~/Content/css/customsweetswitcheryselect2css")
+<div class="row">
+    <div class="col-md-10 col-md-offset-1">
+        <div class="portlet">
+            <div class="portlet-heading bg-primary">
+                <h3 class="portlet-title">
+                    Shading Process
+                </h3>
+                <div class="portlet-widgets">
+                    @*<button type="button" data-assignbatch class="btn btn-default waves-effect waves-light">Assign Selected Batch</button>*@
+                    <span class="divider"></span>
+                    <a data-toggle="collapse" data-parent="#accordion1" href="#bg-primary" class="" aria-expanded="true"><i class="ion-minus-round"></i></a>
+                </div>
+                <div class="clearfix"></div>
+            </div>
+            <div id="bg-primary" class="panel-collapse collapse in" aria-expanded="true">
+                <div class="portlet-body">
+                    <table class="table table-striped table-bordered" id="tblShading">
+                        <thead>
+                            <tr>
+                                <td>
+                                    Batch No
+                                </td>
+                                <td>
+                                    Batch Qty
+                                </td>
+                                <td>
+                                    Assigned Employee
+                                </td>
+                                <td>
+                                    Product
+                                </td>
+                                <td>
+                                    Shade
+                                </td>
+                                <td>
+                                    Shade Maching Type
+                                </td>
+                                <td>
+                                    Is Shading Done?
+                                </td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model != null)
+                            {
+                                foreach (var batch in Model)
+                                {
+
+                                    <tr data-itemid="@batch.ID">
+                                        <td>
+                                            @batch.BatchNo
+                                        </td>
+                                        <td>
+                                            @batch.ProductionQty
+                                        </td>
+                                        <td>
+                                            @batch.EmployeeName
+                                        </td>
+                                        <td>
+                                            @batch.ProductName
+                                        </td>
+                                        <td>
+                                            @batch.ShadeName
+                                        </td>
+                                        <td>
+                                            @if (batch.ShadeMaching == "Last Supply" || string.IsNullOrEmpty(batch.ShadeMaching))
+                                            {
+                                                <span>@batch.ShadeMaching</span>
+                                            }
+                                            else
+                                            {
+                                                <span>@(batch.ShadeMaching + " ( " + batch.PanelNumber + " - " + batch.RackNumber + ")")</span>
+                                            }
+                                        </td>
+                                        <td>
+                                            @if (batch.ShadingStartDate.HasValue)
+                                            {
+                                                <button type="button" data-assignbatch class="btn btn-success waves-effect waves-light">Done</button>
+                                            }
+                                            else
+                                            {
+                                                <button type="button" data-startbatch class="btn btn-primary waves-effect waves-light">Start</button>
+                                            }
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                        <tfoot></tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@Scripts.Render("~/Content/css/customsweetswitcheryselect2js")
+
+<script>
+    $(document).ready(function () {
+        var currRow = "";
+        $('#tblShading button[data-startbatch]').on('click', function () {
+            currRow = $(this).parent().parent();
+            swal({
+                title: "Please confirm?",
+                text: "Are you sure want to start this batch?",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "Yes, Start it!",
+                cancelButtonText: "No, cancel plz!",
+                closeOnConfirm: false,
+                closeOnCancel: false
+            }, function (isConfirm) {
+                if (isConfirm) {
+                    $.ajax({
+                        type: "GET",
+                        url: "@Url.Action("StartShading","Production")",
+                        data: { ID: $(currRow).data('itemid') },
+                        success: function (response) {
+                            if (response.IsSuccess == true) {
+                                swal({
+                                    title: "Started!",
+                                    text: "Batch is Started successfully.",
+                                    type: "success"
+                                }, function () {
+                                    window.location.reload(true);
+                                });
+                            }
+                            else {
+                                swal("Opssss!", response.ResponseValue, "error");
+                            }
+                        }
+                    });
+
+                } else {
+                    swal("Cancelled", "Batch is not Started :)", "error");
+                }
+            });
+        });
+        $('#tblShading button[data-assignbatch]').on('click', function () {
+            var batchData = {};
+            batchData.ID = $(this).parent().parent().data('itemid');
+
+            $.ajax({
+                type: "POST",
+                data: JSON.stringify({ batch: batchData }),
+                contentType: 'application/json',
+                url: '@Url.Action("ShadingDone","Production")',
+                success: function (result) {
+                    if (result.IsSuccess) {
+                        window.location.reload(true);
+                    }
+                    else {
+                        swal({
+                            title: "Opppsss",
+                            text: "Error while saving data, Please try after sometime.",
+                            type: "error"
+                        }, function () {
+                        });
+                    }
+                }
+            })
+        });
+    });
+</script>

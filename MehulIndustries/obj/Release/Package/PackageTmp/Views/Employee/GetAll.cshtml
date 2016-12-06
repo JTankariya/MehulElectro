@@ -1,0 +1,54 @@
+﻿@model IEnumerable<ViewModels.Employee>
+
+@Styles.Render("~/Content/css/datatablecss")
+@*<link href="@Url.Content("~/Content/plugins/datatables/jquery.dataTables.min.css")" rel="stylesheet" type="text/css" />*@
+@*<link href="@Url.Content("~/Content/plugins/datatables/buttons.bootstrap.min.css")" rel="stylesheet" type="text/css" />
+<link href="@Url.Content("~/Content/plugins/datatables/fixedHeader.bootstrap.min.css")" rel="stylesheet" type="text/css" />
+    <link href="@Url.Content("~/Content/plugins/datatables/responsive.bootstrap.min.css")" rel="stylesheet" type="text/css" />
+    <link href="@Url.Content("~/Content/plugins/datatables/scroller.bootstrap.min.css")" rel="stylesheet" type="text/css" />*@
+
+<table id="tblEmployee" class="table table-striped table-bordered">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Mobile Number</th>
+            <th>User Name</th>
+            <th>Email Id</th>
+            <th>Type</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @if (Model != null)
+        {
+            foreach (var emp in Model)
+            {
+                <tr data-empid="@emp.ID">
+                    <td>@emp.Name</td>
+                    <td>@emp.MobileNo</td>
+                    <td>@emp.UserName</td>
+                    <td>@emp.EmailId</td>
+                    <td>@emp.Type</td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+@Scripts.Render("~/Content/js/datatablejs")
+@*<script src="@Url.Content("~/Content/plugins/datatables/dataTables.buttons.min.js")"></script>
+    <script src="@Url.Content("~/Content/plugins/datatables/buttons.bootstrap.min.js")"></script>
+    <script src="@Url.Content("~/Content/plugins/datatables/pdfmake.min.js")"></script>
+    <script src="@Url.Content("~/Content/plugins/datatables/vfs_fonts.js")"></script>
+    <script src="@Url.Content("~/Content/plugins/datatables/buttons.html5.min.js")"></script>
+    <script src="@Url.Content("~/Content/plugins/datatables/buttons.print.min.js")"></script>
+    <script src="@Url.Content("~/Content/plugins/datatables/dataTables.fixedHeader.min.js")"></script>
+    <script src="@Url.Content("~/Content/plugins/datatables/dataTables.keyTable.min.js")"></script>
+    <script src="@Url.Content("~/Content/plugins/datatables/dataTables.responsive.min.js")"></script>
+    <script src="@Url.Content("~/Content/plugins/datatables/responsive.bootstrap.min.js")"></script>
+    <script src="@Url.Content("~/Content/plugins/datatables/dataTables.scroller.min.js")"></script>*@
+
+<script>
+    $(document).ready(function () {
+        $('#tblEmployee').DataTable();
+    });
+</script>

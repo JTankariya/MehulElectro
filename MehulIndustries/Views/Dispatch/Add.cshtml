@@ -1,0 +1,170 @@
+﻿@{
+    ViewBag.Title = "Dispatch";
+    Layout = "~/Views/Shared/_Dashboard.cshtml";
+}
+@Styles.Render("~/Content/css/customsweetswitcheryselect2css")
+<div class="container">
+    @if (((int)ViewBag.ViewID) > 0)
+    {
+        <div class="row">
+            <div class="col-md-12" id="orderContainer">
+                @{
+        Html.RenderAction("GetOrderDetail", "Dispatch", new { ID = ViewBag.OrderID, DispatchID = (ViewBag.ViewID == null ? 0 : ViewBag.ViewID) });
+                }
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="row">
+            <div class="col-md-5">
+                <label>Select Party : </label>
+                @if (ViewBag.Parties != null)
+                {
+                    @Html.DropDownList("ddlParties", new SelectList(ViewBag.Parties, "ID", "Name"), "-- Select Party --", new { @class = "form-control" })
+                }
+                else
+                {
+                    @Html.DropDownList("ddlParties", new List<SelectListItem>(), new { @class = "form-control" })
+                }
+            </div>
+            <div class="col-md-5">
+                <label>Select Order : </label>
+                @if (ViewBag.Orders != null)
+                {
+                    @Html.DropDownList("ddlOrders", new SelectList(ViewBag.Orders, "ID", "OrderNo"), "-- Select Order --", new { @class = "form-control" })
+                }
+                else
+                {
+                    @Html.DropDownList("ddlOrders", new List<SelectListItem>(), new { @class = "form-control" })
+                }
+            </div>
+            <div class="col-md-2">
+                <button id="btnViewDispatch" type="button" class="btn btn-lg btn-warning waves-effect waves-light m-l-5">
+                    <i class="ti-search"></i>&nbsp;&nbsp;View
+                </button>
+            </div>
+        </div>
+    }
+
+
+    <div class="row">
+        <div class="col-md-12" id="orderContainer">
+
+        </div>
+    </div>
+</div>
+<div id="custom-modal" class="modal-demo">
+    <button type="button" class="close" onclick="Custombox.close();">
+        <span>&times;</span><span class="sr-only">Close</span>
+    </button>
+    <h4 class="custom-modal-title">Dispatch</h4>
+    <div class="custom-modal-text" id="AllDispatch" style="max-height:500px;overflow:auto;">
+
+    </div>
+</div>
+@Scripts.Render("~/Content/css/customsweetswitcheryselect2js")
+<script>
+    function DispatchAdded(response) {
+        swal({
+            title: "Information",
+            text: "Dispatch is saved successfully.",
+            type: "success"
+        }, function () {
+            $('#btnAdd')[0].click();
+        });
+    }
+    $(document).ready(function () {
+        $('#ddlOrders').on('change', function () {
+            $.ajax({
+                type: "GET",
+                url: '@Url.Action("GetOrderDetail","Dispatch")',
+                data: { ID: $(this).val(),DispatchID:0 },
+                success: function (result) {
+                    $('#orderContainer').html(result);
+                }
+            })
+        });
+
+        $('#ddlParties').on('change', function () {
+            $.ajax({
+                type: "GET",
+                url: '@Url.Action("GetOrders","Party")',
+                data: { ID: $(this).val() },
+                success: function (response) {
+                    if (response && response.IsSuccess && response.IsSuccess == true) {
+                        strAdd = "<option selected>-- Select Orders --</option>";
+                        $.each(response.ResponseValue, function (index, element) {
+                            strAdd += '<option value="' + element.ID + '">' + (element.OrderNo + " (" + GetDateFromJSONValue(element.OrderDate) + ")") + '</option>';
+                        });
+                        $('#ddlOrders').html(strAdd);
+                    }
+                }
+            })
+        });
+
+        $('#btnView,#btnViewDispatch').click(function () {
+            $.ajax({
+                type: "GET",
+                url: "@Url.Action("GetAll", "Dispatch")",
+                success: function (response) {
+                    $('#AllDispatch').html(response);
+                    Custombox.open({
+                        animation: 'rotatedown',
+                        plugin: 'custommodal',
+                        overlayspeed: '100',
+                        overlaycolor: '#36404a',
+                        target: '#custom-modal'
+                    });
+                    $('body').on('dblclick', '#tblDispatch tbody tr', function () {
+                        window.location.href = '@Url.Action("Add", "Dispatch", new { Id = "REPLACE" })'.replace('REPLACE', $(this).data('empid'));
+                    });
+                }
+            });
+        });
+
+        $('#btnDelete').click(function () {
+            if ($('#ID').val() == "0") {
+                swal("Please select any record First!", "In order to delete Dispatch, You need to select an Dispatch first.")
+            }
+            else {
+                swal({
+                    title: "Are you sure want to delete this Dispatch?",
+                    text: "You will not be able to recover this record!",
+                    type: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#DD6B55",
+                    confirmButtonText: "Yes, delete it!",
+                    cancelButtonText: "No, cancel plz!",
+                    closeOnConfirm: false,
+                    closeOnCancel: false
+                }, function (isConfirm) {
+                    if (isConfirm) {
+                        $.ajax({
+                            type: "GET",
+                            url: "@Url.Action("Delete", "Dispatch")",
+                            data: { ID: $('#ID').val() },
+                            success: function (response) {
+                                if (response.IsSuccess == true) {
+                                    swal({
+                                        title: "Deleted!",
+                                        text: "Dispatch is deleted Successfully.",
+                                        type: "success"
+                                    }, function () {
+                                        $('#btnAdd')[0].click();
+                                    });
+                                }
+                                else {
+                                    swal("Opssss!", "Something seems wrong while deleting Dispatch.", "error");
+                                }
+                            }
+                        });
+
+                    } else {
+                        swal("Cancelled", "Order is safe :)", "error");
+                    }
+                });
+            }
+        });
+    });
+</script>

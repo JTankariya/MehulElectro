@@ -1,0 +1,31 @@
+﻿@model IEnumerable<ViewModels.Inward>
+@Styles.Render("~/Content/css/datatablecss")
+
+<table id="tblInward" class="table table-striped table-bordered">
+    <thead>
+        <tr>
+            <th>Inward No</th>
+            <th>Party Name</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @if (Model != null)
+        {
+            foreach (var Inward in Model)
+            {
+                <tr data-empid="@Inward.ID">
+                    <td>@Inward.InwardNo</td>
+                    <td>@Inward.PartyName</td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+@Scripts.Render("~/Content/js/datatablejs")
+
+<script>
+    $(document).ready(function () {
+        $('#tblInward').DataTable();
+    });
+</script>

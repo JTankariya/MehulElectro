@@ -1,0 +1,31 @@
+﻿@model IEnumerable<ViewModels.LabParameter>
+@Styles.Render("~/Content/css/datatablecss")
+
+<table id="tblLabParameter" class="table table-striped table-bordered">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Conversion Factor With Ltr</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @if (Model != null)
+        {
+            foreach (var labparameter in Model)
+            {
+                <tr data-empid="@labparameter.ID">
+                    <td>@labparameter.Name</td>
+                    <td>@labparameter.ValueTypeName</td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+@Scripts.Render("~/Content/js/datatablejs")
+
+<script>
+    $(document).ready(function () {
+        $('#tblLabParameter').DataTable();
+    });
+</script>

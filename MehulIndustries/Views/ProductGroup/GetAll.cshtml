@@ -1,0 +1,31 @@
+﻿@model IEnumerable<ViewModels.ProductGroup>
+
+@Styles.Render("~/Content/css/datatablecss")
+
+<table id="tblProductGroup" class="table table-striped table-bordered">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Product Group Type</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @if (Model != null)
+        {
+            foreach (var packing in Model)
+            {
+                <tr data-empid="@packing.ID">
+                    <td>@packing.Name</td>
+                    <td>@packing.ProductGroupType</td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+@Scripts.Render("~/Content/js/datatablejs")
+<script>
+    $(document).ready(function () {
+        $('#tblProductGroup').DataTable();
+    });
+</script>

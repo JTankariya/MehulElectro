@@ -1,0 +1,9 @@
+E:\Jayesh\MehulIndustries\BAL\bin\Release\BAL.dll
+E:\Jayesh\MehulIndustries\BAL\bin\Release\BAL.pdb
+E:\Jayesh\MehulIndustries\BAL\bin\Release\DAL.dll
+E:\Jayesh\MehulIndustries\BAL\bin\Release\ViewModels.dll
+E:\Jayesh\MehulIndustries\BAL\bin\Release\DAL.pdb
+E:\Jayesh\MehulIndustries\BAL\bin\Release\ViewModels.pdb
+E:\Jayesh\MehulIndustries\BAL\obj\Release\BAL.csprojResolveAssemblyReference.cache
+E:\Jayesh\MehulIndustries\BAL\obj\Release\BAL.dll
+E:\Jayesh\MehulIndustries\BAL\obj\Release\BAL.pdb

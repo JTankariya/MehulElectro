@@ -1,0 +1,253 @@
+﻿@model List<ViewModels.BillOfMaterialDetail>
+<table class="table table-striped table-bordered" id="tblRawMaterial">
+    <thead>
+        <tr>
+            <td>
+                Process
+            </td>
+            <td>
+                Raw Material Taken
+            </td>
+            <td>
+                Print Name
+            </td>
+            <td>
+                Qty / KG
+            </td>
+            <td style="display:none">
+                S/G
+            </td>
+            <td style="display:none">
+                Volume
+            </td>
+            <td style="display:none">
+                Solid %
+            </td>
+            <td style="display:none">
+                Binder Solid
+            </td>
+            <td style="display:none">
+                S/G Solid
+            </td>
+            <td style="display:none">
+                Volume Of Solid
+            </td>
+            <td style="display:none">
+                Rate / KG
+            </td>
+            <td style="display:none">
+                Total
+            </td>
+        </tr>
+    </thead>
+    <tbody>
+       
+            @if (Model != null && Model.FirstOrDefault() != null && !string.IsNullOrEmpty(Model.FirstOrDefault().QtyKG))
+            {
+                foreach (var rawMaterial in Model)
+                {
+                    <tr>
+                        <td>
+                            @if (ViewBag.BOMProcessList != null)
+                        {
+                        @Html.DropDownList("ddlBOMProcess", new SelectList(ViewBag.BOMProcessList, "ID", "Name", rawMaterial.ProcessID), "-- Select Process --", new { @class = "form-control", @placeholder = "Process" })
+                        }
+                        else
+                        {
+                        @Html.DropDownList("ddlBOMProcess", new List<SelectListItem>(), "-- Select Process --", new { @class = "form-control", @placeholder = "Process" })
+                        }
+                        </td>
+                        <td>
+                            @if (ViewBag.RawMaterialProductList != null)
+                        {
+                        @Html.DropDownList("ddlProducts", new SelectList(ViewBag.RawMaterialProductList, "ID", "Name", rawMaterial.ProductID), "-- Select Product --", new { @class = "form-control", @placeholder = "Product" })
+                        }
+                        else
+                        {
+                        @Html.DropDownList("ddlProducts", new List<SelectListItem>(), "-- Select Product --", new { @class = "form-control", @placeholder = "Product" })
+                        }
+                        </td>
+                        <td>
+                            @if (ViewBag.RawMaterialProductList != null)
+                            {
+                                @Html.DropDownList("ddlPrintNames", new SelectList(ViewBag.RawMaterialProductList, "ID", "PrintName", rawMaterial.ProductID), "-- Select Product --", new { @class = "form-control", @placeholder = "Product" })
+                            }
+                            else
+                            {
+                                @Html.DropDownList("ddlPrintNames", new List<SelectListItem>(), "-- Select Print Name --", new { @class = "form-control", @placeholder = "Product" })
+                            }
+                        </td>
+                        <td>
+                            <input class="numeric form-control" type="text" value="@rawMaterial.QtyKG" />
+                        </td>
+                        <td style="display:none">
+                            <input class="numeric form-control" type="text" />
+                        </td>
+                        <td style="display:none">
+                            <input class="numeric form-control" type="text" />
+                        </td>
+                        <td style="display:none">
+                            <input class="numeric form-control" type="text" />
+                        </td>
+                        <td style="display:none">
+                            <input class="numeric form-control" type="text" />
+                        </td>
+                        <td style="display:none">
+                            <input class="numeric form-control" type="text" />
+                        </td>
+                        <td style="display:none">
+                            <input class="numeric form-control" type="text" />
+                        </td>
+                        <td style="display:none">
+                            <input class="numeric form-control" type="text" />
+                        </td>
+                        <td style="display:none">
+                            <input class="numeric form-control" type="text" />
+                        </td>
+                    </tr>
+                }
+                <tr>
+                    <td>
+                        @if (ViewBag.BOMProcessList != null)
+                        {
+                            @Html.DropDownList("ddlBOMProcess", new SelectList(ViewBag.BOMProcessList, "ID", "Name"), "-- Select Process --", new { @class = "form-control", @placeholder = "Process" })
+                        }
+                        else
+                        {
+                            @Html.DropDownList("ddlBOMProcess", new List<SelectListItem>(), "-- Select Process --", new { @class = "form-control", @placeholder = "Process" })
+                        }
+                    </td>
+                    <td>
+                        @if (ViewBag.RawMaterialProductList != null)
+                        {
+                            @Html.DropDownList("ddlProducts", new SelectList(ViewBag.RawMaterialProductList, "ID", "Name"), "-- Select Product --", new { @class = "form-control", @placeholder = "Product" })
+                        }
+                        else
+                        {
+                            @Html.DropDownList("ddlProducts", new List<SelectListItem>(), "-- Select Product --", new { @class = "form-control", @placeholder = "Product" })
+                        }
+                    </td>
+                    <td>
+                        @if (ViewBag.RawMaterialProductList != null)
+                        {
+                            @Html.DropDownList("ddlPrintNames", new SelectList(ViewBag.RawMaterialProductList, "ID", "PrintName"), "-- Select Print Name --", new { @class = "form-control", @placeholder = "Product" })
+                        }
+                        else
+                        {
+                            @Html.DropDownList("ddlPrintNames", new List<SelectListItem>(), "-- Select Print Name --", new { @class = "form-control", @placeholder = "Product" })
+                        }
+                    </td>
+
+                    <td>
+                        <input class="numeric form-control" type="text" />
+                    </td>
+                    <td>
+                        <input class="numeric form-control" type="text" />
+                    </td>
+                    <td>
+                        <input class="numeric form-control" type="text" />
+                    </td>
+                    <td>
+                        <input class="numeric form-control" type="text" />
+                    </td>
+                    <td>
+                        <input class="numeric form-control" type="text" />
+                    </td>
+                    <td>
+                        <input class="numeric form-control" type="text" />
+                    </td>
+                    <td>
+                        <input class="numeric form-control" type="text" />
+                    </td>
+                    <td>
+                        <input class="numeric form-control" type="text" />
+                    </td>
+                    <td>
+                        <input class="numeric form-control" type="text" />
+                    </td>
+                </tr>
+            }
+            else
+            {
+                <tr>
+                    <td>
+                        @if (ViewBag.BOMProcessList != null)
+                        {
+                            @Html.DropDownList("ddlBOMProcess", new SelectList(ViewBag.BOMProcessList, "ID", "Name"), "-- Select Process --", new { @class = "form-control", @placeholder = "Process" })
+                        }
+                        else
+                        {
+                            @Html.DropDownList("ddlBOMProcess", new List<SelectListItem>(), "-- Select Process --", new { @class = "form-control", @placeholder = "Process" })
+                        }
+                    </td>
+                    <td>
+                        @if (ViewBag.RawMaterialProductList != null)
+                        {
+                            @Html.DropDownList("ddlProducts", new SelectList(ViewBag.RawMaterialProductList, "ID", "Name"), "-- Select Product --", new { @class = "form-control", @placeholder = "Product" })
+                        }
+                        else
+                        {
+                            @Html.DropDownList("ddlProducts", new List<SelectListItem>(), "-- Select Product --", new { @class = "form-control", @placeholder = "Product" })
+                        }
+                    </td>
+                    <td>
+                        @if (ViewBag.RawMaterialProductList != null)
+                        {
+                            @Html.DropDownList("ddlPrintNames", new SelectList(ViewBag.RawMaterialProductList, "ID", "PrintName"), "-- Select Print Name --", new { @class = "form-control", @placeholder = "Product" })
+                        }
+                        else
+                        {
+                            @Html.DropDownList("ddlPrintNames", new List<SelectListItem>(), "-- Select Print Name --", new { @class = "form-control", @placeholder = "Product" })
+                        }
+                    </td>
+                    <td>
+                        <input class="numeric form-control" type="text" />
+                    </td>
+                    <td>
+                        <input class="numeric form-control" type="text" />
+                    </td>
+                    <td>
+                        <input class="numeric form-control" type="text" />
+                    </td>
+                    <td>
+                        <input class="numeric form-control" type="text" />
+                    </td>
+                    <td>
+                        <input class="numeric form-control" type="text" />
+                    </td>
+                    <td>
+                        <input class="numeric form-control" type="text" />
+                    </td>
+                    <td>
+                        <input class="numeric form-control" type="text" />
+                    </td>
+                    <td>
+                        <input class="numeric form-control" type="text" />
+                    </td>
+                    <td>
+                        <input class="numeric form-control" type="text" />
+                    </td>
+                </tr>
+            }
+
+                
+    </tbody>
+    <tfoot>
+        <tr>
+            <td>
+                Totals
+            </td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td style="display:none"></td>
+            <td style="display:none"></td>
+            <td style="display:none"></td>
+            <td style="display:none"></td>
+            <td style="display:none"></td>
+            <td style="display:none"></td>
+            <td style="display:none"></td>
+            <td style="display:none"></td>
+        </tr>
+    </tfoot>
+</table>

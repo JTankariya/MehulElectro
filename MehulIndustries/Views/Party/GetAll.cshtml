@@ -1,0 +1,40 @@
+﻿@model IEnumerable<ViewModels.Party>
+@Styles.Render("~/Content/css/datatablecss")
+
+<table id="tblParty" class="table table-striped table-bordered">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Group</th>
+            <th>Email Id</th>
+            <th>Contact Person</th>
+            <th>Mobile Number</th>
+            <th>CST No</th>
+            <th>TIN No</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @if (Model != null)
+        {
+            foreach (var party in Model)
+            {
+                <tr data-empid="@party.ID">
+                    <td>@party.Name</td>
+                    <td>@party.PartyGroup</td>
+                    <td>@party.EmailId</td>
+                    <td>@party.ContactPerson</td>
+                    <td>@party.MobileNo</td>
+                    <td>@party.CSTNo</td>
+                    <td>@party.TINNo</td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+@Scripts.Render("~/Content/js/datatablejs")
+<script>
+    $(document).ready(function () {
+        $('#tblParty').DataTable();
+    });
+</script>

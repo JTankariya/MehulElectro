@@ -1,0 +1,177 @@
+﻿@model IEnumerable<ViewModels.Order>
+
+@{
+    ViewBag.Title = "ClosedOrder";
+    Layout = "~/Views/Shared/_Dashboard.cshtml";
+}
+@Styles.Render("~/Content/css/customsweetswitcheryselect2css")
+@if (Model != null)
+{
+
+    foreach (var order in Model)
+    {
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2">
+                <div class="portlet">
+                    <div class="portlet-heading bg-primary">
+                        <h3 class="portlet-title">
+                            Order No : @order.OrderNo
+                        </h3>
+                        <div class="portlet-widgets">
+                            <span class="divider"></span>
+                            <a data-toggle="collapse" data-parent="#accordion1" href="#bg-primary" class="" aria-expanded="true"><i class="ion-minus-round"></i></a>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                    <div id="bg-primary" class="panel-collapse collapse in" aria-expanded="true">
+                        <div class="portlet-body">
+                            <div class="row">
+                                <div class="col-md-10">
+                                    <div class="row">
+                                        <div class="col-md-2"><b>Party :</b></div>
+                                        <div class="col-md-10">@order.PartyName</div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-2"><b>Delivery At :</b> </div>
+                                        <div class="col-md-10">@order.DeliveryAddress</div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-2"><b>Transport :</b></div>
+                                        <div class="col-md-10">@order.Transport</div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-2"><b>Booking :</b></div>
+                                        <div class="col-md-10">@order.BookingAt</div>
+                                    </div>
+                                </div>
+                                <div class="col-md-2 text-right">
+                                    <button type="button" data-orderitemid="@order.ID" class="btn btn-success waves-effect waves-light">Reopen Order</button>
+                                </div>
+                            </div>
+                            @{
+        if (order.orderDetail != null)
+        {
+            var orderRows = order.orderDetail.Select(x => new { x.ProductID, x.ShadeID, x.ProductName, x.ShadeName }).Distinct();
+            foreach (var row in orderRows)
+            {
+                <table class="table table-striped table-bordered">
+                    <thead>
+                        <tr>
+                            <td>
+                                Product
+                            </td>
+                            <td>
+                                Shade
+                            </td>
+                            <td>
+                                Packings
+                            </td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>@row.ProductName</td>
+                            <td>@row.ShadeName</td>
+                            <td>
+                                @{
+                var packings = order.orderDetail.Where(x => x.OrderID == order.ID && x.ProductID == row.ProductID && x.ShadeID == row.ShadeID);
+                if (packings != null)
+                {
+                    <table class="table table-striped table-bordered">
+                        <thead>
+                            <tr>
+                                <td>
+                                    Name
+                                </td>
+                                <td>
+                                    Qty
+                                </td>
+                                <td>
+                                    Rate
+                                </td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var packing in packings)
+                            {
+                                <tr style="color:green">
+                                    <td>
+                                        @packing.PackingName
+                                    </td>
+                                    <td>
+                                        @packing.Qty
+                                    </td>
+                                    <td>
+                                        @packing.Rate
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                        <tfoot></tfoot>
+                    </table>
+
+                }
+                                }
+
+                            </td>
+                        </tr>
+                    </tbody>
+                    <tfoot></tfoot>
+                </table>
+
+            }
+        }
+                            }
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    }
+}
+@Scripts.Render("~/Content/css/customsweetswitcheryselect2js")
+
+<script>
+    var productionItems = [];
+    var btnMoveToProduction = "";
+    var btnCloseOrder = "";
+    $(document).ready(function () {
+        $('body').on('click', '[data-orderitemid]', function () {
+            btnCloseOrder = this;
+            swal({
+                title: "Are you sure want to Reopen this order?",
+                text: "You will not be able to recover this action from here!",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "Yes, Close it!",
+                cancelButtonText: "No, Don't Close this!",
+                closeOnConfirm: false,
+                closeOnCancel: false
+            }, function (isConfirm) {
+                if (isConfirm) {
+
+                    $.ajax({
+                        url: '@Url.Action("Reopen","Order")',
+                        data: { ID: $(btnCloseOrder).data('orderitemid') },
+                        type: "POST",
+                        success: function () {
+                            swal({
+                                title: "Information",
+                                text: "Order is Reopened successfully.",
+                                type: "success"
+                            }, function () {
+                                window.location.reload(true);
+                            });
+                        }
+                    })
+
+                } else {
+                    swal("Cancelled", "Item is safe :)", "error");
+                }
+            });
+        });
+    });
+</script>

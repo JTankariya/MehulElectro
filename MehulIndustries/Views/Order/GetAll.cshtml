@@ -1,0 +1,37 @@
+﻿@model IEnumerable<ViewModels.Order>
+@Styles.Render("~/Content/css/datatablecss")
+
+<table id="tblOrder" class="table table-striped table-bordered">
+    <thead>
+        <tr>
+            <th>Order No</th>
+            <th>Order Date</th>
+            <th>Party Name</th>
+            <th>Transport</th>
+            <th>Booking At</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @if (Model != null)
+        {
+            foreach (var order in Model)
+            {
+                <tr data-empid="@order.ID">
+                    <td>@order.OrderNo</td>
+                    <td>@order.OrderDate.ToString("dd/MM/yyyy")</td>
+                    <td>@order.PartyName</td>
+                    <td>@order.Transport</td>
+                    <td>@order.BookingAt</td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+@Scripts.Render("~/Content/js/datatablejs")
+
+<script>
+    $(document).ready(function () {
+        $('#tblOrder').DataTable();
+    });
+</script>

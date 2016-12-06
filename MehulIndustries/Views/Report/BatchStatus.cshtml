@@ -1,0 +1,54 @@
+﻿@model IEnumerable<ViewModels.Batch>
+@{
+    ViewBag.Title = "BatchStatus";
+    Layout = "~/Views/Shared/_Dashboard.cshtml";
+}
+
+@Styles.Render("~/Content/css/datatablecss")
+<div class="container">
+    <table id="tblBatchStatus" class="table table-striped table-bordered">
+        <thead>
+            <tr>
+                <th>Batch No</th>
+                <th>Production Qty</th>
+                <th>Product Name</th>
+                <th>Batch Start Date</th>
+                <th>Ordered Qty</th>
+                <th>In Grinding?</th>
+                <th>In Shading?</th>
+                <th>In QC?</th>
+                <th>In Packing?</th>
+                <th>Completed?</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @if (Model != null)
+            {
+                foreach (var batch in Model)
+                {
+                    <tr data-empid="@batch.ID">
+                        <td>@batch.BatchNo </td>
+                        <td>@batch.ProductionQty</td>
+                        <td>@batch.ProductName </td>
+                        <td>@(batch.GrindingStartDate.HasValue ? batch.GrindingStartDate.Value.ToString("dd/MM/yyyy") : "Not Started Yet") </td>
+                        <td>@batch.OrderedQty</td>
+                        <td><input type="checkbox" @(batch.GrindingStartDate.HasValue && !batch.GrindingDoneDate.HasValue ? "checked" : "") disabled /></td>
+                        <td><input type="checkbox" @(batch.ShadingStartDate.HasValue && !batch.ShadingDoneDate.HasValue ? "checked" : "") disabled /></td>
+                        <td><input type="checkbox" @(batch.QCStartDate.HasValue && !batch.QCDoneDate.HasValue ? "checked" : "") disabled /></td>
+                        <td><input type="checkbox" @(batch.PackingStartDate.HasValue && !batch.PackingDoneDate.HasValue ? "checked" : "") disabled /></td>
+                        <td><input type="checkbox" @(batch.PackingDoneDate.HasValue ? "checked" : "") disabled /></td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>
+
+@Scripts.Render("~/Content/js/datatablejs")
+
+<script>
+    $(document).ready(function () {
+        $('#tblBatchStatus').DataTable();
+    });
+</script>

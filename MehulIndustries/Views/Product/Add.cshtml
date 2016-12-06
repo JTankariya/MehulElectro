@@ -1,0 +1,1458 @@
+﻿@model ViewModels.Product
+@{
+    ViewBag.Title = "Add";
+    Layout = "~/Views/Shared/_Dashboard.cshtml";
+}
+
+
+@Styles.Render("~/Content/css/customsweetswitcheryselect2css")
+<style>
+    span.select2 {
+        width: 100% !important;
+    }
+</style>
+<div class="row">
+    <div class="col-md-12">
+        <ul class="nav nav-tabs navtab-custom">
+            <li class="active">
+                <a href="#productpanel" data-toggle="tab" aria-expanded="false">
+                    <span class="visible-xs"><i class="fa fa-home"></i></span>
+                    <span class="hidden-xs">Product Info</span>
+                </a>
+            </li>
+            <li class="">
+                <a href="#packingpanel" data-toggle="tab" aria-expanded="false">
+                    <span class="visible-xs"><i class="fa fa-user"></i></span>
+                    <span class="hidden-xs">Packing Info</span>
+                </a>
+            </li>
+            <li class="">
+                <a href="#shadepanel" data-toggle="tab" aria-expanded="false">
+                    <span class="visible-xs"><i class="fa fa-user"></i></span>
+                    <span class="hidden-xs">Shade Info</span>
+                </a>
+            </li>
+        </ul>
+        <div class="tab-content">
+            <div class="tab-pane active" id="productpanel">
+                @using (Html.BeginForm("Add", "Product", FormMethod.Post, new { @class = "form-horizontal m-t-20", @id = "frmProduct" }))
+                {
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="inputEmail3" class="col-sm-4 control-label">Group</label>
+                                        <div class="col-sm-7">
+                                            @if (ViewBag.ProductGroups != null)
+                                            {
+                                                @Html.DropDownListFor(x => x.ProductGroupID, new SelectList(ViewBag.ProductGroups, "ID", "Name"), new { @class = "form-control", @placeholder = "Conversion Factor with litter" })
+                                            }
+                                            else
+                                            {
+                                                @Html.DropDownListFor(x => x.ProductGroupID, new List<SelectListItem>(), new { @class = "form-control", @placeholder = "Conversion Factor with litter" })
+                                            }
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="hori-pass1" class="col-sm-4 control-label">Name</label>
+                                        <div class="col-sm-7">
+                                            @Html.HiddenFor(x => x.ID, new { @class = "form-control" })
+                                            @Html.TextBoxFor(x => x.Name, new { @class = "form-control", @placeholder = "Product Name", @style = " text-transform: uppercase;" })
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group" id="pnlRawMaterial">
+                                        <label for="inputEmail3" class="col-sm-4 control-label">Raw Material Type</label>
+                                        <div class="col-sm-7">
+                                            @if (ViewBag.RawMaterialTypes != null)
+                                            {
+                                                @Html.DropDownListFor(x => x.RawMaterialTypeID, new SelectList(ViewBag.RawMaterialTypes, "ID", "Name"), new { @class = "form-control", @placeholder = "Conversion Factor with litter" })
+                                            }
+                                            else
+                                            {
+                                                @Html.DropDownListFor(x => x.RawMaterialTypeID, new List<SelectListItem>(), new { @class = "form-control", @placeholder = "Conversion Factor with litter" })
+                                            }
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="hori-pass1" class="col-sm-4 control-label">Print Name</label>
+                                        <div class="col-sm-7">
+                                            @Html.TextBoxFor(x => x.PrintName, new { @class = "form-control", @placeholder = "Print Name", @style = " text-transform: uppercase;" })
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="hori-pass1" class="col-sm-4 control-label">UOM</label>
+                                        <div class="col-sm-7">
+                                            @if (ViewBag.ProductUnits != null)
+                                            {
+                                                @Html.DropDownListFor(x => x.ProductUnitID, new SelectList(ViewBag.ProductUnits, "ID", "Name"), new { @class = "form-control", @placeholder = "Conversion Factor with litter" })
+                                            }
+                                            else
+                                            {
+                                                @Html.DropDownListFor(x => x.ProductUnitID, new List<SelectListItem>(), new { @class = "form-control", @placeholder = "Conversion Factor with litter" })
+                                            }
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="hori-pass2" class="col-sm-4 control-label">Has Packing</label>
+                                        <div class="col-sm-2">
+                                            @Html.CheckBoxFor(x => x.HasPacking, new { @data_plugin = "switchery", @data_color = "#515ffb" })
+                                        </div>
+                                        <label for="hori-pass2" class="col-sm-3 control-label">Has Shade</label>
+                                        <div class="col-sm-2">
+                                            @Html.CheckBoxFor(x => x.HasShade, new { @data_plugin = "switchery", @data_color = "#515ffb" })
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="hori-pass1" class="col-sm-4 control-label">Parties</label>
+                                        <div class="col-sm-7">
+                                            @if (ViewBag.Parties != null)
+                                            {
+
+                                                var selectedParties = "";
+                                                if (Model.Parties != null && !Model.HasShade && !Model.HasPacking)
+                                                {
+                                                    selectedParties = string.Join(",", Model.Parties.Select(x => x.PartyID));
+                                                }
+
+                                                @Html.DropDownList("ddlMainParty", new SelectList(ViewBag.Parties, "ID", "Name", selectedParties), new { @class = "select2 form-control", @multiple = "multiple", @data_selectedparties = selectedParties })
+                                            }
+                                            else
+                                            {
+                                                @Html.DropDownList("ddlMainParty", new List<SelectListItem>(), new { @class = "select2 form-control", @multiple = "multiple" })
+                                            }
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="hori-pass1" class="col-sm-4 control-label">Min Qty</label>
+                                        <div class="col-sm-7">
+                                            @Html.TextBoxFor(x => x.MinQty, new { @class = "numeric form-control", @placeholder = "Min Qty" })
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="hori-pass1" class="col-sm-4 control-label">Opening Qty</label>
+                                        <div class="col-sm-7">
+                                            @Html.TextBoxFor(x => x.OpeningQty, new { @class = "numeric form-control", @placeholder = "Opening Qty" })
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="hori-pass1" class="col-sm-4 control-label">Opening Rate</label>
+                                        <div class="col-sm-7">
+                                            @Html.TextBoxFor(x => x.OpeningRate, new { @class = "numeric form-control", @placeholder = "Opening Rate" })
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="hori-pass1" class="col-sm-4 control-label">Opening Value</label>
+                                        <div class="col-sm-7">
+                                            @Html.TextBoxFor(x => x.OpeningValue, new { @class = "numeric form-control", @placeholder = "Opening Value", @disabled = "disabled" })
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="hori-pass1" class="col-sm-4 control-label">Gravity</label>
+                                        <div class="col-sm-7">
+                                            @Html.TextBoxFor(x => x.Gravity, new { @class = "numeric form-control", @placeholder = "Gravity" })
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="hori-pass1" class="col-sm-4 control-label">Solid Gravity</label>
+                                        <div class="col-sm-7">
+                                            @Html.TextBoxFor(x => x.SolidGravity, new { @class = "numeric form-control", @placeholder = "Solid Gravity" })
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="hori-pass1" class="col-sm-4 control-label">Solid %</label>
+                                        <div class="col-sm-7">
+                                            @Html.TextBoxFor(x => x.SolidPercentage, new { @class = "numeric form-control", @placeholder = "Solid Percentage" })
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="hori-pass1" class="col-sm-4 control-label">Max Qty</label>
+                                        <div class="col-sm-7">
+                                            @Html.TextBoxFor(x => x.MaxQty, new { @class = "numeric form-control", @placeholder = "Max Qty" })
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="hori-pass1" class="col-sm-4 control-label">Batch Unit</label>
+                                        <div class="col-sm-7">
+                                            @if (ViewBag.ProductUnits != null)
+                                            {
+                                                @Html.DropDownList("ddlBatchUnit", new SelectList(ViewBag.ProductUnits, "ID", "Name"), new { @class = "form-control" })
+                                            }
+                                            else
+                                            {
+                                                @Html.DropDownList("ddlBatchUnit", new List<SelectListItem>(), new { @class = "form-control" })
+                                            }
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="hori-pass1" class="col-sm-4 control-label">Batch Min Size</label>
+                                        <div class="col-sm-7">
+                                            @Html.TextBoxFor(x => x.BatchMin, new { @class = "numeric form-control", @placeholder = "Min Size" })
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="hori-pass1" class="col-sm-4 control-label">Batch Ideal Size</label>
+                                        <div class="col-sm-7">
+                                            @Html.TextBoxFor(x => x.BatchIdeal, new { @class = "numeric form-control", @placeholder = "Ideal Size" })
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="hori-pass1" class="col-sm-4 control-label">Batch Max Size</label>
+                                        <div class="col-sm-7">
+                                            @Html.TextBoxFor(x => x.BatchMax, new { @class = "numeric form-control", @placeholder = "Max Size" })
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="hori-pass1" class="col-sm-4 control-label">Sales Rate</label>
+                                        <div class="col-sm-7">
+                                            @Html.TextBoxFor(x => x.SalesRate, new { @class = "numeric form-control", @placeholder = "Sales Rate" })
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="hori-pass1" class="col-sm-4 control-label">Purchase Rate</label>
+                                        <div class="col-sm-7">
+                                            @Html.TextBoxFor(x => x.PurchaseRate, new { @class = "numeric form-control", @placeholder = "Purchase Rate" })
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="hori-pass1" class="col-sm-4 control-label">Reorder Qty</label>
+                                        <div class="col-sm-7">
+                                            @Html.TextBoxFor(x => x.ReorderQty, new { @class = "numeric form-control", @placeholder = "Reorder Qty" })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+
+                        <div class="col-sm-offset-4 col-sm-8">
+                            <a href="@Url.Action("Add", "Product", new { ID=0})" i id="btnAdd" type="button" class="btn btn-lg btn-default waves-effect waves-light m-l-5">
+                                <i class="ti-plus"></i>&nbsp;&nbsp;Add
+                            </a>
+                            <button id="btnSave" type="submit" class="btn btn-lg btn-primary waves-effect waves-light">
+                                <i class="ti-save"></i>&nbsp;&nbsp; Save
+                            </button>
+                            <button id="btnDelete" type="button" class="btn btn-lg btn-danger waves-effect waves-light m-l-5">
+                                <i class="ti-trash"></i>&nbsp;&nbsp;Delete
+                            </button>
+                            <button id="btnView" type="button" class="btn btn-lg btn-warning waves-effect waves-light m-l-5">
+                                <i class="ti-search"></i>&nbsp;&nbsp;View
+                            </button>
+                        </div>
+                    </div>
+                }
+            </div>
+            <div class="tab-pane" id="packingpanel">
+                <div class="row">
+                    <div class="col-md-4">
+                        <form id="frmPacking" class="form-horizontal m-t-20">
+                            <div class="form-group">
+                                <label for="hori-pass1" class="col-sm-4 control-label">Packing Caption</label>
+                                <div class="col-sm-7">
+                                    <input type="hidden" class="form-control" id="txtPackingID" name="PackingID" placeholder="Packing Name" />
+                                    @if (ViewBag.Packings != null)
+                                    {
+                                        @Html.DropDownList("ddlPacking", new SelectList(ViewBag.Packings, "ID", "Name"), new { @class = "form-control", @data_oldvalue = "0" })
+                                    }
+                                    else
+                                    {
+                                        @Html.DropDownList("ddlPacking", new List<SelectListItem>(), new { @class = "form-control", @data_oldvalue = "0" })
+                                    }
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="hori-pass1" class="col-sm-4 control-label">Opening Qty</label>
+                                <div class="col-sm-7">
+                                    <input type="text" class="numeric form-control" id="txtPackingOpeningQty" name="PackingOpeningQty" placeholder="Opening Qty" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="hori-pass1" class="col-sm-4 control-label">Opening Rate</label>
+                                <div class="col-sm-7">
+                                    <input type="text" class="numeric form-control" onchange="CalculateOpeningValue(this,'txtPackingOpeningQty', 'txtPackingOpeningValue')" id="txtPackingOpeningRate" name="PackingOpeningRate" placeholder="Opening Rate" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="hori-pass1" class="col-sm-4 control-label">Opening Value</label>
+                                <div class="col-sm-7">
+                                    <input type="text" disabled class="numeric form-control" id="txtPackingOpeningValue" name="PackingOpeningValue" placeholder="Opening Value" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="hori-pass1" class="col-sm-4 control-label">Parties</label>
+                                <div class="col-sm-7">
+                                    @if (ViewBag.Parties != null)
+                                    {
+                                        @Html.DropDownList("ddlPackingParty", new SelectList(ViewBag.Parties, "ID", "Name"), new { @class = "select2 form-control", @multiple = "multiple" })
+                                    }
+                                    else
+                                    {
+                                        @Html.DropDownList("ddlPackingParty", new List<SelectListItem>(), new { @class = "select2 form-control", @multiple = "multiple" })
+                                    }
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-sm-12 text-center">
+                                    <button i id="btnAddPacking" type="button" class="btn btn-default waves-effect waves-light m-l-5">
+                                        <i class="ti-plus"></i>&nbsp;&nbsp;Add
+                                    </button>
+                                    <button id="btnSavePacking" type="button" class="btn btn-primary waves-effect waves-light">
+                                        <i class="ti-save"></i>&nbsp;&nbsp;Save
+                                    </button>
+                                    <button id="btnDeletePacking" type="button" class="btn btn-danger waves-effect waves-light m-l-5">
+                                        <i class="ti-trash"></i>&nbsp;&nbsp;Delete
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="col-md-8">
+                        <table class="table table-striped table-bordered" id="tblPacking">
+                            <thead style="font-weight:bold">
+                                <tr>
+                                    <td>
+                                        Packing Name
+                                    </td>
+                                    <td>
+                                        Parties
+                                    </td>
+                                    <td>
+                                        Opening Qty
+                                    </td>
+                                    <td>
+                                        Opening Rate
+                                    </td>
+                                    <td>
+                                        Opening Value
+                                    </td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model.Packings != null && Model.Packings.Count > 0)
+                                {
+                                    foreach (var packing in Model.Packings)
+                                    {
+                                        <tr data-packingid="@packing.ID">
+                                            <td data-packingid="@packing.PackingID">
+                                                @packing.PackingName
+                                            </td>
+                                            <td>
+                                                @{
+                                        if (Model.Parties != null)
+                                        {
+                                            var packingParty = Model.Parties.Where(x => x.ProductPackingID == packing.ID);
+                                            if (packingParty.Count() > 0)
+                                            {
+                                                <text>@string.Join(",", packingParty.Select(x => x.PartyName).ToArray())</text>
+                                            }
+                                        }
+
+                                                }
+                                            </td>
+                                            <td>
+                                                @packing.OpeningQty
+                                            </td>
+                                            <td>
+                                                @packing.OpeningRate
+                                            </td>
+                                            <td>
+                                                @packing.OpeningValue
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+                            <tfoot style="font-weight:bold">
+                                <tr>
+                                    <td colspan="2">
+                                        Total
+                                    </td>
+                                    <td>
+                                        <input type="text" disabled class="numeric form-control" />
+                                    </td>
+                                    <td>
+                                        <input type="text" disabled class="numeric form-control" />
+                                    </td>
+                                    <td>
+                                        <input type="text" disabled class="numeric form-control" />
+                                    </td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane" id="shadepanel">
+                <div class="row">
+                    <div class="col-md-12" style="    overflow: auto;">
+                        <table class="table table-striped table-bordered" id="tblShade">
+                            <thead style="font-weight:bold">
+                                <tr>
+                                    <td>Shade Name</td>
+                                    <td>Party</td>
+                                    <td>Opening Qty</td>
+                                    <td>Opening Rate</td>
+                                    <td>Opening Value</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model.ID == 0)
+                                {
+                                    <tr>
+                                        <td>
+                                            @if (ViewBag.Shades != null)
+                                            {
+                                                @Html.DropDownList("ddlShade", new SelectList(ViewBag.Shades, "ID", "Name"), "-- Select Shade --", new { @class = "form-control" })
+                                            }
+                                            else
+                                            {
+                                                @Html.DropDownList("ddlShade", new List<SelectListItem>(), "-- Select Shade --", new { @class = "form-control" })
+                                            }
+                                        </td>
+                                        <td>
+                                            @if (ViewBag.Parties != null)
+                                            {
+                                                @Html.DropDownList("ddlParty", new SelectList(ViewBag.Parties, "ID", "Name"), new { @class = "select2 form-control", @multiple = "multiple", @style = "width:200px" })
+                                            }
+                                            else
+                                            {
+                                                @Html.DropDownList("ddlParty", new List<SelectListItem>(), new { @class = "select2 form-control", @multiple = "multiple", @style = "width:200px" })
+                                            }
+                                        </td>
+                                        <td>
+                                            <input type="text" data-qty class="numeric form-control" />
+                                        </td>
+                                        <td>
+                                            <input type="text" data-rate class="numeric form-control" />
+                                        </td>
+                                        <td>
+                                            <input type="text" disabled data-value class="numeric form-control" />
+                                        </td>
+                                    </tr>
+                                }
+                                else
+                                {
+                                    if (Model.HasShade && !Model.HasPacking && Model.Shades != null && Model.Shades.Count > 0)
+                                    {
+                                        foreach (var shade in Model.Shades)
+                                        {
+                                            <tr>
+                                                <td>
+                                                    @if (ViewBag.Shades != null)
+                                                    {
+                                                        @Html.DropDownList("ddlShade", new SelectList(ViewBag.Shades, "ID", "Name"), "-- Select Shade --", new { @class = "form-control" })
+                                                    }
+                                                    else
+                                                    {
+                                                        @Html.DropDownList("ddlShade", new List<SelectListItem>(), "-- Select Shade --", new { @class = "form-control" })
+                                                    }
+                                                </td>
+                                                <td>
+                                                    @{
+                                                    var parties = Model.Parties.Where(x => x.ProductShadeID == shade.ID);
+                                                    int[] selectedParty = null;
+                                                    if (parties != null && parties.Count() > 0)
+                                                    {
+                                                        selectedParty = parties.Select(x => x.PartyID).ToArray();
+                                                    }
+                                                    }
+                                                    @if (ViewBag.Parties != null)
+                                                    {
+                                                        @Html.DropDownList("ddlParty", new SelectList(ViewBag.Parties, "ID", "Name", (selectedParty.Length > 0 ? string.Join(",", selectedParty) : "")), new { @class = "select2 form-control", @multiple = "true", @style = "width:200px" })
+                                                    }
+                                                    else
+                                                    {
+                                                        @Html.DropDownList("ddlParty", new List<SelectListItem>(), new { @class = "select2 form-control", @multiple = "true", @style = "width:200px" })
+                                                    }
+                                                </td>
+                                                <td>
+                                                    <input type="text" value="@shade.OpeningQty" data-qty class="numeric form-control" />
+                                                </td>
+                                                <td>
+                                                    <input type="text" data-rate value="@shade.OpeningRate" class="numeric form-control" />
+                                                </td>
+                                                <td>
+                                                    <input type="text" disabled data-value value="@shade.OpeningValue" class="numeric form-control" />
+                                                </td>
+                                            </tr>
+                                        }
+                                    }
+                                }
+                            </tbody>
+                            <tfoot style="font-weight:bold">
+                                <tr>
+                                    <td colspan="2">Total</td>
+                                    <td>
+                                        <input type="text" disabled data-qty class="numeric form-control" />
+                                    </td>
+                                    <td>
+                                        <input type="text" disabled data-rate class="numeric form-control" />
+                                    </td>
+                                    <td>
+                                        <input type="text" disabled data-value class="numeric form-control" />
+                                    </td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                        <table style="max-width:4000px" class="table table-striped table-bordered" id="tblShadeWithPacking">
+                            @if (Model.ID == 0)
+                            {
+                                <thead style="font-weight:bold">
+                                    <tr>
+                                        <td style="width: 210px;">Shade</td>
+                                        <td style="width: 140px;">Parties</td>
+                                    </tr>
+                                    <tr>
+                                        <td></td>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr></tr>
+                                </tbody>
+                                <tfoot style="font-weight:bold">
+                                    <tr>
+                                        <td colspan="2">
+                                            Totals
+                                        </td>
+                                    </tr>
+                                </tfoot>
+                            }
+                            else
+                            {
+                                <thead style="font-weight:bold">
+                                    <tr>
+                                        <td style="width: 140px;">Shade</td>
+                                        <td style="width: 140px;">Parties</td>
+                                        @if (Model.Packings != null && Model.Packings.Count > 0)
+                                        {
+                                            foreach (var packing in Model.Packings)
+                                            {
+                                                <td colspan="3" data-packingtitle="@packing.PackingID" data-packingid="@packing.ID">@(packing.PackingName + " (Openings)")</td>
+                                            }
+                                        }
+                                    </tr>
+                                    <tr>
+                                        <td></td>
+                                        <td></td>
+                                        @if (Model.Packings != null && Model.Packings.Count > 0)
+                                        {
+                                            foreach (var packing in Model.Packings)
+                                            {
+                                                <td data-packingtitle="@packing.PackingID">Qty</td>
+                                                <td data-packingtitle="@packing.PackingID">Rate</td>
+                                                <td data-packingtitle="@packing.PackingID">Value</td>
+                                            }
+                                        }
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @if (Model.Shades != null && Model.Shades.Count > 0)
+                                    {
+                                        foreach (var shade in Model.Shades.Select(x => x.ShadeID).Distinct())
+                                        {
+                                            <tr>
+                                                <td class="col-md-3">
+                                                    @if (ViewBag.Shades != null)
+                                                    {
+                                                        @Html.DropDownList("ddlShade", new SelectList(ViewBag.Shades, "ID", "Name", shade), "-- Select Shade --", new { @class = "form-control" })
+                                                    }
+                                                    else
+                                                    {
+                                                        @Html.DropDownList("ddlShade", new List<SelectListItem>(), "-- Select Shade --", new { @class = "form-control" })
+                                                    }
+                                                </td>
+                                                <td class="col-md-3">
+                                                    @{
+                                                    int[] selectedParty = null;
+                                                    if (Model.Parties != null)
+                                                    {
+                                                        var parties = Model.Parties.Where(x => x.ShadeID == shade);
+
+                                                        if (parties != null && parties.Count() > 0)
+                                                        {
+                                                            selectedParty = parties.Select(x => x.PartyID).ToArray();
+                                                        }
+                                                    }
+
+                                                    }
+                                                    @if (ViewBag.Parties != null)
+                                                    {
+                                                        @Html.DropDownList("ddlshadepacking", new SelectList(ViewBag.Parties, "ID", "Name"), new { @class = "select2 form-control", @multiple = "true", @data_selectedparties = (selectedParty != null && selectedParty.Length > 0 ? string.Join(",", selectedParty.Distinct()) : "") })
+                                                    }
+                                                    else
+                                                    {
+                                                        @Html.DropDownList("ddlshadepacking", new List<SelectListItem>(), new { @class = "select2 form-control", @multiple = "true", @data_selectedparties = @selectedParty })
+                                                    }
+                                                </td>
+
+                                                @if (Model.Packings != null && Model.Packings.Count > 0)
+                                                {
+                                                    foreach (var packing in Model.Packings)
+                                                    {
+                                                        var shadePacking = Model.Shades.FirstOrDefault(x => x.ShadeID == shade && x.ProductPackingID == packing.ID);
+                                                        if (shadePacking != null)
+                                                        {
+                                                            <td class="col-md-1" data-packingtitle="@packing.PackingID">
+                                                                <input type="text" data-qty class="numeric form-control" value="@shadePacking.OpeningQty" />
+                                                            </td>
+                                                            <td class="col-md-1" data-packingtitle="@packing.PackingID">
+                                                                <input type="text" data-rate class="numeric form-control" value="@shadePacking.OpeningRate" />
+                                                            </td>
+                                                            <td class="col-md-1" data-packingtitle="@packing.PackingID">
+                                                                <input type="text" data-value disabled class="numeric form-control" value="@shadePacking.OpeningValue" />
+                                                            </td>
+                                                        }
+                                                    }
+                                                }
+                                            </tr>
+                                        }
+                                        <tr>
+                                            <td>
+                                                @if (ViewBag.Shades != null)
+                                                {
+                                                    @Html.DropDownList("ddlShade", new SelectList(ViewBag.Shades, "ID", "Name"), "-- Select Shade --", new { @class = "form-control" })
+                                                }
+                                                else
+                                                {
+                                                    @Html.DropDownList("ddlShade", new List<SelectListItem>(), "-- Select Shade --", new { @class = "form-control" })
+                                                }
+                                            </td>
+                                            <td>
+                                                @if (ViewBag.Parties != null)
+                                                {
+                                                    @Html.DropDownList("ddlshadepacking", new SelectList(ViewBag.Parties, "ID", "Name"), new { @class = "select2 form-control", @multiple = "true" })
+                                                }
+                                                else
+                                                {
+                                                    @Html.DropDownList("ddlshadepacking", new List<SelectListItem>(), new { @class = "select2 form-control", @multiple = "true" })
+                                                }
+                                            </td>
+                                            @if (Model.Packings != null && Model.Packings.Count > 0)
+                                            {
+                                                foreach (var packing in Model.Packings)
+                                                {
+                                                    <td class="col-md-1" data-packingtitle="@packing.PackingID">
+                                                        <input type="text" data-qty class="numeric form-control" value="" />
+                                                    </td>
+                                                    <td class="col-md-1" data-packingtitle="@packing.PackingID">
+                                                        <input type="text" data-rate class="numeric form-control" value="" />
+                                                    </td>
+                                                    <td class="col-md-1" data-packingtitle="@packing.PackingID">
+                                                        <input type="text" data-value disabled class="numeric form-control" value="" />
+                                                    </td>
+                                                }
+                                            }
+                                        </tr>
+                                    }
+                                </tbody>
+                                <tfoot style="font-weight:bold">
+                                    <tr>
+                                        <td colspan="2">
+                                            Totals
+                                        </td>
+                                        @if (Model.Packings != null && Model.Packings.Count > 0 && Model.Shades != null && Model.Shades.Count > 0)
+                                        {
+                                            foreach (var packing in Model.Packings)
+                                            {
+                                                var qtySum = Model.Shades.Where(x => x.ProductPackingID == packing.ID).Sum(x => Convert.ToDecimal(x.OpeningQty));
+                                                var rateSum = Model.Shades.Where(x => x.ProductPackingID == packing.ID).Sum(x => Convert.ToDecimal(x.OpeningRate));
+                                                var valueSum = Model.Shades.Where(x => x.ProductPackingID == packing.ID).Sum(x => Convert.ToDecimal(x.OpeningValue));
+                                                <td data-packingtitle="@packing.PackingID">
+                                                    <input class="numeric form-control" data-qty disabled type="text" value="@qtySum" />
+                                                </td>
+                                                <td data-packingtitle="@packing.PackingID">
+                                                    <input class="numeric form-control" data-rate disabled type="text" value="@rateSum" />
+                                                </td>
+                                                <td data-packingtitle="@packing.PackingID">
+                                                    <input class="numeric form-control" data-value disabled type="text" value="@valueSum" />
+                                                </td>
+                                            }
+                                        }
+                                    </tr>
+                                </tfoot>
+                            }
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="custom-modal" class="modal-demo">
+    <button type="button" class="close" onclick="Custombox.close();">
+        <span>&times;</span><span class="sr-only">Close</span>
+    </button>
+    <h4 class="custom-modal-title">Products</h4>
+    <div class="custom-modal-text" id="AllProduct" style="max-height:500px;overflow:auto;">
+
+    </div>
+</div>
+@Scripts.Render("~/Content/css/customsweetswitcheryselect2js")
+<script src="@Url.Content("~/Content/plugins/bootstrap-inputmask/bootstrap-inputmask.min.js")" type="text/javascript"></script>
+<script>
+
+    var parties = JSON.parse('@Html.Raw(Json.Encode(ViewBag.Parties))');
+    var shades = JSON.parse('@Html.Raw(Json.Encode(ViewBag.Shades))');
+    var partiesHTML = GetSelectOptionsOfParties();
+    var shadesHTML = GetSelectOptionsOfShades();
+    function GetSelectOptionsOfParties() {
+        var html = "";
+        if (parties != null) {
+            $.each(parties, function (index, item) {
+                html += '<option value="' + item.ID + '">' + item.Name + '</option>';
+            });
+        }
+
+        return html;
+    }
+    function GetSelectOptionsOfShades() {
+        var html = '<option value="">-- Select Shade --</option>';
+        if (shades != null) {
+            $.each(shades, function (index, item) {
+                html += '<option value="' + item.ID + '">' + item.Name + '</option>';
+            });
+        }
+
+        return html;
+    }
+    function CalculateOpeningValue(cuurentField, anotherField, resultField) {
+        $("#" + resultField).val((parseFloat($('#' + anotherField).val()) * parseFloat($(cuurentField).val())).toFixed(2));
+    }
+    function CalculateProductTotal() {
+        if (($('#HasShade').is(':checked') && $('#HasPacking').is(':checked')) ||
+            (!$('#HasShade').is(':checked') && $('#HasPacking').is(':checked'))) {
+            $('#OpeningQty').val(GetNumericValue($('#tblPacking tfoot tr:last td:eq(1) input').val()).toFixed(2));
+            $('#OpeningRate').val(GetNumericValue($('#tblPacking tfoot tr:last td:eq(2) input').val()).toFixed(2));
+            $('#OpeningValue').val(GetNumericValue($('#tblPacking tfoot tr:last td:eq(3) input').val()).toFixed(2));
+        }
+        if ($('#HasShade').is(':checked') && !$('#HasPacking').is(':checked')) {
+            $('#OpeningQty').val(GetNumericValue($('#tblShade tfoot tr:last td:eq(1) input').val()).toFixed(2));
+            $('#OpeningRate').val(GetNumericValue($('#tblShade tfoot tr:last td:eq(2) input').val()).toFixed(2));
+            $('#OpeningValue').val(GetNumericValue($('#tblShade tfoot tr:last td:eq(3) input').val()).toFixed(2));
+        }
+    }
+
+    function CalculatePackingTotal() {
+        if ($('#HasShade').is(':checked')) {
+            if ($('#tblShade').is(':visible')) {
+                $('#tblPacking tfoot tr:last td:eq(1) input').val(GetNumericValue($('#tblShade tfoot tr:last td:eq(1) input').val()).toFixed(2));
+                $('#tblPacking tfoot tr:last td:eq(2) input').val(GetNumericValue($('#tblShade tfoot tr:last td:eq(2) input').val()).toFixed(2));
+                $('#tblPacking tfoot tr:last td:eq(3) input').val(GetNumericValue($('#tblShade tfoot tr:last td:eq(3) input').val()).toFixed(2));
+            }
+            else {
+                var totalShadeQty = 0, totalShadeRate = 0, totalShadeValue = 0;
+                $.each($('#tblShadeWithPacking tfoot td input[data-qty]'), function (index, element) {
+                    var packingTd = $('#tblPacking tbody tr td:nth-child(1)').filter(function () {
+                        if ($(this).data('packingid') == $(element).parent().data('packingtitle')) {
+                            return this;
+                        };
+                    });
+                    $(packingTd).next().next().text(GetNumericValue($(element).val()).toFixed(2));
+                    $(packingTd).next().next().next().text(GetNumericValue($(element).parent().next().find('input').val()).toFixed(2));
+                    $(packingTd).next().next().next().next().text(GetNumericValue($(element).parent().next().next().find('input').val()).toFixed(2));
+                    totalShadeQty += GetNumericValue($(element).val());
+                    totalShadeRate += GetNumericValue($(element).parent().next().find('input').val());
+                    totalShadeValue += GetNumericValue($(element).parent().next().next().find('input').val());
+                });
+                $('#tblPacking tfoot tr:last td:eq(1) input').val((totalShadeQty).toFixed(2));
+                $('#tblPacking tfoot tr:last td:eq(2) input').val((totalShadeValue / totalShadeQty).toFixed(2));
+                $('#tblPacking tfoot tr:last td:eq(3) input').val((totalShadeValue).toFixed(2));
+            }
+        }
+        else {
+            var totalPackingQty = 0, totalPackingRate = 0, totalPackingValue = 0;
+            $.each($('#tblPacking tbody tr'), function (index, element) {
+                totalPackingQty += GetNumericValue($(element).find('td:eq(2)').text());
+                totalPackingRate += GetNumericValue($(element).find('td:eq(3)').text());
+                totalPackingValue += GetNumericValue($(element).find('td:eq(4)').text());
+            });
+            $('#tblPacking tfoot tr:last td:eq(1) input').val((totalPackingQty).toFixed(2));
+            $('#tblPacking tfoot tr:last td:eq(2) input').val(isNaN(totalPackingValue / totalPackingQty) ? 0 : (totalPackingValue / totalPackingQty).toFixed(2));
+            $('#tblPacking tfoot tr:last td:eq(3) input').val((totalPackingValue).toFixed(2));
+        }
+    }
+
+    function ProductAdded() {
+        swal({
+            title: "Information",
+            text: "Product is saved successfully.",
+            type: "success"
+        }, function () {
+            $('#btnAdd')[0].click();
+        });
+    }
+
+    $(document).ready(function () {
+        if ($('#ddlMainParty').data('selectedparties') && $('#ddlMainParty').data('selectedparties').length > 0) {
+            $('#ddlMainParty').val($('#ddlMainParty').data('selectedparties').split(','));
+        }
+        $.each($('#tblShadeWithPacking select[data-selectedparties]'), function (index, element) {
+            if ($(this).data('selectedparties') && $(this).data('selectedparties').length > 0) {
+                $(this).val($(this).data('selectedparties').split(','));
+            }
+        });
+
+
+        $('#ProductGroupID').on('change', function () {
+            $.ajax({
+                url: "@Url.Action("GetGroupType","Product")",
+                data: { GroupID: $('#ProductGroupID').val() },
+                success: function (response) {
+                    if (response.IsSuccess) {
+                        if (response.ResponseValue[0].ProductGroupTypeID == 3 || response.ResponseValue[0].ProductGroupTypeID == 4) {
+                            if (response.ResponseValue[0].ProductGroupTypeID == 4) {
+                                if (!$('#HasPacking').is(':checked')) {
+                                    $('#HasPacking').trigger('click');
+                                }
+                                if (!$('#HasShade').is(':checked')) {
+                                    $('#HasShade').trigger('click');
+                                }
+                                $('#pnlRawMaterial').hide();
+                            }
+                            else {
+                                if ($('#HasPacking').is(':checked')) {
+                                    $('#HasPacking').trigger('click');
+                                }
+                                if ($('#HasShade').is(':checked')) {
+                                    $('#HasShade').trigger('click');
+                                }
+                                $('#pnlRawMaterial').show();
+                            }
+                            $('#Gravity,#SolidGravity,#SolidPercentage').removeAttr('disabled');
+                            $('#ddlBatchUnit,#BatchMin,#BatchIdeal,#BatchMax').attr('disabled', 'disabled');
+
+                        }
+                        else {
+                            if ($('#HasPacking').is(':checked')) {
+                                $('#HasPacking').trigger('click');
+                            }
+                            if ($('#HasShade').is(':checked')) {
+                                $('#HasShade').trigger('click');
+                            }
+                            $('#Gravity,#SolidGravity,#SolidPercentage').attr('disabled', 'disabled');
+                            $('#ddlBatchUnit,#BatchMin,#BatchIdeal,#BatchMax').removeAttr('disabled');
+                            $('#pnlRawMaterial').hide();
+                        }
+                    }
+                    else {
+                        swal("OOpsss", "There is some problem while saving data, Please try after sometime.", "error");
+                    }
+                }
+            });
+        });
+        $('#ProductGroupID').change();
+        $('#Name').on('change', function () {
+            $('#PrintName').val($(this).val());
+        });
+
+        $('#frmProduct').validate({
+            rules: {
+                Name: {
+                    required: true,
+                    remote: {
+                        url: '@Url.Action("CheckDuplicateName","Product")',
+                        data: { ID: $('#ID').val() },
+                        type: "POST"
+                    }
+                },
+                OpeningQty: {
+                    number: true
+                },
+                OpeningRate: {
+                    number: true
+                },
+                BatchMin: {
+                    required: '#BatchMin:enabled'
+                },
+                BatchIdeal: {
+                    required: '#BatchIdeal:enabled'
+                },
+                BatchMax: {
+                    required: '#BatchMax:enabled'
+                }
+            },
+            messages: {
+                Name: {
+                    required: "Please enter name.",
+                    remote: "Product is already entered, Please enter another name."
+                },
+                OpeningQty: {
+                    number: "Please enter numbers only."
+                },
+                OpeningRate: {
+                    required: "Please enter Opening Rate."
+                },
+                BatchMin: {
+                    required: "Please enter Batch Min Size."
+                },
+                BatchIdeal: {
+                    required: "Please enter Ideal Size."
+                },
+                BatchMax: {
+                    required: "Please enter Max Size."
+                }
+            },
+
+            submitHandler: function (form) {
+                if ($('#HasPacking').is(":checked") && $('#tblPacking tbody tr').length == 0) {
+                    swal("Oppss :(", "Please enter packing list first.");
+                    return false;
+                }
+                if ($('#HasPacking').is(":checked") &&
+                    $('#HasShade').is(":checked") &&
+                    $('#tblShadeWithPacking tbody tr').length == 1 &&
+                    $('#tblShadeWithPacking tbody tr:eq(0) select').val() == "") {
+                    swal("Oppss :(", "Please select Shade of packing.");
+                    return false;
+                }
+                if (!$('#HasPacking').is(":checked") &&
+                   $('#HasShade').is(":checked") &&
+                   $('#tblShade tbody tr').length == 1 &&
+                   $('#tblShade tbody tr:eq(0) input').val() == "") {
+                    swal("Oppss :(", "Please select Shade.");
+                    return false;
+                }
+                if ($('#tblShadeWithPacking tbody tr').not(':last').length > 0) {
+                    $.each($('#tblShadeWithPacking tbody tr').not(':last'), function (index, element) {
+                        if ($(element).find('td:eq(0) select').val().length == 0) {
+                            swal("Oppss :(", "Please select shade in all entries.");
+                            return false;
+                        }
+                    });
+                }
+                var ShadeList = [], PackingList = [];
+                var product = {};
+                product.ID = $('#ID').val();
+                product.Name = $('#Name').val();
+                product.ProductGroupID = $('#ProductGroupID').val();
+                product.RawMaterialTypeID = $('#RawMaterialTypeID').val();
+                product.PrintName = $('#PrintName').val();
+                product.ProductUnitID = $('#ProductUnitID').val();
+                product.OpeningQty = $('#OpeningQty').val();
+                product.OpeningRate = $('#OpeningRate').val();
+                product.OpeningValue = $('#OpeningValue').val();
+                product.MinQty = $('#MinQty').val();
+                product.MaxQty = $('#MaxQty').val();
+                product.ReorderQty = $('#ReorderQty').val();
+                product.Gravity = $('#Gravity').val();
+                product.SolidGravity = $('#SolidGravity').val();
+                product.SolidPercentage = $('#SolidPercentage').val();
+                product.HasShade = $('#HasShade').is(':checked');
+                product.HasPacking = $('#HasPacking').is(':checked');
+                product.BatchUnitID = $('#ddlBatchUnit').val();
+                product.BatchMin = $('#BatchMin').val();
+                product.BatchIdeal = $('#BatchIdeal').val();
+                product.BatchMax = $('#BatchMax').val();
+                product.SalesRate = $('#SalesRate').val();
+                product.PurchaseRate = $('#PurchaseRate').val();
+                if (product.HasShade && product.HasPacking) {
+                    $.each($('#tblPacking tbody tr'), function (index, element) {
+                        var packing = {};
+                        packing.ID = $(element).data('packingid');
+                        packing.PackingID = $(element).find('td:eq(0)').data('packingid');
+                        packing.PartyIDs = ($(element).find('td:eq(1)').data('partyids') ? $(element).find('td:eq(1)').data('partyids') : "");
+                        packing.OpeningQty = $(element).find('td:eq(2)').text().trim();
+                        packing.OpeningRate = $(element).find('td:eq(3)').text().trim();
+                        packing.OpeningValue = $(element).find('td:eq(4)').text().trim();
+                        packing.ProductID = $('#ID').val();
+                        PackingList.push(packing);
+                    });
+                    $.each($('#tblShadeWithPacking tbody tr:not(:last-child)'), function (index, element) {
+                        $.each($('#tblShadeWithPacking td[colspan="3"]'), function (packingindex, packingelement) {
+                            var shade = {};
+                            shade.ID = $(element).data('shadeid');
+                            shade.ShadeID = $(element).find('td:eq(0) select').val().trim();
+                            shade.PartyIDs = ($(element).find('td:eq(1) select').val() && $(element).find('td:eq(1) select').val().length > 0 ? $(element).find('td:eq(1) select').val().join(',') : "");
+                            shade.ProductID = $('#ID').val();
+                            shade.ProductPackingTitle = $(packingelement).data('packingtitle');
+                            shade.PackingID = $(packingelement).data('packingtitle');
+                            shade.OpeningQty = $(element).find('[data-packingtitle="' + $(packingelement).data('packingtitle') + '"] input[data-qty]').val();
+                            shade.OpeningRate = $(element).find('[data-packingtitle="' + $(packingelement).data('packingtitle') + '"] input[data-rate]').val();
+                            shade.OpeningValue = $(element).find('[data-packingtitle="' + $(packingelement).data('packingtitle') + '"] input[data-value]').val();
+                            ShadeList.push(shade);
+                        });
+                    });
+
+                }
+                if (!product.HasShade && product.HasPacking) {
+                    $.each($('#tblPacking tbody tr'), function (index, element) {
+                        var packing = {};
+                        packing.ID = $(element).data('packingid');
+                        packing.PackingID = $(element).find('td:eq(0)').data('packingid');
+                        packing.PartyIDs = ($(element).find('td:eq(1)').data('partyids') ? $(element).find('td:eq(1)').data('partyids') : "");
+                        packing.OpeningQty = $(element).find('td:eq(2)').text().trim();
+                        packing.OpeningRate = $(element).find('td:eq(3)').text().trim();
+                        packing.OpeningValue = $(element).find('td:eq(4)').text().trim();
+                        packing.ProductID = $('#ID').val();
+                        PackingList.push(packing);
+                    });
+                }
+                if (product.HasShade && !product.HasPacking) {
+                    $.each($('#tblShade tbody tr:not(:last-child)'), function (index, element) {
+                        var shade = {};
+                        shade.ID = $(element).data('shadeid');
+                        shade.ShadeID = $(element).find('td:eq(0) select').val().trim();
+                        shade.PartyIDs = ($(element).find('td:eq(1) select').val() && $(element).find('td:eq(1) select').val().length > 0 ? $(element).find('td:eq(1) select').val().join(',') : "");
+                        shade.ProductID = $('#ID').val();
+                        shade.ProductPackingTitle = "";
+                        shade.PackingID = 0;
+                        shade.OpeningQty = $(element).find('input[data-qty]').val();
+                        shade.OpeningRate = $(element).find('input[data-rate]').val();
+                        shade.OpeningValue = $(element).find('input[data-value]').val();
+                        ShadeList.push(shade);
+                    });
+                }
+                if (!product.HasShade && !product.HasPacking) {
+                    product.PartyIDs = $('#ddlMainParty').val() && $('#ddlMainParty').val().length > 0 ? $('#ddlMainParty').val().join(',') : "";
+                }
+                product.Shades = ShadeList;
+                product.Packings = PackingList;
+                $.ajax({
+                    url: "@Url.Action("Add","Product")",
+                    type: "POST",
+                    data: JSON.stringify(product),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (response) {
+                        if (response.IsSuccess) {
+                            ProductAdded();
+                        }
+                        else {
+                            swal("OOpsss", "There is some problem while saving data, Please try after sometime.", "error");
+                        }
+                    }
+                });
+                return false;
+            }
+        });
+        $('#btnAddPacking').on('click', function () {
+            $('#frmPacking')[0].reset();
+            $('#ddlPackingParty').val("").trigger('change');
+        });
+        $('#btnDeletePacking').on('click', function () {
+            swal({
+                title: "Are you sure want to delete this Packing?",
+                text: "You will not be able to recover this Packing!",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "Yes, delete it!",
+                cancelButtonText: "No, cancel plz!",
+                closeOnConfirm: false,
+                closeOnCancel: false
+            }, function (isConfirm) {
+                if (isConfirm) {
+                    if ($('#tblPacking tbody tr').length == 1) {
+                        $('#tblShade').show();
+                        $('#tblShadeWithPacking').hide();
+                        $('#frmPacking')[0].reset();
+                    }
+                    else {
+                        $('#tblShadeWithPacking td[data-packingtitle="' + $('#tblPacking tr.btn-default td:eq(0)').data('packingid') + '"]').remove();
+                    }
+                    $('#tblPacking tbody tr.btn-default').remove();
+                    swal("Deleted!", "Packing is deleted Successfully.", "success");
+                    if ($('#tblPacking tbody tr').length > 3) {
+                        $('#tblShadeWithPacking').css('width', '5000px');
+                    }
+                    else {
+                        $('#tblShadeWithPacking').css('width', '100%');
+                    }
+                } else {
+                    swal("Cancelled", "Packing is safe :)", "error");
+                }
+            });
+
+        });
+        $(".select2").selectize({
+            placeholder: 'Select parties',
+            multiple: true
+        });
+        $('#ddlMainParty')[0].value = [5, 6];
+        $('#HasShade').on('change', function () {
+            if ($(this).is(':checked')) {
+                $('[href="#shadepanel"]').parent().fadeIn();
+                $('#OpeningQty').attr('disabled', 'disabled');
+                $('#OpeningRate').attr('disabled', 'disabled');
+                $('#ddlMainParty')[0].selectize.disable();
+                $('#ddlPackingParty')[0].selectize.disable();
+                $('#txtPackingOpeningRate').attr('disabled', 'disabled');
+                $('#txtPackingOpeningQty').attr('disabled', 'disabled');
+                $('#tblPacking tbody tr td:nth-child(2),#tblPacking thead tr td:nth-child(2)').hide();
+                $('#tblPacking tfoot tr td:eq(0)').attr("colspan", "1");
+            }
+            else {
+                $('[href="#shadepanel"]').parent().fadeOut();
+                $('#txtPackingOpeningRate').removeAttr('disabled');
+                $('#txtPackingOpeningQty').removeAttr('disabled');
+                $('#ddlPackingParty')[0].selectize.enable();
+                if (!$('#HasPacking').is(':checked')) {
+                    $('#OpeningQty').removeAttr('disabled');
+                    $('#OpeningRate').removeAttr('disabled');
+                }
+                else {
+                    $('#ddlMainParty')[0].selectize.enable();
+                    $('#tblPacking tbody tr td:nth-child(2),#tblPacking thead tr td:nth-child(2)').show();
+                    $('#tblPacking tfoot tr td:eq(0)').attr("colspan", "2");
+                }
+            }
+            ShowHideShadeTables();
+            CalculatePackingTotal();
+            CalculateProductTotal();
+        });
+        $('#HasPacking').on('change', function () {
+            if ($(this).is(':checked')) {
+                $('[href="#packingpanel"]').parent().fadeIn();
+                $('#OpeningQty').attr('disabled', 'disabled');
+                $('#OpeningRate').attr('disabled', 'disabled');
+                $('#ddlMainParty')[0].selectize.disable();
+            }
+            else {
+                $('[href="#packingpanel"]').parent().fadeOut("medium", function () {
+                    ShowHideShadeTables();
+                });
+                if (!$('#HasShade').is(':checked')) {
+                    $('#OpeningQty').removeAttr('disabled');
+                    $('#OpeningRate').removeAttr('disabled');
+                    $('#ddlMainParty')[0].selectize.enable();
+                }
+            }
+        });
+        $('#HasPacking').change();
+        $('#HasShade').change();
+        $('#btnDelete').click(function () {
+            if ($('#ID').val() == "0") {
+                swal("Please select any record First!", "In order to delete Product, You need to select Product first.")
+            }
+            else {
+                swal({
+                    title: "Are you sure want to delete this Product?",
+                    text: "You will not be able to recover this product!",
+                    type: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#DD6B55",
+                    confirmButtonText: "Yes, delete it!",
+                    cancelButtonText: "No, cancel plz!",
+                    closeOnConfirm: false,
+                    closeOnCancel: false
+                }, function (isConfirm) {
+                    if (isConfirm) {
+                        $.ajax({
+                            type: "GET",
+                            url: "@Url.Action("Delete","Product")",
+                            data: { ID: $('#ID').val() },
+                            success: function (response) {
+                                if (response.IsSuccess == true) {
+                                    swal({
+                                        title: "Deleted!",
+                                        text: "Product is deleted Successfully.",
+                                        type: "success"
+                                    }, function () {
+                                        $('#btnAdd')[0].click();
+                                    });
+                                }
+                                else {
+                                    swal("Opssss!", "Can't delete this product as it is in use.", "error");
+                                }
+                            }
+                        });
+
+                    } else {
+                        swal("Cancelled", "Product is safe :)", "info");
+                    }
+                });
+            }
+        });
+        $('#btnView').click(function () {
+            $.ajax({
+                type: "GET",
+                url: "@Url.Action("GetAll","Product")",
+                success: function (response) {
+                    $('#AllProduct').html(response);
+                    Custombox.open({
+                        animation: 'rotatedown',
+                        plugin: 'custommodal',
+                        overlayspeed: '100',
+                        overlaycolor: '#36404a',
+                        target: '#custom-modal'
+                    });
+                    $('body').on('dblclick', '#tblProduct tbody tr', function () {
+                        window.location.href = '@Url.Action("Add", "Product", new { Id="REPLACE"})'.replace('REPLACE', $(this).data('empid'));
+                    });
+                }
+            });
+        });
+        $('#frmPacking').validate({
+            rules: {
+                ddlPacking: {
+                    required: {
+                        depends: function (element) {
+                            if ('0' == $('#ddlPacking').val()) {
+                                $('#ddlPacking').val('');
+                            }
+                            return true;
+                        }
+                    }
+                },
+                PackingOpeningQty: {
+                    number: true
+                },
+                PackingOpeningRate: {
+                    number: true
+                }
+            },
+            messages: {
+                ddlPacking: "Please enter Packing Name",
+                PackingOpeningQty: {
+                    number: "Please enter numbers only."
+                },
+                PackingOpeningRate: {
+                    number: "Please enter numbers only.",
+                },
+
+                submitHandler: function (form) {
+                    return false;
+                }
+            }
+        });
+        $('body').on('change', '#tblShade tbody tr td:nth-child(1) select', function () {
+            var selectedShade = $(this).parent();
+            $.each($('#tblShade tbody tr td:nth-child(1)'), function (index, element) {
+                if ($(element).parent().index() != $(selectedShade).parent().index() && $(element).find('select').val() == $(selectedShade).find('select').val()) {
+                    swal("Duplicate", "Shade name is already exist, Please enter another Shade name.");
+                    $(selectedShade).find('select').val("");
+                    return false;
+                }
+            });
+            if ($(this).val().length > 0 && $('#tblShade tbody tr:last').index() == $(this).parent().parent().index()) {
+                $('#tblShade tbody').append('<tr><td><select class="form-control">' + shadesHTML + '</select></td>' +
+                    '<td><select multiple="multiple" class="select2 form-control" style="width:200px">' + partiesHTML + '</select></td>' +
+                    '<td><input type="text" data-qty class="numeric form-control" /></td>' +
+                    '<td><input type="text" data-rate class="numeric form-control" /></td>' +
+                    '<td><input type="text" disabled data-value class="numeric form-control" /></td></tr>');
+                $("#tblShade tbody tr:last .select2").selectize({
+                    placeholder: 'Select parties',
+                    multiple: true
+                });
+            }
+        });
+        $('body').on('change', '#tblShadeWithPacking tbody tr td:nth-child(1)', function () {
+            var selectedShade = this;
+            $.each($('#tblShadeWithPacking tbody tr td:nth-child(1)'), function (index, element) {
+                
+                if ($(element).parent().index() != $(selectedShade).parent().index() && $(element).find('select').val() == $(selectedShade).find('select').val()) {
+                    swal("Duplicate", "Shade name is already exist, Please enter another Shade name.");
+                    $(selectedShade).find('select').val("");
+                    return false;
+                }
+            });
+            if ($('#tblShadeWithPacking tbody tr:last td:eq(0) select').val().length > 0) {
+                $('#tblShadeWithPacking tbody').append('<tr></tr>');
+                $.each($('#tblShadeWithPacking tbody tr:last').prev().find('td'), function (index, item) {
+                    if ($('#tblShadeWithPacking thead tr:last td:eq(' + $(item).index() + ')').text().toUpperCase() == "QTY") {
+                        $('#tblShadeWithPacking tbody tr:last').append('<td data-packingtitle="' + $('#tblShadeWithPacking thead tr:last td:eq(' + $(item).index() + ')').data('packingtitle') + '"><input type="text" data-qty class="numeric form-control" /></td>');
+                    }
+                    else if ($('#tblShadeWithPacking thead tr:last td:eq(' + $(item).index() + ')').text().toUpperCase() == "RATE") {
+                        $('#tblShadeWithPacking tbody tr:last').append('<td data-packingtitle="' + $('#tblShadeWithPacking thead tr:last td:eq(' + $(item).index() + ')').data('packingtitle') + '"><input type="text" data-rate class="numeric form-control" /></td>');
+                    }
+                    else if ($('#tblShadeWithPacking thead tr:last td:eq(' + $(item).index() + ')').text().toUpperCase() == "VALUE") {
+                        $('#tblShadeWithPacking tbody tr:last').append('<td data-packingtitle="' + $('#tblShadeWithPacking thead tr:last td:eq(' + $(item).index() + ')').data('packingtitle') + '"><input type="text" data-value disabled class="numeric form-control" /></td>');
+                    }
+                    else {
+                        if ($('#tblShadeWithPacking tbody tr:last td').length == 0)
+                            $('#tblShadeWithPacking tbody tr:last').append('<td><select class="form-control">' + shadesHTML + '</select></td>' +
+                                '<td><select multiple="multiple" class="select2 form-control" style="width:200px">' + partiesHTML + '</select></td>');
+                    }
+                });
+                $("#tblShadeWithPacking tbody tr:last .select2").selectize({
+                    placeholder: 'Select parties',
+                    multiple: true
+                });
+
+                $("#tblShadeWithPacking tr td:last-child input").attr('disabled', 'disabled');
+            }
+        });
+        $('body').on('click', '#tblPacking tbody tr', function () {
+            $(this).siblings().removeClass('btn-default');
+            $(this).addClass('btn-default');
+        });
+        $('body').on('dblclick', '#tblPacking tbody tr', function () {
+            $('#txtPackingID').val($(this).data('packingid'));
+            $('#ddlPacking').val($(this).find('td:eq(0)').data('packingid'));
+            $('#ddlPacking').data('oldvalue', $(this).find('td:eq(0)').data('packingid'));
+            var partyids = ($('#tblPacking tbody tr.btn-default td:eq(1)').data('partyids') != null && $('#tblPacking tbody tr.btn-default td:eq(1)').data('partyids').toString().indexOf(',') != -1 ? $(this).find('td:eq(1)').data('partyids').split(',') : $(this).find('td:eq(1)').data('partyids'));
+            $('#ddlPackingParty')[0].selectize.setValue(partyids);
+            //$('#ddlPackingParty').select2('val', partyids);
+            $('#txtPackingOpeningQty').val($(this).find('td:eq(2)').text());
+            $('#txtPackingOpeningRate').val($(this).find('td:eq(3)').text());
+            $('#txtPackingOpeningValue').val($(this).find('td:eq(4)').text());
+        });
+        $('body').on('change', 'input[data-qty],input[data-rate]', function () {
+            var valueBox = "";
+            if ($(this)[0].hasAttribute('data-qty')) {
+                valueBox = $(this).parent().next().next().find('input');
+                $(valueBox).val((parseFloat($(this).val()) * parseFloat($(this).parent().next().find('input').val())).toFixed(2));
+            }
+            else {
+                valueBox = $(this).parent().next().find('input');
+                $(valueBox).val((parseFloat($(this).val()) * parseFloat($(this).parent().prev().find('input').val())).toFixed(2));
+            }
+            if ($(valueBox).val() > 0) {
+
+            }
+            else {
+                $(valueBox).val("0");
+            }
+
+            if ($(this).closest('table').find('tfoot').length > 0) {
+                var totalofQtyColumn = 0;
+                var totalofRateColumn = 0;
+                var totalofValueColumn = 0;
+                var editingCtrl = this;
+                $.each($(this).closest('table').find('tbody td:nth-child(' + ($(this).parent().index() + 1) + ') input'), function (index, item) {
+                    if ($(editingCtrl)[0].hasAttribute("data-qty")) {
+                        totalofQtyColumn += parseFloat($(item).val().length > 0 ? $(item).val() : "0");
+                        totalofRateColumn += parseFloat($(item).parent().next().find('input').val().length > 0 ? $(item).parent().next().find('input').val() : "0");
+                        totalofValueColumn += parseFloat($(item).parent().next().next().find('input').val().length > 0 ? $(item).parent().next().next().find('input').val() : "0");
+                    }
+                    else {
+                        totalofQtyColumn += parseFloat($(item).parent().prev().find('input').val().length > 0 ? $(item).parent().prev().find('input').val() : "0");
+                        totalofRateColumn += parseFloat($(item).val().length > 0 ? $(item).val() : "0");
+                        totalofValueColumn += parseFloat($(item).parent().next().find('input').val().length > 0 ? $(item).parent().next().find('input').val() : "0");
+                    }
+                });
+                if ($(this)[0].hasAttribute("data-qty")) {
+                    $(this).closest('table').find('tfoot').find('td:eq(' + ($(this).parent().index() - 1) + ')').find('input').val((totalofQtyColumn).toFixed(2));
+                    $(this).closest('table').find('tfoot').find('td:eq(' + $(this).parent().index() + ')').find('input').val((totalofValueColumn / totalofQtyColumn).toFixed(2));
+                    $(this).closest('table').find('tfoot').find('td:eq(' + ($(this).parent().index() + 1) + ')').find('input').val((totalofValueColumn).toFixed(2));
+                }
+                else {
+                    $(this).closest('table').find('tfoot').find('td:eq(' + ($(this).parent().index() - 1) + ')').find('input').val((totalofValueColumn / totalofQtyColumn).toFixed(2));
+                    $(this).closest('table').find('tfoot').find('td:eq(' + ($(this).parent().index() - 2) + ')').find('input').val((totalofQtyColumn).toFixed(2));
+                    $(this).closest('table').find('tfoot').find('td:eq(' + $(this).parent().index() + ')').find('input').val((totalofValueColumn).toFixed(2));
+                }
+            }
+            CalculatePackingTotal();
+            CalculateProductTotal();
+        });
+        $('#btnSavePacking').on('click', function () {
+            if ($('#frmPacking').valid() && PackingNotDuplicate()) {
+                $.ajax({
+                    type: "POST",
+                    url: '@Url.Action("CheckPackingInUse","Product")',
+                    data: { ProductID: $('#ID').val(), PackingID: $('#ddlPacking').data('oldvalue') },
+                    success: function (result) {
+                        if (result.toUpperCase() == "FALSE") {
+                            if ($('#ddlPacking').data('oldvalue').toString().length > 0 && $('#ddlPacking').data('oldvalue').toString() != "0") {
+                                $('#tblShadeWithPacking td[data-packingtitle="' + $('#ddlPacking').data('oldvalue') + '"]').attr('data-packingtitle', $('#ddlPacking').val());
+                                $('#tblShadeWithPacking thead tr:eq(0) td[data-packingtitle="' + $('#ddlPacking').val() + '"]').text($('#ddlPacking option:selected').text() + " (Openings)");
+                                var currentRow = $('#tblPacking tr td:nth-child(1)').filter(function (index, item) { return $(item).data('packingid') == $('#ddlPacking').data('oldvalue') }).parent();
+                                $(currentRow).data('packingid', $('#ddlPacking').val());
+                                var selMulti = $.map($("#ddlPackingParty option:selected"), function (el, i) {
+                                    return $(el).text();
+                                });
+                                currentRow.html('<td data-packingid="' + $('#ddlPacking').val() + '">' + $('#ddlPacking option:selected').text() + '</td>' +
+                               '<td ' + ($('#ddlPackingParty').prop('disabled') ? "style='display:none'" : "") + ' data-partyids="' + $('#ddlPackingParty').val() + '">' + selMulti.join(',') + '</td>' +
+                               '<td>' + $('#txtPackingOpeningQty').val() + '</td>' +
+                               '<td>' + $('#txtPackingOpeningRate').val() + '</td>' +
+                               '<td>' + $('#txtPackingOpeningValue').val() + '</td>');
+                            }
+                            else {
+                                var selMulti = $.map($("#ddlPackingParty option:selected"), function (el, i) {
+                                    return $(el).text();
+                                });
+                                $('#tblPacking tbody').append('<tr data-packingid="' + ($('#txtPackingID').val() == "" ? "0" : $('#txtPackingID').val()) + '">' +
+                               '<td data-packingid="' + $('#ddlPacking').val() + '">' + $('#ddlPacking option:selected').text() + '</td>' +
+                               '<td ' + ($('#ddlPackingParty').prop('disabled') ? "style='display:none'" : "") + ' data-partyids="' + $('#ddlPackingParty').val() + '">' + selMulti.join(',') + '</td>' +
+                               '<td>' + $('#txtPackingOpeningQty').val() + '</td>' +
+                               '<td>' + $('#txtPackingOpeningRate').val() + '</td>' +
+                               '<td>' + $('#txtPackingOpeningValue').val() + '</td></tr>');
+                                $('#tblShadeWithPacking thead tr:eq(0)').append('<td colspan="3"  data-packingtitle="' + $('#ddlPacking').val() + '" data-packingid="' + $('#txtPackingID').val() + '">' +
+                                    $('#ddlPacking option:selected').text() + ' (Openings)</td>');
+                                if ($('#tblShadeWithPacking thead tr:eq(1) td').length > 1) {
+                                    $('#tblShadeWithPacking thead tr:eq(1)').append('<td data-packingtitle="' + $('#ddlPacking').val() + '">Qty</td><td data-packingtitle="' + $('#ddlPacking').val() + '">Rate</td><td data-packingtitle="' + $('#ddlPacking').val() + '">Value</td>');
+                                }
+                                else {
+                                    $('#tblShadeWithPacking thead tr:eq(1)').append('<td></td><td data-packingtitle="' + $('#ddlPacking').val() + '">Qty</td><td data-packingtitle="' + $('#ddlPacking').val() + '">Rate</td><td data-packingtitle="' + $('#ddlPacking').val() + '">Value</td>');
+                                }
+
+                                $.each($('#tblShadeWithPacking tbody tr'), function (index, item) {
+                                    var lastTd = $(item).find('td:last');
+                                    if (lastTd.length > 0) {
+                                        $(item).append('<td data-packingtitle="' + $('#ddlPacking').val() + '"><input type="text" data-qty class="numeric form-control" /></td>' +
+                                            '<td data-packingtitle="' + $('#ddlPacking').val() + '"><input data-rate type="text" class="numeric form-control" /></td>' +
+                                            '<td data-packingtitle="' + $('#ddlPacking').val() + '"><input type="text" data-value class="numeric form-control" /></td>');
+                                    }
+                                    else {
+                                        $(item).append('<td><select class="form-control">' + shadesHTML + '</select></td>' +
+                                            '<td><select multiple="multiple" class="select2 form-control" style="width:200px">' + partiesHTML + '</select></td>' +
+                                            '<td data-packingtitle="' + $('#ddlPacking').val() + '"><input type="text" data-qty class="numeric form-control" /></td>' +
+                                            '<td  data-packingtitle="' + $('#ddlPacking').val() + '"><input type="text" data-rate class="numeric form-control" /></td>' +
+                                            '<td  data-packingtitle="' + $('#ddlPacking').val() + '"><input type="text" data-value class="numeric form-control" /></td>');
+                                        $("#tblShadeWithPacking tbody tr:last .select2").selectize({
+                                            placeholder: 'Select parties',
+                                            multiple: true
+                                        });
+                                    }
+                                });
+                                $('#tblShadeWithPacking tfoot tr:first').append('<td data-packingtitle="' + $('#ddlPacking').val() + '"><input data-qty type="text" disabled class="numeric form-control" /></td>' +
+                                    '<td data-packingtitle="' + $('#ddlPacking').val() + '"><input type="text" data-rate disabled class="numeric form-control" /></td>' +
+                                    '<td data-packingtitle="' + $('#ddlPacking').val() + '"><input type="text" data-value disabled class="numeric form-control" /></td>');
+                                $('#ddlPackingParty')[0].selectize.clear();
+                                $("#tblShadeWithPacking tr td:last-child input").attr('disabled', 'disabled');
+                            }
+                            if ($('#tblPacking tbody tr').length > 3) {
+                                $('#tblShadeWithPacking').css('width', '5000px');
+                            }
+                            else {
+                                $('#tblShadeWithPacking').css('width', '100%');
+                            }
+                            $('#frmPacking')[0].reset();
+                            ShowHideShadeTables();
+                            CalculatePackingTotal();
+                            CalculateProductTotal();
+                        }
+                        else {
+                            swal("Opppsss", "Packing is in use, You can not update this packing.");
+                        }
+                    }
+                })
+
+            }
+            else {
+                $('#frmPacking').validate();
+            }
+        });
+    });
+
+    function ShowHideShadeTables() {
+        if ($('#tblPacking tbody tr').length > 0 && $('[href="#packingpanel"]').parent().is(':visible')) {
+            $('#tblShadeWithPacking').show();
+            $('#tblShade').hide();
+        }
+        else {
+            $('#tblShadeWithPacking').hide();
+            $('#tblShade').show();
+        }
+    }
+
+    function PackingNotDuplicate() {
+        if ($('#tblPacking tr td:nth-child(1)').filter(function (index, item) {
+            return $(item).data('packingid') == $('#ddlPacking').val()
+        }).length > 0 &&
+            $('#ddlPacking').data('oldvalue') != $('#ddlPacking').val()) {
+            swal("Duplicate", "Packing name is already exist, Please enter another packing name.");
+            return false;
+        }
+        else {
+            return true;
+        }
+    }
+</script>

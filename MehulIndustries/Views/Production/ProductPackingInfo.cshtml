@@ -1,0 +1,103 @@
+﻿@model IEnumerable<ViewModels.Batch>
+@if (Model != null)
+{
+    <div class="row">
+        <div class="col-md-6">
+            <label>Batch Qty : @(Model.FirstOrDefault().ProductionQty + " " + Model.FirstOrDefault().BatchUnit) </label>
+        </div>
+        <div class="col-md-6">
+            <label>Ordered Qty : @(Model.FirstOrDefault().OrderedQty + " " + Model.FirstOrDefault().BatchUnit) </label>
+        </div>
+    </div>
+    <table class="table table-striped table-bordered" id="tblPacking">
+        <thead>
+            <tr>
+                <td>
+                    Product
+                </td>
+                <td>
+                    Shade
+                </td>
+                <td>
+                    Packing Info
+                </td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>
+                    @Model.FirstOrDefault().ProductName
+                </td>
+                <td>
+                    @Model.FirstOrDefault().ShadeName
+                </td>
+                <td>
+                    <table class="table table-striped table-bordered" id="tblProductPacking">
+                        <thead>
+                            <tr>
+                                <td>
+                                    Packing Name
+                                </td>
+                                <td>
+                                    Drums to be packed in
+                                </td>
+                                <td>
+                                    Qty
+                                </td>
+                            </tr>
+
+                        </thead>
+                        <tbody>
+                            @foreach (var packing in Model)
+                            {
+                                if (packing.BatchPackings != null)
+                                {
+                                    var packingOrderedQty = packing.BatchPackings.Where(x => x.PackingID == packing.PackingID).Sum(y => Convert.ToDecimal(y.Qty));
+                                    <tr>
+                                        <td>
+                                            @packing.PackingName
+                                        </td>
+                                        <td>
+                                            @if (ViewBag.PackingProductList != null)
+                                            {
+                                                @Html.DropDownList("ddlPackingProduct", new SelectList(ViewBag.PackingProductList, "ID", "Name"), "-- Select Product --", new { @class = "form-control" })
+                                            }
+                                            else
+                                            {
+                                                @Html.DropDownList("ddlPackingProduct", new List<SelectListItem>(), "-- Select Product --", new { @class = "form-control" })
+                                            }
+                                        </td>
+                                        <td>
+                                            <input data-packingid="@packing.PackingID" data-conversionfactorwithltr="@packing.ConversionFactorWithLtr" type="text" class="numeric form-control" value="@packingOrderedQty" />
+                                        </td>
+                                    </tr>
+                                }
+
+                            }
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td colspan="2">Total</td>
+                                <td></td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </td>
+            </tr>
+        </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="3" class="text-right">
+                    @if (Model.FirstOrDefault().PackingStartDate.HasValue)
+                    {
+                        <button data-assignbatch data-productionqty="@Model.FirstOrDefault().ProductionQty" data-batchid="@Model.FirstOrDefault().ID" type="button" class="btn btn-success waves-effect waves-light">Done</button>
+                    }
+                    else
+                    {
+                        <button data-startbatch data-productionqty="@Model.FirstOrDefault().ProductionQty" data-batchid="@Model.FirstOrDefault().ID" type="button" class="btn btn-primary waves-effect waves-light">Start</button>
+                    }
+                </td>
+            </tr>
+        </tfoot>
+    </table>
+}

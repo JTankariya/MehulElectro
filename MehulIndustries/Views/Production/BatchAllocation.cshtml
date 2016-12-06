@@ -1,0 +1,342 @@
+﻿@model IEnumerable<ViewModels.Batch>
+@{
+    ViewBag.Title = "BatchAllocation";
+    Layout = "~/Views/Shared/_Dashboard.cshtml";
+    IEnumerable<ViewModels.Batch> mainRow = new List<ViewModels.Batch>();
+    if (Model != null)
+    {
+        mainRow = Model.Select(x => new
+        {
+            ProductID = x.ProductID,
+            ShadeID = x.ShadeID,
+            ProductName = x.ProductName,
+            ShadeName = x.ShadeName,
+            BatchMin = x.BatchMin,
+            BatchIdeal = x.BatchIdeal,
+            BatchMax = x.BatchMax,
+            BatchNo = x.BatchNo,
+            WPL=x.WPL,
+            OrderedQty = Model.Where(y => y.ProductID == x.ProductID && y.ShadeID == x.ShadeID).Sum(z => z.OrderedQty * Convert.ToDecimal(z.ConversionFactorWithLtr))
+        }).Distinct().Select(x => new ViewModels.Batch
+        {
+            ProductID = x.ProductID,
+            ShadeID = x.ShadeID,
+            ProductName = x.ProductName,
+            ShadeName = x.ShadeName,
+            BatchMin = x.BatchMin,
+            BatchIdeal = x.BatchIdeal,
+            BatchMax = x.BatchMax,
+            BatchNo = x.BatchNo,
+            WPL=x.WPL,
+            OrderedQty = x.OrderedQty
+        });
+    }
+}
+
+@Styles.Render("~/Content/css/customsweetswitcheryselect2css")
+<div class="row">
+    <div class="col-md-10 col-md-offset-1">
+        <div class="portlet">
+            <div class="portlet-heading bg-primary">
+                <h3 class="portlet-title">
+                    Batch Allocation
+                </h3>
+                <div class="portlet-widgets">
+                    <button type="button" data-assignbatch class="btn btn-default waves-effect waves-light">Assign Selected Batch</button>
+                    <span class="divider"></span>
+                    <a data-toggle="collapse" data-parent="#accordion1" href="#bg-primary" class="" aria-expanded="true"><i class="ion-minus-round"></i></a>
+                </div>
+                <div class="clearfix"></div>
+            </div>
+            <div id="bg-primary" class="panel-collapse collapse in" aria-expanded="true">
+                <div class="portlet-body">
+                    <table class="table table-striped table-bordered" id="tblBatchAllocation">
+                        <thead>
+                            <tr>
+                                <td>
+                                    Check to Allocate
+                                </td>
+                                <td>
+                                    Product
+                                </td>
+                                <td>
+                                    Shade
+                                </td>
+                                <td>
+                                    Batch Size (Min-Ideal-Max)
+                                </td>
+                                <td>
+                                    Order Qty
+                                </td>
+                                <td>
+                                    WPL
+                                </td>
+                                <td>
+                                    Actual Production Qty
+                                </td>
+                                <td>
+                                    Production Qty
+                                </td>
+                                @*<td>
+                                    Employee
+                                </td>*@
+                                <td>
+                                    Batch No
+                                </td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (mainRow != null)
+                            {
+                                foreach (var batch in mainRow)
+                                {
+                                    decimal totalBatch = 1;
+                                    if (batch.OrderedQty > Convert.ToDecimal(batch.BatchMax))
+                                    {
+                                        totalBatch = batch.OrderedQty / Convert.ToDecimal(batch.BatchMax);
+                                        if (Convert.ToString(totalBatch).Contains('.'))
+                                        {
+                                            totalBatch++;
+                                        }
+                                    }
+                                    for (var i = 0; i < Math.Round(totalBatch); i++)
+                                    {
+                                        <tr>
+                                            <td>
+                                                <div class="checkbox checkbox-primary text-center">
+                                                    <input id="@("AllocateBatch"+i + batch.ProductID+batch.ShadeID)" data-productid="@batch.ProductID" data-shadeid="@batch.ShadeID" type="checkbox" name="AllocateBatch">
+                                                    <label for="@("AllocateBatch" + i + batch.ProductID + batch.ShadeID)">
+
+                                                    </label>
+                                                </div>
+                                            </td>
+                                            <td data-productid="@batch.ProductID">
+                                                @batch.ProductName
+                                            </td>
+                                            <td data-shadeid="@batch.ShadeID">
+                                                @batch.ShadeName
+                                            </td>
+                                            <td>
+                                                @(batch.BatchMin + " - " + batch.BatchIdeal + " - " + batch.BatchMax)
+                                            </td>
+                                            <td>
+                                                @batch.OrderedQty
+                                            </td>
+                                            <td>
+                                                @batch.WPL
+                                            </td>
+                                            <td>
+                                                @(Math.Round(batch.OrderedQty * batch.WPL,2))
+                                            </td>
+                                            <td>
+                                                <input type="number" data-ideal="@batch.BatchIdeal" min="@batch.BatchMin" max="@batch.BatchMax" value="@batch.BatchIdeal" class="form-control" />
+                                            </td>
+                                            @*<td>
+                                                @if (ViewBag.Employees != null)
+                                                {
+                                                    @Html.DropDownList("ddlEmployee", new SelectList(ViewBag.Employees, "ID", "Name"), "-- Select Employee --", new { @class = "form-control" })
+                                                }
+                                                else
+                                                {
+                                                    @Html.DropDownList("ddlEmployee", new List<SelectListItem>(), new { @class = "form-control" })
+                                                }
+                                            </td>*@
+                                            <td>
+                                                <input value="@(Convert.ToDecimal(batch.BatchNo)+1)" type="text" class="numeric form-control" />
+                                            </td>
+                                        </tr>
+                                                var packingDetails = Model.Where(x => x.ProductID == batch.ProductID && x.ShadeID == batch.ShadeID);
+                                                if (packingDetails != null)
+                                                {
+
+                                                    <tr>
+                                                        <td colspan="9" class="text-center">
+                                                            <table style="width: 50%;margin: 0px auto; " class="table table-striped table-bordered" id="tblPackings">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <td>
+                                                                            Packing
+                                                                        </td>
+                                                                        <td>
+                                                                            Ordered Qty
+                                                                        </td>
+                                                                        <td>
+                                                                            Packing Qty
+                                                                        </td>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                    @foreach (var packing in packingDetails)
+                                                                    {
+                                                                        <tr>
+                                                                            <td data-packingid="@packing.PackingID">
+                                                                                @packing.PackingName
+                                                                            </td>
+                                                                            <td>
+                                                                                @packing.OrderedQty
+                                                                            </td>
+                                                                            <td>
+                                                                                <input type="text" class="numeric form-control" />
+                                                                            </td>
+                                                                        </tr>
+                                                                    }
+                                                                </tbody>
+                                                            </table>
+                                                        </td>
+                                                    </tr>
+
+                                                }
+
+                                    }
+
+                                }
+                            }
+                        </tbody>
+                        <tfoot></tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@Scripts.Render("~/Content/css/customsweetswitcheryselect2js")
+<script>
+    var currBox = "";
+    $(document).ready(function () {
+        $('#tblBatchAllocation tbody tr td:nth-child(1) input[type="checkbox"]').on('change', function () {
+            if ($(this).is(':checked'))
+                $('#tblBatchAllocation tbody tr td:nth-child(1) input[type="checkbox"][data-productid="' + $(this).data('productid') + '"][data-shadeid="' + $(this).data('shadeid') + '"]').prop('checked', 'checked');
+            else
+                $('#tblBatchAllocation tbody tr td:nth-child(1) input[type="checkbox"][data-productid="1"]').removeAttr('checked');
+        });
+        $('#tblBatchAllocation tbody tr td:nth-child(7) input[type="text"]').on('blur', function () {
+            var currTextBox = this;
+            if ($(this).val() != "") {
+                $.each($('#tblBatchAllocation tbody tr td:nth-child(7) input[type="text"]'), function () {
+                    if ($(this).val() == $(currTextBox).val() && $(currTextBox).parent().parent().index() != $(this).parent().parent().index()) {
+                        swal({
+                            title: "Opppsss",
+                            text: "You have already assigned this batch number to another record, Please enter another number",
+                            type: "error"
+                        }, function () {
+                            $(currTextBox).val("");
+                        });
+                    }
+                });
+            }
+        });
+        $('button[data-assignbatch]').on('click', function () {
+            var batches = [];
+            if ($('#tblBatchAllocation tbody tr td:nth-child(1) input[type="checkbox"]:checked').length == 0) {
+                swal({
+                    title: "Opppsss",
+                    text: "Please select any batch first.",
+                    type: "error"
+                }, function () {
+                });
+            }
+            else {
+                var batchQty = 0, orderedQty = 0;
+                var isMultipleProduct = false;
+                $.each($('#tblBatchAllocation tbody tr td:nth-child(1) input[type="checkbox"]:checked').parent().parent().parent(), function (index, element) {
+                    if ($(this).find('input[type="number"]').val() == "" ||
+                    $(this).find('input[type="text"]').val() == "" ||
+                    $(this).find('select').val() == "") {
+                        swal({
+                            title: "Opppsss",
+                            text: "You must enter Production qty,Employee & batch no first and then you can create Batch.",
+                            type: "error"
+                        }, function () {
+                        });
+                        return false;
+                    }
+                    var bPacking = [];
+                    debugger;
+                    $.each($(this).next().find('table>tbody>tr'), function (index, element) {
+                        bPacking.push({
+                            PackingID: $(this).find('td:eq(0)').data('packingid'),
+                            Qty: $(this).find('input').val()
+                        })
+                    });
+                    batches.push({
+                        ProductID: $(this).find('td:eq(0) input[type="checkbox"]').data('productid'),
+                        ShadeID: $(this).find('td:eq(0) input[type="checkbox"]').data('shadeid'),
+                        OrderedQty: $(this).find('td:eq(4)').text(),
+                        ProductionQty: $(this).find('td:eq(7) input').val(),
+                        //EmployeeID: $(this).find('td:eq(6) select').val(),
+                        BatchNo: $(this).find('td:eq(8) input').val(),
+                        BatchPackings: bPacking
+                    });
+
+                    if (orderedQty > 0 && orderedQty != $(this).find('td:eq(4)').text()) {
+                        isMultipleProduct = true;
+                        if (batchQty < orderedQty) {
+                            swal({
+                                title: "Opppsss",
+                                text: "Ordered qty is not satisfied with allocated batch qty, Please check and fullfill them.",
+                                type: "error"
+                            }, function () {
+                            });
+                            return false;
+                        }
+                        batchQty = parseFloat($(this).find('td:eq(5) input').val());
+                        orderedQty = parseFloat($(this).find('td:eq(4)').text())
+                    }
+                    else {
+                        batchQty += parseFloat($(this).find('td:eq(5) input').val());
+                        orderedQty = parseFloat($(this).find('td:eq(4)').text());
+                    }
+                });
+
+                if (!isMultipleProduct && batchQty < orderedQty) {
+                    swal({
+                        title: "Opppsss",
+                        text: "Ordered qty is not satisfied with allocated batch qty, Please check and fullfill them.",
+                        type: "error"
+                    }, function () {
+                    });
+                    return false;
+                }
+                else {
+                    if (batches.length == $('#tblBatchAllocation tbody tr td:nth-child(1) input[type="checkbox"]:checked').length) {
+                        batches = JSON.stringify({ 'batches': batches });
+                        $.ajax({
+                            type: "POST",
+                            contentType: 'application/json; charset=utf-8',
+                            dataType: 'json',
+                            url: '@Url.Action("AllocateBatch","Production")',
+                            data: batches,
+                            success: function (result) {
+                                if (result.IsSuccess == true) {
+                                    window.location.reload(true);
+                                }
+                                else {
+                                    swal({
+                                        title: "Opppsss",
+                                        text: "test" + result.ResponseValue,
+                                        type: "error"
+                                    }, function () {
+                                    });
+                                }
+                            }
+                        });
+                    }
+                }
+            }
+        });
+        $('input[type="number"]').on('blur', function () {
+            currBox = this;
+            if ($(this).val() != "") {
+                if (parseFloat($(this).val()) < parseFloat($(this).attr('min')) || parseFloat($(this).val()) > parseFloat($(this).attr('max'))) {
+                    swal({
+                        title: "Opppsss",
+                        text: "You can not set value less then Batch Min Size(" + $(this).attr('min') + ") and Greater then Batch Max Size(" + $(this).attr('max') + ").",
+                        type: "error"
+                    }, function () {
+                        $(currBox).val($(currBox).data('ideal'));
+                    });
+                }
+            }
+        });
+    });
+</script>

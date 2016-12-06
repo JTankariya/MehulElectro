@@ -1,0 +1,179 @@
+﻿@model ViewModels.Packing
+@{
+    ViewBag.Title = "Add";
+    Layout = "~/Views/Shared/_Dashboard.cshtml";
+}
+@Styles.Render("~/Content/css/customsweetcss")
+<div class="row">
+    <div class="col-lg-offset-2 col-lg-8">
+        <div class="card-box">
+            <h4 class="m-t-0 header-title"><b>Packing Master</b></h4>
+            <p class="text-muted font-13 m-b-30">
+                Add/Edit Packing here
+            </p>
+            @using (Html.BeginForm("Add", "Packing", FormMethod.Post, new { @class = "form-horizontal m-t-20", @id = "frmPacking" }))
+            {
+                <form class="form-horizontal" role="form" data-parsley-validate novalidate>
+                    <div class="form-group">
+                        <label for="hori-pass1" class="col-sm-4 control-label">Name</label>
+                        <div class="col-sm-7">
+                            @Html.HiddenFor(x => x.ID, new { @class = "form-control" })
+                            @Html.TextBoxFor(x => x.Name, new { @class = "form-control", @placeholder = "Packing Name" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputEmail3" class="col-sm-4 control-label">Conversion Factor With Ltr</label>
+                        <div class="col-sm-7">
+                            @Html.TextBoxFor(x => x.ConversionFactorWithLtr, new { @class = "form-control", @placeholder = "Conversion Factor with litter" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-offset-4 col-sm-8">
+                            <a href="@Url.Action("Add", "Packing", new { ID=0})" i id="btnAdd" type="button" class="btn btn-lg btn-default waves-effect waves-light m-l-5">
+                                <i class="ti-plus"></i>&nbsp;&nbsp;Add
+                            </a>
+                            <button id="btnSave" type="submit" class="btn btn-lg btn-primary waves-effect waves-light">
+                                <i class="ti-save"></i>&nbsp;&nbsp; Save
+                            </button>
+                            <button id="btnDelete" type="button" class="btn btn-lg btn-danger waves-effect waves-light m-l-5">
+                                <i class="ti-trash"></i>&nbsp;&nbsp;Delete
+                            </button>
+                            <button id="btnView" type="button" class="btn btn-lg btn-warning waves-effect waves-light m-l-5">
+                                <i class="ti-search"></i>&nbsp;&nbsp;View
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            }
+        </div>
+    </div>
+</div>
+<div id="custom-modal" class="modal-demo">
+    <button type="button" class="close" onclick="Custombox.close();">
+        <span>&times;</span><span class="sr-only">Close</span>
+    </button>
+    <h4 class="custom-modal-title">Packing</h4>
+    <div class="custom-modal-text" id="AllPacking" style="max-height:500px;overflow:auto;">
+
+    </div>
+</div>
+@Scripts.Render("~/Content/css/customsweetjs")
+
+<script>
+    function PackingAdded(response) {
+        swal({
+            title: "Information",
+            text: "Packing is saved successfully.",
+            type: "success"
+        }, function () {
+            $('#btnAdd')[0].click();
+        });
+    }
+
+    $(document).ready(function () {
+        $('#frmPacking').validate({
+            // Specify the validation rules
+            rules: {
+                Name: {
+                    required: true,
+                    remote: {
+                        url: '@Url.Action("CheckDuplicateName","Packing")',
+                        data: { ID: $('#ID').val() },
+                        type: "POST"
+                    }
+                },
+                ConversionFactorWithLtr: {
+                    number: true,
+                    required: true
+                },
+                //ContactPerson: "required",
+                //Mobile: "required"
+            },
+
+            // Specify the validation error messages
+            messages: {
+                Name: {
+                    required: "Please enter Name",
+                    remote:"Packing name is already entered, Please enter another packing name."
+                },
+                ConversionFactorWithLtr: {
+                    required: "Please enter Conversion Factor with litter",
+                    number: "Please enter numbers only."
+                },
+                // Mobile: "Please enter Mobile Number"
+            },
+
+            submitHandler: function (form) {
+                $.ajax({
+                    type: "POST",
+                    url: "@Url.Action("Add","Packing")",
+                    data: $('#frmPacking').serialize(),
+                    success: function (response) {
+                        PackingAdded();
+                    }
+                });
+                return false;
+            }
+        });
+        $('#btnView').click(function () {
+            $.ajax({
+                type: "GET",
+                url: "@Url.Action("GetAll","Packing")",
+                success: function (response) {
+                    $('#AllPacking').html(response);
+                    Custombox.open({
+                        animation: 'rotatedown',
+                        plugin: 'custommodal',
+                        overlayspeed: '100',
+                        overlaycolor: '#36404a',
+                        target: '#custom-modal'
+                    });
+                    $('body').on('dblclick', '#tblPacking tbody tr', function () {
+                        window.location.href = '@Url.Action("Add", "Packing", new { Id="REPLACE"})'.replace('REPLACE', $(this).data('empid'));
+                    });
+                }
+            });
+
+        });
+        $('#btnDelete').click(function () {
+            if ($('#ID').val() == "0") {
+                swal("Please select any record First!", "In order to delete emplyee, You need to select an Packing first.")
+            }
+            else {
+                swal({
+                    title: "Are you sure want to delete this Packing?",
+                    text: "You will not be able to recover this record!",
+                    type: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#DD6B55",
+                    confirmButtonText: "Yes, delete it!",
+                    cancelButtonText: "No, cancel plz!",
+                    closeOnConfirm: false,
+                    closeOnCancel: false
+                }, function (isConfirm) {
+                    if (isConfirm) {
+                        $.ajax({
+                            type: "GET",
+                            url: "@Url.Action("Delete","Packing")",
+                            data: { ID: $('#ID').val() },
+                            success: function (response) {
+                                if (response.IsSuccess == true) {
+                                    swal("Deleted!", "Packing is deleted Successfully.", "success");
+                                    setTimeout(5000, function () {
+                                        $('#btnAdd')[0].click();
+                                    });
+                                }
+                                else {
+                                    swal("Opssss!", "Something seems wrong while deleting Packing.", "error");
+                                }
+                            }
+                        });
+
+                    } else {
+                        swal("Cancelled", "Packing is safe :)", "error");
+                    }
+                });
+            }
+        });
+    });
+</script>

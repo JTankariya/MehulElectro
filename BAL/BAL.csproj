@@ -1,0 +1,102 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{EE04FF61-A976-4CF7-8E2F-526B5F8BDB87}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>BAL</RootNamespace>
+    <AssemblyName>BAL</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="itextsharp, Version=5.5.6.0, Culture=neutral, PublicKeyToken=8354ae6d2174ddca, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Users\WINDOWS10\Downloads\itextsharp-all-5.5.9\itextsharp-src-core\bin\Debug_woDrawing\itextsharp.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AccountLogic.cs" />
+    <Compile Include="BatchLogic.cs" />
+    <Compile Include="BillOfMaterialDetailLogic.cs" />
+    <Compile Include="BillOfMaterialLabParametersLogic.cs" />
+    <Compile Include="BillOfMaterialLogic.cs" />
+    <Compile Include="BOMProcessLogic.cs" />
+    <Compile Include="CommonFunction.cs" />
+    <Compile Include="DispatchLogic.cs" />
+    <Compile Include="EmployeeLogic.cs" />
+    <Compile Include="EmployeeTypeLogic.cs" />
+    <Compile Include="ExceptionLogic.cs" />
+    <Compile Include="ExceptionParameters.cs" />
+    <Compile Include="GrindingLogic.cs" />
+    <Compile Include="InwardLogic.cs" />
+    <Compile Include="LabParameterLogic.cs" />
+    <Compile Include="LabParameterValueTypeLogic.cs" />
+    <Compile Include="OrderLogic.cs" />
+    <Compile Include="PackingLogic.cs" />
+    <Compile Include="PackingProcessLogic.cs" />
+    <Compile Include="PartyAddressLogic.cs" />
+    <Compile Include="PartyGroupLogic.cs" />
+    <Compile Include="PartyLogic.cs" />
+    <Compile Include="PDFFooter.cs" />
+    <Compile Include="ProductGroupLogic.cs" />
+    <Compile Include="ProductGroupTypeLogic.cs" />
+    <Compile Include="ProductLogic.cs" />
+    <Compile Include="ProductPartyLogic.cs" />
+    <Compile Include="ProductUnitLogic.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="QCLogic.cs" />
+    <Compile Include="RawMaterialTypeLogic.cs" />
+    <Compile Include="ReadyAvailableLogic.cs" />
+    <Compile Include="ShadeLogic.cs" />
+    <Compile Include="ShadingLogic.cs" />
+    <Compile Include="StockLogic.cs" />
+    <Compile Include="StringCipher.cs" />
+    <Compile Include="TransportLogic.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\DAL\DAL.csproj">
+      <Project>{39ac1d11-1f58-449e-8ecf-3a1e7abf8f86}</Project>
+      <Name>DAL</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ViewModels\ViewModels.csproj">
+      <Project>{c430a3dd-1639-4f05-8b58-88e98f046013}</Project>
+      <Name>ViewModels</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

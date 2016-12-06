@@ -1,0 +1,34 @@
+﻿@model IEnumerable<ViewModels.Dispatch>
+@Styles.Render("~/Content/css/datatablecss")
+
+<table id="tblDispatch" class="table table-striped table-bordered">
+    <thead>
+        <tr>
+            <th>DO No</th>
+            <th>DO Date</th>
+            <th>Party</th>
+            @*<th>OrderNo</th>*@
+        </tr>
+    </thead>
+
+    <tbody>
+        @if (Model != null)
+        {
+            foreach (var bom in Model)
+            {
+                <tr data-empid="@bom.ID">
+                    <td>@bom.DONo</td>
+                    <td>@bom.DODate.ToShortDateString()</td>
+                    <td>@bom.PartyName</td>
+                    @*<td>@bom.order.OrderNo</td>*@
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+@Scripts.Render("~/Content/js/datatablejs")
+<script>
+    $(document).ready(function () {
+        $('#tblDispatch').DataTable();
+    });
+</script>

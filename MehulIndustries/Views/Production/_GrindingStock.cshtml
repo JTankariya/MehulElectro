@@ -1,0 +1,68 @@
+﻿@model IEnumerable<ViewModels.GrindingMaterial>
+<div class="row">
+    <div class="col-md-12">
+        <button type="button" class="btn btn-lg btn-primary waves-effect waves-light" data-donegrinding>Done Grinding</button>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <table id="tblProduct" class="table table-striped table-bordered">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Code</th>
+                    <th>Stock Qty</th>
+                    <th>Consumed Qty</th>
+                    <th>Min Qty</th>
+                    <th>Reorder Qty</th>
+                    <th>Max Qty</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @if (Model != null)
+                {
+                    foreach (var product in Model)
+                    {
+                        if (Convert.ToDecimal(product.StockQty) - Convert.ToDecimal(product.Qty) < Convert.ToDecimal(product.MinQty))
+                        {
+                            <tr style="background-color: rgba(255, 0, 0, 0.23);">
+                                <td>@product.ProductName</td>
+                                <td>@product.ProductCode</td>
+                                <td style="text-align: right;">@product.StockQty</td>
+                                <td style="text-align: right;">@product.Qty</td>
+                                <td style="text-align: right;">@product.MinQty</td>
+                                <td style="text-align: right;">@product.ReorderQty</td>
+                                <td style="text-align: right;">@product.MaxQty</td>
+                            </tr>
+                        }
+                        else if (Convert.ToDecimal(product.StockQty) - Convert.ToDecimal(product.Qty) < Convert.ToDecimal(product.ReorderQty))
+                        {
+                            <tr style="background-color: rgba(61, 220, 247, 0.25);">
+                                <td>@product.ProductName</td>
+                                <td>@product.ProductCode</td>
+                                <td style="text-align: right;">@product.StockQty</td>
+                                <td style="text-align: right;">@product.Qty</td>
+                                <td style="text-align: right;">@product.MinQty</td>
+                                <td style="text-align: right;">@product.MaxQty</td>
+                                <td style="text-align: right;">@product.ReorderQty</td>
+                            </tr>
+                        }
+                        else
+                        {
+                            <tr>
+                                <td>@product.ProductName</td>
+                                <td>@product.ProductCode</td>
+                                <td style="text-align: right;">@product.StockQty</td>
+                                <td style="text-align: right;">@product.Qty</td>
+                                <td style="text-align: right;">@product.MinQty</td>
+                                <td style="text-align: right;">@product.MaxQty</td>
+                                <td style="text-align: right;">@product.ReorderQty</td>
+                            </tr>
+                        }
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

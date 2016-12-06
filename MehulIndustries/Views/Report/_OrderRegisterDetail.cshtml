@@ -1,0 +1,14 @@
+﻿@model IEnumerable<ViewModels.Order>
+
+@if (Model != null)
+{
+    foreach (var stock in Model)
+    {
+        <tr data-orderid="@stock.ID">
+            <td>@stock.OrderNo</td>
+            <td>@stock.OrderDate.ToString("dd/MM/yyyy")</td>
+            <td>@stock.PartyName</td>
+            <td>@stock.Total</td>
+        </tr>
+    }
+}

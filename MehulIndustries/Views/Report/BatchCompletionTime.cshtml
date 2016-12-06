@@ -1,0 +1,128 @@
+﻿@model IEnumerable<ViewModels.Batch>
+@{
+    ViewBag.Title = "Batch Completion Time";
+    Layout = "~/Views/Shared/_Dashboard.cshtml";
+}
+
+@Styles.Render("~/Content/css/datatablecss")
+<div class="container">
+    <table id="tblBatchTime" class="table table-striped table-bordered">
+        <thead>
+            <tr>
+                <th>Batch No</th>
+                <th>Production Qty</th>
+                <th>Ordered Qty</th>
+                <th>Grinding</th>
+                <th>Shading</th>
+                <th>QC</th>
+                <th>Packing</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @if (Model != null)
+            {
+                foreach (var batch in Model)
+                {
+                    <tr data-empid="@batch.ID">
+                        <td>@batch.BatchNo </td>
+                        <td>@batch.ProductionQty</td>
+                        <td>@batch.OrderedQty</td>
+                        <td>
+                            @if (batch.GrindingStartDate.HasValue)
+                            {
+                                <label>Starts : </label>@batch.GrindingStartDate<br />
+                                if (batch.GrindingDoneDate.HasValue)
+                                {
+                                    <label>Ends : </label>@batch.GrindingDoneDate<br />
+
+                                    var dateDiff = (batch.GrindingStartDate - batch.GrindingDoneDate).Value;
+                                    long durationTicks = Math.Abs(dateDiff.Ticks / TimeSpan.TicksPerMillisecond);
+                                    long hours = durationTicks / (1000 * 60 * 60);
+                                    long minutes = (durationTicks - (hours * 60 * 60 * 1000)) / (1000 * 60);
+
+                                    <label>Total Time : @(hours + " Hours & " + minutes + " Mins")</label>
+                                }
+                            }
+                            else
+                            {
+                                <label>Not yet started</label>
+                            }
+                        </td>
+                        <td>
+                            @if (batch.ShadingStartDate.HasValue)
+                            {
+                                <label>Starts : </label>@batch.ShadingStartDate<br />
+                                if (batch.ShadingDoneDate.HasValue)
+                                {
+                                    <label>Ends : </label>@batch.ShadingDoneDate<br />
+
+                                    var dateDiff = (batch.ShadingStartDate - batch.ShadingDoneDate).Value;
+                                    long durationTicks = Math.Abs(dateDiff.Ticks / TimeSpan.TicksPerMillisecond);
+                                    long hours = durationTicks / (1000 * 60 * 60);
+                                    long minutes = (durationTicks - (hours * 60 * 60 * 1000)) / (1000 * 60);
+
+                                    <label>Total Time : @(hours + " Hours & " + minutes + " Mins")</label>
+                                }
+                            }
+                            else
+                            {
+                                <label>Not yet started</label>
+                            }
+                        </td>
+                        <td>
+                            @if (batch.QCStartDate.HasValue)
+                            {
+                                <label>Starts : </label>@batch.QCStartDate<br />
+                                if (batch.QCDoneDate.HasValue)
+                                {
+                                    <label>Ends : </label>@batch.QCDoneDate<br />
+
+                                    var dateDiff = (batch.QCStartDate - batch.QCDoneDate).Value;
+                                    long durationTicks = Math.Abs(dateDiff.Ticks / TimeSpan.TicksPerMillisecond);
+                                    long hours = durationTicks / (1000 * 60 * 60);
+                                    long minutes = (durationTicks - (hours * 60 * 60 * 1000)) / (1000 * 60);
+
+                                    <label>Total Time : @(hours + " Hours & " + minutes + " Mins")</label>
+                                }
+                            }
+                            else
+                            {
+                                <label>Not yet started</label>
+                            }
+                        </td>
+                        <td>
+                            @if (batch.PackingStartDate.HasValue)
+                            {
+                                <label>Starts : </label>@batch.PackingStartDate<br />
+                                if (batch.PackingDoneDate.HasValue)
+                                {
+                                    <label>Ends : </label>@batch.PackingDoneDate<br />
+
+                                    var dateDiff = (batch.PackingStartDate - batch.PackingDoneDate).Value;
+                                    long durationTicks = Math.Abs(dateDiff.Ticks / TimeSpan.TicksPerMillisecond);
+                                    long hours = durationTicks / (1000 * 60 * 60);
+                                    long minutes = (durationTicks - (hours * 60 * 60 * 1000)) / (1000 * 60);
+
+                                    <label>Total Time : @(hours + " Hours & " + minutes + " Mins")</label>
+                                }
+                            }
+                            else
+                            {
+                                <label>Not yet started</label>
+                            }
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>
+
+@Scripts.Render("~/Content/js/datatablejs")
+
+<script>
+    $(document).ready(function () {
+        $('#tblBatchTime').DataTable();
+    });
+</script>

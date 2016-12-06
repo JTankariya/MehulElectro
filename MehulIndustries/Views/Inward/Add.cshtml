@@ -1,0 +1,500 @@
+﻿@model ViewModels.Inward
+@{
+    ViewBag.Title = "Add";
+    Layout = "~/Views/Shared/_Dashboard.cshtml";
+    if (Model != null && Model.ID == 0)
+    {
+        Model.InwardDate = DateTime.Now;
+    }
+}
+
+@Styles.Render("~/Content/css/customsweetcss")
+
+
+<div class="row">
+    <div class="col-lg-offset-1 col-lg-10">
+        <div class="card-box">
+            <h4 class="m-t-0 header-title"><b>Inward Enter Form</b></h4>
+            <p class="text-muted font-13 m-b-30">
+                Add/Edit Inwards here
+            </p>
+            @using (Html.BeginForm("Add", "Inward", FormMethod.Post, new { @class = "form-horizontal m-t-20", @id = "frmInward" }))
+            {
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="hori-pass1" class="col-sm-4 control-label">Inward No</label>
+                            <div class="col-sm-7">
+                                @Html.HiddenFor(x => x.ID, new { @class = "form-control" })
+                                @Html.TextBoxFor(x => x.InwardNo, new { @class = "form-control", @placeholder = "Inward No" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="hori-pass1" class="col-sm-4 control-label">Date</label>
+                            <div class="col-sm-7">
+                                @Html.TextBoxFor(x => x.InwardDate, "{0:dd/MM/yyyy}", new { @class = "datepicker form-control", @data_mask = "__/__/____", @placeholder = "Inward Date" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="inputEmail3" class="col-sm-4 control-label">Party</label>
+                    <div class="col-sm-7">
+                        @if (ViewBag.Parties != null)
+                        {
+                            @Html.DropDownListFor(x => x.PartyID, new SelectList(ViewBag.Parties, "ID", "Name"), "-- Select Party --", new { @class = "form-control" })
+                        }
+                        else
+                        {
+                            @Html.DropDownListFor(x => x.PartyID, new List<SelectListItem>(), new { @class = "form-control" })
+                        }
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <table id="tblInwardDetails" class="table table-striped table-bordered">
+                            <thead>
+                                <tr>
+                                    <td>
+                                        Delete?
+                                    </td>
+                                    <td>
+                                        Product
+                                    </td>
+                                    <td>
+                                        Qty
+                                    </td>
+                                    <td>
+                                        Rate
+                                    </td>
+                                    <td>
+                                        Total
+                                    </td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model.ID == 0)
+                                {
+                                    <tr>
+                                        <td>
+                                            <button data-deldetail type="button" class="btn btn-sm btn-danger waves-effect waves-light m-l-5">
+                                                <i class="ti-trash"></i>&nbsp;&nbsp;Delete
+                                            </button>
+                                        </td>
+                                        <td class="col-md-2">
+                                            @if (ViewBag.Products != null)
+                                            {
+                                                @Html.DropDownList("ddlProduct", new SelectList(ViewBag.Products, "ID", "Name"), "-- Select Product --", new { @class = "form-control" })
+                                            }
+                                            else
+                                            {
+                                                @Html.DropDownList("ddlProduct", new List<SelectListItem>(), new { @class = "form-control" })
+                                            }
+                                        </td>
+                                        <td class="col-md-2">
+                                            <input type="text" class="numeric form-control" />
+                                        </td>
+                                        <td class="col-md-2">
+                                            <input type="text" class="numeric form-control" />
+                                        </td>
+                                        <td class="col-md-2">
+                                            <input type="text" class="numeric form-control" disabled />
+                                        </td>
+                                    </tr>
+                                }
+                                else
+                                {
+                                    foreach (var detail in Model.inwardDetail)
+                                    {
+                                        <tr data-recordid="@detail.ID">
+                                            <td>
+                                                <button data-deldetail type="button" class="btn btn-sm btn-danger waves-effect waves-light m-l-5">
+                                                    <i class="ti-trash"></i>&nbsp;&nbsp;Delete
+                                                </button>
+                                            </td>
+                                            <td class="col-md-2">
+                                                @if (ViewBag.Products != null)
+                                                {
+                                                    @Html.DropDownList("ddlProduct", new SelectList(ViewBag.Products, "ID", "Name", detail.ProductID), "-- Select Product --", new { @class = "form-control" })
+                                                }
+                                                else
+                                                {
+                                                    @Html.DropDownList("ddlProduct", new List<SelectListItem>(), new { @class = "form-control" })
+                                                }
+                                            </td>
+                                            <td class="col-md-2">
+                                                <input type="text" value="@detail.Qty" class="numeric form-control" />
+                                            </td>
+                                            <td class="col-md-2">
+                                                <input type="text" value="@detail.Rate" class="numeric form-control" />
+                                            </td>
+                                            <td class="col-md-2">
+                                                <input type="text" value="@detail.Total" class="numeric form-control" disabled />
+                                            </td>
+                                        </tr>
+                                    }
+                                    <tr>
+                                        <td>
+                                            <button data-deldetail type="button" class="btn btn-sm btn-danger waves-effect waves-light m-l-5">
+                                                <i class="ti-trash"></i>&nbsp;&nbsp;Delete
+                                            </button>
+                                        </td>
+                                        <td class="col-md-2">
+                                            @if (ViewBag.Products != null)
+                                            {
+                                                @Html.DropDownList("ddlProduct", new SelectList(ViewBag.Products, "ID", "Name"), "-- Select Product --", new { @class = "form-control" })
+                                            }
+                                            else
+                                            {
+                                                @Html.DropDownList("ddlProduct", new List<SelectListItem>(), new { @class = "form-control" })
+                                            }
+                                        </td>
+                                        <td class="col-md-2">
+                                            <input type="text" class="numeric form-control" />
+                                        </td>
+                                        <td class="col-md-2">
+                                            <input type="text" class="numeric form-control" />
+                                        </td>
+                                        <td class="col-md-2">
+                                            <input type="text" class="numeric form-control" disabled />
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td colspan="2">
+                                        Total
+                                    </td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="hori-pass1" class="col-sm-4 control-label">Payment Instruction</label>
+                            <div class="col-sm-7">
+                                @Html.TextAreaFor(x => x.PaymentNarr, new { @class = "form-control", @placeholder = "Payment Instruction", @rows = "2" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="hori-pass1" class="col-sm-4 control-label">Remarks 1</label>
+                            <div class="col-sm-7">
+                                @Html.TextAreaFor(x => x.Remarks1, new { @class = "form-control", @placeholder = "Remarks 1", @rows = "2" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="hori-pass1" class="col-sm-4 control-label">Delivery Instruction</label>
+                            <div class="col-sm-7">
+                                @Html.TextAreaFor(x => x.DeliveryNarr, new { @class = "form-control", @placeholder = "Delivery Instruction", @rows = "2" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="hori-pass1" class="col-sm-4 control-label">Remarks 2</label>
+                            <div class="col-sm-7">
+                                @Html.TextAreaFor(x => x.Remarks2, new { @class = "form-control", @placeholder = "Remarks 2", @rows = "2" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="hori-pass1" class="col-sm-4 control-label">Billing Instruction</label>
+                            <div class="col-sm-7">
+                                @Html.TextAreaFor(x => x.BillingNarr, new { @class = "form-control", @placeholder = "Billing Instruction", @rows = "2" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-offset-4 col-sm-8">
+                        <a href="@Url.Action("Add", "Inward", new { ID = 0 })" i id="btnAdd" type="button" class="btn btn-lg btn-default waves-effect waves-light m-l-5">
+                            <i class="ti-plus"></i>&nbsp;&nbsp;Add
+                        </a>
+                        <button id="btnSave" type="submit" class="btn btn-lg btn-primary waves-effect waves-light">
+                            <i class="ti-save"></i>&nbsp;&nbsp; Save
+                        </button>
+                        <button id="btnDelete" type="button" class="btn btn-lg btn-danger waves-effect waves-light m-l-5">
+                            <i class="ti-trash"></i>&nbsp;&nbsp;Delete
+                        </button>
+                        <button id="btnView" type="button" class="btn btn-lg btn-warning waves-effect waves-light m-l-5">
+                            <i class="ti-search"></i>&nbsp;&nbsp;View
+                        </button>
+                    </div>
+                </div>
+
+            }
+        </div>
+    </div>
+</div>
+
+<div id="custom-modal" class="modal-demo">
+    <button type="button" class="close" onclick="Custombox.close();">
+        <span>&times;</span><span class="sr-only">Close</span>
+    </button>
+    <h4 class="custom-modal-title">Inward</h4>
+    <div class="custom-modal-text" id="AllInward" style="max-height:500px;overflow:auto;">
+
+    </div>
+</div>
+@Scripts.Render("~/Content/css/customsweetjs")
+<script src="@Url.Content("~/Content/plugins/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js")"></script>
+<script src="@Url.Content("~/Content/plugins/bootstrap-inputmask/bootstrap-inputmask.min.js")" type="text/javascript"></script>
+<script>
+    function InwardAdded(response) {
+        swal({
+            title: "Information",
+            text: "Inward is saved successfully.",
+            type: "success"
+        }, function () {
+            $('#btnAdd')[0].click();
+        });
+    }
+    $(document).ready(function () {
+        blankInwardDetailRow = $('#tblInwardDetails>tbody>tr:last')[0].outerHTML;
+        $('body').on('click', '[data-deldetail]', function () {
+            if ($(this).parent().parent().index() != $('#tblInwardDetails>tbody>tr:last').index()) {
+                currDetailRow = $(this).parent().parent();
+                swal({
+                    title: "Are you sure want to delete this Transaction?",
+                    text: "You will not be able to recover this Transaction!",
+                    type: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#DD6B55",
+                    confirmButtonText: "Yes, delete it!",
+                    cancelButtonText: "No, cancel plz!",
+                    closeOnConfirm: false,
+                    closeOnCancel: false
+                }, function (isConfirm) {
+                    if (isConfirm) {
+                        currDetailRow.hide();
+                        CalculateTotal();
+                        swal("Success", "Detail is Deleted :)", "success");
+                    } else {
+                        swal("Cancelled", "Inward is safe :)", "error");
+                    }
+                });
+            }
+        });
+        $('body').on('change', '#tblInwardDetails tr td:nth-child(3) input,#tblInwardDetails tr td:nth-child(4) input', function () {
+            CalculateTotal();
+        });
+        $('body').on('change', '#tblInwardDetails tr td:nth-child(2) select', function () {
+            if (CheckDuplicate() == true) {
+                return false;
+            }
+            if ($('#tblInwardDetails>tbody>tr:last').index() == $(this).parent().parent().index() && $(this).val().length > 0) {
+                $('#tblInwardDetails>tbody').append(blankInwardDetailRow);
+            }
+        });
+
+        $('#frmInward').validate({
+            rules: {
+                InwardNo: {
+                    required: true,
+                    remote: {
+                        url: '@Url.Action("CheckDuplicateInwardNo", "Inward")',
+                        data: { ID: $('#ID').val() },
+                        type: "POST"
+                    }
+                },
+                InwardDate: {
+                    required: true
+                },
+                PartyID: {
+                    required: true
+                }
+            },
+            messages: {
+                InwardNo: {
+                    required: "Please enter Inward Number",
+                    remote: "Inward No is already entered, Please enter another Inward No."
+                },
+                InwardDate: {
+                    required: "Please select Date"
+                },
+                PartyID: {
+                    required: "Please select party"
+                }
+            },
+
+            submitHandler: function (form) {
+                if (grandTotal <= 0) {
+                    swal({
+                        title: "Information",
+                        text: "Please enter Inward details.",
+                        type: "error"
+                    }, function () {
+                    });
+                    return false;
+                }
+                var inward = {};
+                inward.ID = $('#ID').val();
+                inward.InwardNo = $('#InwardNo').val();
+                inward.InwardDate = new Date($('#InwardDate').datepicker("getDate")).toISOString();
+                inward.PartyID = $('#PartyID').val();
+                inward.DeliveryAddressID = $('#DeliveryAddressID').val();
+                inward.TransportID = $('#TransportID').val();
+                inward.BookingAt = $('#BookingAt').val();
+                inward.PaymentNarr = $('#PaymentNarr').val();
+                inward.DeliveryNarr = $('#DeliveryNarr').val();
+                inward.BillingNarr = $('#BillingNarr').val();
+                inward.Remarks1 = $('#Remarks1').val();
+                inward.Remarks2 = $('#Remarks2').val();
+                inward.Total = grandTotal;
+                inward.inwardDetail = [];
+                $.each($('#tblInwardDetails>tbody>tr:not(:last-child)'), function (index, element) {
+                    var detail = {};
+                    detail.ID = $(this).data('recordid');
+                    detail.InwardID = $('#ID').val();
+                    detail.ProductID = $(this).find('>td:eq(1) select').val();
+                    detail.Qty = $(this).find('>td:eq(2) input').val();
+                    detail.Rate = $(this).find('>td:eq(3) input').val();
+                    detail.Total = $(this).find('>td:eq(4) input').val();
+                    detail.IsDeleted = !$(this).is(':visible');
+                    inward.inwardDetail.push(detail);
+                });
+
+                $.ajax({
+                    url: "@Url.Action("Add","Inward")",
+                    type: "POST",
+                    data: JSON.stringify(inward),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (response) {
+                        if (response.IsSuccess) {
+                            InwardAdded();
+                        }
+                        else {
+                            swal("OOpsss", "There is some problem while saving data, Please try after sometime.", "error");
+                        }
+                    }
+                });
+
+                return false;
+            }
+        });
+
+        
+        $('.datepicker').datepicker({
+            autoclose: true,
+            format: 'dd/mm/yyyy',
+            forceParse: false
+        });
+        CalculateTotal();
+        $('#btnView').click(function () {
+            $.ajax({
+                type: "GET",
+                url: "@Url.Action("GetAll", "Inward")",
+                success: function (response) {
+                    $('#AllInward').html(response);
+                    Custombox.open({
+                        animation: 'rotatedown',
+                        plugin: 'custommodal',
+                        overlayspeed: '100',
+                        overlaycolor: '#36404a',
+                        target: '#custom-modal'
+                    });
+                    $('body').on('dblclick', '#tblInward tbody tr', function () {
+                        window.location.href = '@Url.Action("Add", "Inward", new { Id = "REPLACE" })'.replace('REPLACE', $(this).data('empid'));
+                    });
+                }
+            });
+
+        });
+        $('#btnDelete').click(function () {
+            if ($('#ID').val() == "0") {
+                swal("Please select any record First!", "In order to delete Inward, You need to select an Inward first.")
+            }
+            else {
+                if ($('#tblPackings').find('input:disabled').length > 0) {
+                    swal("Opppsss", "You can not delete this Inward as some of this Inward items is already dispatched or moved to production.")
+                }
+                else {
+                    swal({
+                        title: "Are you sure want to delete this Inward?",
+                        text: "You will not be able to recover this record!",
+                        type: "warning",
+                        showCancelButton: true,
+                        confirmButtonColor: "#DD6B55",
+                        confirmButtonText: "Yes, delete it!",
+                        cancelButtonText: "No, cancel plz!",
+                        closeOnConfirm: false,
+                        closeOnCancel: false
+                    }, function (isConfirm) {
+                        if (isConfirm) {
+                            $.ajax({
+                                type: "GET",
+                                url: "@Url.Action("Delete", "Inward")",
+                                data: { ID: $('#ID').val() },
+                                success: function (response) {
+                                    if (response.IsSuccess == true) {
+                                        swal({
+                                            title: "Deleted!",
+                                            text: "Inward is deleted Successfully.",
+                                            type: "success"
+                                        }, function () {
+                                            $('#btnAdd')[0].click();
+                                        });
+                                    }
+                                    else {
+                                        swal("Opssss!", "Something seems wrong while deleting Inward.", "error");
+                                    }
+                                }
+                            });
+
+                        } else {
+                            swal("Cancelled", "Inward is safe :)", "error");
+                        }
+                    });
+                }
+
+            }
+        });
+    });
+
+    var grandTotal = 0;
+    var blankInwardDetailRow = "", currProductDDL = "";
+    var currDetailRow = "";
+    function CheckDuplicate(ctrl) {
+        var products = $('#tblInwardDetails>tbody>tr td:nth-child(1) select').filter(function (index, element) { return $(element).val() == $(ctrl).val() });
+        $.each(products, function (index, element) {
+            if ($(element).parent().parent().find('>td:nth-child(1) select').filter(function (sindex, selement) { return $(selement).val() == $(currentShade).val() }).length > 0 &&
+                $(element).parent().parent().index() != $(ctrl).parent().parent().index()) {
+                $(ctrl).val("");
+                return true;
+            }
+        });
+        return false;
+    }
+    function CalculateTotal() {
+        grandTotal = 0;
+        var qtyTotal = 0;
+        $.each($('#tblInwardDetails>tbody>tr:visible'), function (index, element) {
+            qtyTotal = qtyTotal + GetNumericValue($(element).find('td:eq(2) input').val());
+            $(element).find('td:eq(4) input').val(GetNumericValue($(element).find('td:eq(2) input').val()) * GetNumericValue($(element).find('td:eq(3) input').val()));
+            grandTotal = grandTotal + GetNumericValue($(element).find('td:eq(4) input').val());
+        });
+        $('#tblInwardDetails tfoot tr td:eq(1)').text((isNaN(qtyTotal) ? 0 : qtyTotal));
+        $('#tblInwardDetails tfoot tr td:eq(3)').text((isNaN(grandTotal) ? 0 : grandTotal));
+    }
+</script>

@@ -1,0 +1,124 @@
+﻿
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="A fully featured admin theme which can be used to build CRM, CMS, etc.">
+    <meta name="author" content="Coderthemes">
+    <link rel="shortcut icon" href="@Url.Content("~/Content/images/favicon_1.ico")">
+    <title>@ViewBag.Title</title>
+
+    @Styles.Render("~/Content/css/core")
+    <!--[if lt IE 9]>
+        @Scripts.Render("~/bundles/respond")
+    <![endif]-->
+    @Scripts.Render("~/bundles/modernizr")
+    <style>
+        #topnav .navigation-menu > li > a,
+        #topnav .navigation-menu > li:hover a,
+        #topnav .navigation-menu > li:hover a i,
+        #topnav .has-submenu.active a,
+        #topnav .has-submenu.active a i {
+            color: white;
+        }
+
+        .wrapper {
+            margin-top: 75px;
+        }
+    </style>
+</head>
+<body>
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/jqueryvalidate")
+    <header id="topnav">
+        <div class="topbar-main">
+            <div class="container">
+                <div class="logo">
+                    <a href="index-2.html" class="logo"><i class="md md-equalizer"></i> <span>Mehul Industries &nbsp;&nbsp;&nbsp;</span> </a>
+                </div>
+                <div class="menu-extras">
+                    <ul class="navigation-menu">
+                        <li class="has-submenu active">
+                            <a href="@Url.Action("Index","Dashboard")"><i class="md md-dashboard"></i>Dashboard</a>
+                        </li>
+                        <li class="has-submenu">
+                            <a href="#"><i class="md md-color-lens"></i>Masters</a>
+                            <ul class="submenu">
+                                <li><a href="@Url.Action("Add", "Employee", new { ID=0})">Employees</a></li>
+                                <li><a href="@Url.Action("Add", "Transport", new { ID=0})">Transport</a></li>
+                                <li><a href="@Url.Action("Add", "Shade", new { ID=0})">Shade</a></li>
+                                <li><a href="@Url.Action("Add", "Packing", new { ID=0})">Packing</a></li>
+                                <li><a href="@Url.Action("Add", "ProductGroup", new { ID=0})">Product Group</a></li>
+                                <li><a href="@Url.Action("Add", "Party", new { ID=0})">Party</a></li>
+                                <li><a href="@Url.Action("Add", "Product", new { ID=0})">Product</a></li>
+                                <li><a href="@Url.Action("Add", "LabParameter", new { ID=0})">Lab Parameters</a></li>
+                                <li><a href="@Url.Action("Add", "BillOfMaterial", new { ID=0})">Bill Of Material</a></li>
+                            </ul>
+                        </li>
+                        <li class="has-submenu">
+                            <a href="#"><i class="md md-color-lens"></i>Orders</a>
+                            <ul class="submenu">
+                                <li><a href="@Url.Action("Add", "Order", new { ID=0})">Order Form</a></li>
+                                <li><a href="@Url.Action("ReadyAvailable", "Order")">Ready Available Orders</a></li>
+                                <li><a href="@Url.Action("BatchAllocation", "Production")">Batch Allocation</a></li>
+                                <li><a href="@Url.Action("ClosedOrders", "Order")">Closed Orders</a></li>
+                                <li><a href="@Url.Action("Add", "Dispatch", new { ID = 0 })">Dispatch</a></li>
+                                <li><a href="@Url.Action("Add", "Inward", new { ID = 0 })">Inward Raw Material</a></li>
+                            </ul>
+                        </li>
+                        <li class="has-submenu">
+                            <a href="#"><i class="md md-color-lens"></i>Production</a>
+                            <ul class="submenu">
+                                <li><a href="@Url.Action("Grinding", "Production")">Grinding</a></li>
+                                <li><a href="@Url.Action("Shading", "Production")">Shading</a></li>
+                                <li><a href="@Url.Action("QC", "Production")">QC</a></li>
+                                <li><a href="@Url.Action("Packing", "Production")">Packing</a></li>
+                            </ul>
+                        </li>
+                        <li class="has-submenu">
+                            <a href="#"><i class="md md-color-lens"></i>Reports</a>
+                            <ul class="submenu">
+                                <li><a href="@Url.Action("Stock", "Report")">Stock</a></li>
+                                <li><a href="@Url.Action("BatchStatus", "Report")">Batch Status</a></li>
+                                <li><a href="@Url.Action("BatchCompletionTime", "Report")">Batch Completion Time</a></li>
+                                <li><a href="@Url.Action("OrderRegister", "Report")">Order Register</a></li>
+                                <li><a href="@Url.Action("DispatchRegister", "Report")">Dispatch Register</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                    <ul class="nav navbar-nav navbar-right pull-right">
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle waves-effect waves-light profile" data-toggle="dropdown" aria-expanded="true">
+                                <img src="@Url.Content("~/Content/images/users/avatar-1.jpg")" alt="user-img" class="img-circle">
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a href="@Url.Action("UpdateProfile", "Account")"><i class="ti-user m-r-5"></i>Profile</a></li>
+                                <li><a href="@Url.Action("ChangePassword", "Account")"><i class="ti-settings m-r-5"></i> Change Password</a></li>
+                                <li><a href="@Url.Action("Logout", "Account")"><i class="ti-power-off m-r-5"></i> Logout</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                    <div class="menu-item">
+                        <a class="navbar-toggle">
+                            <div class="lines">
+                                <span></span>
+                                <span></span>
+                                <span></span>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+    <div class="wrapper">
+        @RenderBody()
+    </div>
+    <div id="loader-wrapper" style="display:none">
+        <div id="loader"></div>
+    </div>
+    @Scripts.Render("~/bundles/corejs");
+</body>
+</html>

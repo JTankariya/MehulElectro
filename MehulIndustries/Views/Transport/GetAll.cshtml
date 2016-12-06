@@ -1,0 +1,36 @@
+﻿@model IEnumerable<ViewModels.Transport>
+
+@Styles.Render("~/Content/css/datatablecss")
+<table id="tblTransport" class="table table-striped table-bordered">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Address</th>
+            <th>Contact Person</th>
+            <th>Mobile Number</th>
+            <th>Phone</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @if (Model != null)
+        {
+            foreach (var transport in Model)
+            {
+                <tr data-empid="@transport.ID">
+                    <td>@transport.Name</td>
+                    <td>@transport.Address</td>
+                    <td>@transport.ContactPerson</td>
+                    <td>@transport.Mobile</td>
+                    <td>@transport.Phone</td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+@Scripts.Render("~/Content/js/datatablejs")
+<script>
+    $(document).ready(function () {
+        $('#tblTransport').DataTable();
+    });
+</script>

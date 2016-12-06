@@ -1,0 +1,119 @@
+﻿@model ViewModels.Employee
+@{
+    ViewBag.Title = "UpdateProfile";
+    Layout = "~/Views/Shared/_Dashboard.cshtml";
+}
+
+@Styles.Render("~/Content/css/customsweetcss")
+<div class="row">
+    <div class="col-lg-offset-2 col-lg-8">
+        <div class="card-box">
+            <h4 class="m-t-0 header-title"><b>Update / View your profile</b></h4>
+            <p class="text-muted font-13 m-b-30">
+                Add/Edit Lab Parameter here
+            </p>
+            @using (Html.BeginForm("Add", "UpdateProfile", FormMethod.Post, new { @class = "form-horizontal m-t-20", @id = "frmUpdateProfile" }))
+            {
+
+                <div class="form-group">
+                    <label for="hori-pass1" class="col-sm-4 control-label">Name</label>
+                    <div class="col-sm-7">
+                        @Html.HiddenFor(x => x.ID, new { @class = "form-control" })
+                        @Html.TextBoxFor(x => x.Name, new { @class = "form-control", @placeholder = "Full Name" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="hori-pass1" class="col-sm-4 control-label">Email Id</label>
+                    <div class="col-sm-7">
+                        @Html.TextBoxFor(x => x.EmailId, new { @class = "form-control", @placeholder = "Email Address" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="hori-pass1" class="col-sm-4 control-label">Mobile No</label>
+                    <div class="col-sm-7">
+                        @Html.TextBoxFor(x => x.MobileNo, new { @class = "form-control", @placeholder = "Mobile No" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="hori-pass1" class="col-sm-4 control-label">Username</label>
+                    <div class="col-sm-7">
+                        @Html.TextBoxFor(x => x.UserName, new { @class = "form-control", @placeholder = "User Name" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-offset-4 col-sm-8">
+
+                        <button id="btnSave" type="submit" class="btn btn-lg btn-primary waves-effect waves-light">
+                            <i class="ti-save"></i>&nbsp;&nbsp; Save
+                        </button>
+
+                    </div>
+                </div>
+
+            }
+        </div>
+    </div>
+</div>
+@Scripts.Render("~/Content/css/customsweetjs")
+<script>
+    function UpdateProfileAdded(response) {
+        swal({
+            title: "Information",
+            text: "Profile Updated successfully.",
+            type: "success"
+        }, function () {
+            window.location.href = "@Url.Action("Index","Dashboard")";
+        });
+    }
+
+    $(document).ready(function () {
+        $('#frmUpdateProfile').validate({
+            rules: {
+                EmailId: {
+                    required: true,
+                    remote: {
+                        url: '@Url.Action("CheckDuplicateEmailId", "Employee")',
+                        data: { ID: $('#ID').val() },
+                        type: "POST"
+                    }
+                },
+                UserName: {
+                    required: true,
+                    remote: {
+                        url: '@Url.Action("CheckDuplicateUserName", "Employee")',
+                        data: { ID: $('#ID').val() },
+                        type: "POST"
+                    }
+                },
+                Name: {
+                    required: true
+                }
+            },
+            messages: {
+                Name: {
+                    required: "Please enter Your full name"
+                },
+                EmailId: {
+                    required: "Please enter Email Address",
+                    remote: "Email Id is already exist, Please enter another Email Id"
+                },
+                UserName: {
+                    required: "Please enter User Name",
+                    remote: "User name is already taken by someone else, Please enter another username."
+                }
+            },
+
+            submitHandler: function (form) {
+                $.ajax({
+                    type: "POST",
+                    url: "@Url.Action("UpdateProfile", "Account")",
+                    data: $('#frmUpdateProfile').serialize(),
+                    success: function (response) {
+                        UpdateProfileAdded();
+                    }
+                });
+                return false;
+            }
+        });
+    });
+</script>

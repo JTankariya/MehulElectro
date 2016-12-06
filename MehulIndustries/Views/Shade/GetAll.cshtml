@@ -1,0 +1,27 @@
+﻿@model IEnumerable<ViewModels.Shade>
+@Styles.Render("~/Content/css/datatablecss")
+<table id="tblShade" class="table table-striped table-bordered">
+    <thead>
+        <tr>
+            <th>Name</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @if (Model != null)
+        {
+            foreach (var shade in Model)
+            {
+                <tr data-empid="@shade.ID">
+                    <td>@shade.Name</td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+@Scripts.Render("~/Content/js/datatablejs")
+<script>
+    $(document).ready(function () {
+        $('#tblShade').DataTable();
+    });
+</script>

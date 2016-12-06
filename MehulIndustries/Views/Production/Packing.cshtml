@@ -1,0 +1,185 @@
+﻿@{
+    ViewBag.Title = "Packing";
+    Layout = "~/Views/Shared/_Dashboard.cshtml";
+}
+@Styles.Render("~/Content/css/customsweetswitcheryselect2css")
+
+<div class="row">
+    <div class="col-md-10 col-md-offset-1">
+        <div class="portlet">
+            <div class="portlet-heading bg-primary">
+                <h3 class="portlet-title">
+                    Packing Process
+                </h3>
+                <div class="portlet-widgets">
+                    <span class="divider"></span>
+                    <a data-toggle="collapse" data-parent="#accordion1" href="#bg-primary" class="" aria-expanded="true"><i class="ion-minus-round"></i></a>
+                </div>
+                <div class="clearfix"></div>
+            </div>
+            <div id="bg-primary" class="panel-collapse collapse in" aria-expanded="true">
+                <div class="portlet-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <label>Select batch : </label>
+                            @if (ViewBag.PackingBatches != null)
+                            {
+                                @Html.DropDownList("ddlBatch", new SelectList(ViewBag.PackingBatches, "ID", "BatchNo"), "-- Select Batch No --", new { @class = "form-control", @placeholder = "Select Unit", @style = "width:30%" })
+                            }
+                            else
+                            {
+                                @Html.DropDownList("ddlBatch", new List<SelectListItem>(), new { @class = "form-control", @placeholder = "Select Unit", @disabled = "disabled" })
+                            }
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12" id="productInfo">
+
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@Scripts.Render("~/Content/css/customsweetswitcheryselect2js")
+
+<script>
+    var total = 0;
+    function CalculateTotal(ctrl) {
+        total = 0;
+        $.each($(ctrl).closest('#tblPacking').find('input'), function () {
+            if ($(this).val() != "")
+                total += (parseFloat($(this).val()) * $(this).data('conversionfactorwithltr'));
+        });
+        $(ctrl).closest('#tblPacking').find('tfoot td:eq(1)').text(total);
+    }
+    var currButton = "";
+    $(document).ready(function () {
+        $('#ddlBatch').on('change', function () {
+            if ($(this).val() != "") {
+                $.ajax({
+                    type: "POST",
+                    data: { ID: $(this).val() },
+                    url: '@Url.Action("GetBatchPackings","Production")',
+                    success: function (result) {
+                        if (result && result.length > 0) {
+                            $('#productInfo').html(result);
+
+                            $('#tblPacking input').on('change', function () {
+                                CalculateTotal(this);
+                            });
+
+                            $('#tblPacking tfoot button[data-startbatch]').on('click', function () {
+                                currButton = this;
+                                swal({
+                                    title: "Please confirm?",
+                                    text: "Are you sure want to start this batch?",
+                                    type: "warning",
+                                    showCancelButton: true,
+                                    confirmButtonColor: "#DD6B55",
+                                    confirmButtonText: "Yes, Start it!",
+                                    cancelButtonText: "No, cancel plz!",
+                                    closeOnConfirm: false,
+                                    closeOnCancel: false
+                                }, function (isConfirm) {
+                                    if (isConfirm) {
+                                        $.ajax({
+                                            type: "GET",
+                                            url: "@Url.Action("StartPacking","Production")",
+                                            data: { ID: $(currButton).data('batchid') },
+                                            success: function (response) {
+                                                if (response.IsSuccess == true) {
+                                                    swal({
+                                                        title: "Started!",
+                                                        text: "Batch is Started successfully.",
+                                                        type: "success"
+                                                    }, function () {
+                                                        window.location.reload(true);
+                                                    });
+                                                }
+                                                else {
+                                                    swal("Opssss!", response.ResponseValue, "error");
+                                                }
+                                            }
+                                        });
+
+                                    } else {
+                                        swal("Cancelled", "Batch is not Started :)", "error");
+                                    }
+                                });
+                            });
+
+                            $('#tblPacking tfoot button[data-assignbatch]').on('click', function () {
+                                var IsSuccess = true;
+                                if ($('#tblPacking select').filter(function () { return $(this).val() == ""; }).length == $('#tblPacking select').length)
+                                {
+                                    swal({
+                                        title: "Opppsss",
+                                        text: "Please select packing Product.",
+                                        type: "error"
+                                    }, function () {
+                                    });
+                                    return false;
+                                }
+                                if ($('input:text').filter(function () { return $(this).val() == ""; }).length == $('input:text').length) {
+                                    swal({
+                                        title: "Opppsss",
+                                        text: "Please enter packing Qty in atleast one Packing.",
+                                        type: "error"
+                                    }, function () {
+                                    });
+                                }
+                                else {
+                                    if ($(this).data('productionqty') != total) {
+                                        swal({
+                                            title: "Opppsss",
+                                            text: "Packing Qty is greater then Batch Qty which can not be happen, Please correct your packing detail and then try to save it.",
+                                            type: "error"
+                                        }, function () {
+                                        });
+                                    }
+                                    else {
+                                        var packingDetails = [];
+                                        $.each($('input:text').filter(function () { return $(this).val() != ""; }), function (index, element) {
+                                            packingDetails.push({
+                                                PackingID: $(element).data('packingid'),
+                                                ProductionQty: $(element).val(),
+                                                PackingProductID: $(element).parent().parent().find('select').val()
+                                            });
+                                        });
+                                        $.ajax({
+                                            type: "POST",
+                                            data: JSON.stringify({ ID: $(this).data('batchid'), packingDetails: packingDetails }),
+                                            contentType: 'application/json',
+                                            url: '@Url.Action("PackingDone","Production")',
+                                            success: function (result) {
+                                                if (result.IsSuccess) {
+                                                    window.location.reload(true);
+                                                }
+                                                else {
+                                                    swal({
+                                                        title: "Opppsss",
+                                                        text: "Error while saving data, Please try after sometime.",
+                                                        type: "error"
+                                                    }, function () {
+                                                    });
+                                                }
+                                            }
+                                        })
+                                    }
+                                }
+                            });
+                        }
+                    }
+                })
+            }
+
+        });
+
+
+    });
+</script>

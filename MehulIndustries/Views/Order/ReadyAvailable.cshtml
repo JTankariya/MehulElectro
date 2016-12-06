@@ -1,0 +1,354 @@
+﻿@model IEnumerable<ViewModels.ReadyAvailableOrder>
+@{
+    ViewBag.Title = "ReadyAvailable";
+    Layout = "~/Views/Shared/_Dashboard.cshtml";
+}
+@Styles.Render("~/Content/css/customsweetswitcheryselect2css")
+
+@if (Model != null)
+{
+    var orders = Model.Select(x => new { x.OrderID, x.OrderNo, x.PartyName, x.PartyAddress, x.TransportName, x.BookingAt }).Distinct();
+    if (orders != null)
+    {
+        foreach (var order in orders)
+        {
+            <div class="row">
+                <div class="col-md-8 col-md-offset-2">
+                    <div class="portlet">
+                        <div class="portlet-heading bg-primary">
+                            <h3 class="portlet-title">
+                                Order No : @order.OrderNo
+                            </h3>
+                            <div class="portlet-widgets">
+                                <span class="divider"></span>
+                                <a data-toggle="collapse" data-parent="#accordion1" href="#bg-primary" class="" aria-expanded="true"><i class="ion-minus-round"></i></a>
+                            </div>
+                            <div class="clearfix"></div>
+                        </div>
+                        <div id="bg-primary" class="panel-collapse collapse in" aria-expanded="true">
+                            <div class="portlet-body">
+                                <div class="row">
+                                    <div class="col-md-10">
+                                        <div class="row">
+                                            <div class="col-md-2"><b>Party :</b></div>
+                                            <div class="col-md-10">@order.PartyName</div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-2"><b>Delivery At :</b> </div>
+                                            <div class="col-md-10">@order.PartyAddress</div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-2"><b>Transport :</b></div>
+                                            <div class="col-md-10">@order.TransportName</div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-2"><b>Booking :</b></div>
+                                            <div class="col-md-10">@order.BookingAt</div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2 text-right">
+                                        <button type="button" data-orderitemid="@order.OrderID" class="btn btn-danger waves-effect waves-light">Close Order</button>
+                                    </div>
+                                </div>
+                                @{
+            var orderRows = Model.Where(x => x.OrderID == order.OrderID).Select(x => new { x.ProductID, x.ShadeID, x.ProductName, x.ShadeName }).Distinct();
+            if (orderRows != null)
+            {
+                foreach (var row in orderRows)
+                {
+                    <table class="table table-striped table-bordered">
+                        <thead>
+                            <tr>
+                                <td>
+                                    Product
+                                </td>
+                                <td>
+                                    Shade
+                                </td>
+                                <td>
+                                    Packings
+                                </td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>@row.ProductName</td>
+                                <td>@row.ShadeName</td>
+                                <td>
+                                    @{
+                    var packings = Model.Where(x => x.OrderID == order.OrderID && x.ProductID == row.ProductID && x.ShadeID == row.ShadeID);
+                    if (packings != null)
+                    {
+                        <table class="table table-striped table-bordered">
+                            <thead>
+                                <tr>
+                                    <td>
+                                        Name
+                                    </td>
+                                    <td>
+                                        Qty
+                                    </td>
+                                    <td>
+                                        Rate
+                                    </td>
+                                    <td>
+                                        Stock Qty
+                                    </td>
+                                    <td>
+                                        ?
+                                    </td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var packing in packings)
+                                {
+                                    if (Convert.ToDecimal(packing.Qty) <= packing.AvailableQty && packing.IsSoftDispatched != null)
+                                    {
+                                        <tr style="color:green">
+                                            <td>
+                                                @packing.PackingName
+                                            </td>
+                                            <td>
+                                                @packing.Qty
+                                            </td>
+                                            <td>
+                                                @packing.Rate
+                                            </td>
+                                            <td>
+                                                @packing.AvailableQty
+                                            </td>
+                                            <td>
+                                                @*@if (packing.IsSoftDispatched)
+                                                {*@
+                                                    <label data-dispatched>Moved to Dispatched</label>
+                                                @*}
+                                                else
+                                                {
+                                                    <label for="chkDispatch">Move to Dispatch ?</label> <text> &nbsp; &nbsp; &nbsp;</text>
+                                                    <input data-itemid="@packing.ID" data-movetodispatch type="checkbox" data-plugin="switchery" data-color="#515ffb" />
+                                                }*@
+                                                
+                                            </td>
+                                        </tr>
+                                    }
+                                    else if (Convert.ToDecimal(packing.Qty) > packing.AvailableQty)
+                                    {
+                                        <tr style="color:red">
+                                            <td>
+                                                @packing.PackingName
+                                            </td>
+                                            <td>
+                                                @packing.Qty
+                                            </td>
+                                            <td>
+                                                @packing.Rate
+                                            </td>
+                                            <td>
+                                                @packing.AvailableQty
+                                            </td>
+                                            <td>
+                                                @if (packing.IsMovedToProduction)
+                                                {
+                                                    <label data-moved style="color:darkgray">Moved to Production</label>
+                                                }
+                                                else
+                                                {
+                                                    <button data-itemid="@packing.ID" type="button" data-movetoptoduction class="btn btn-sm btn-warning waves-effect waves-light">
+                                                        <i class="fa fa-shopping-basket"></i>&nbsp;&nbsp;
+                                                        Move To Production
+                                                    </button>
+                                                }
+
+                                            </td>
+                                        </tr>
+                                    }
+                                    else if (Convert.ToDecimal(packing.Qty) < packing.AvailableQty && packing.IsSoftDispatched == null)
+                                    {
+                                        <tr style="color:#99a817">
+                                            <td>
+                                                @packing.PackingName
+                                            </td>
+                                            <td>
+                                                @packing.Qty
+                                            </td>
+                                            <td>
+                                                @packing.Rate
+                                            </td>
+                                            <td>
+                                                @packing.AvailableQty
+                                            </td>
+                                            <td>
+                                                <label>Already Dispatched</label>
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+                            <tfoot></tfoot>
+                        </table>
+
+                    }
+                                    }
+
+                                </td>
+                            </tr>
+                        </tbody>
+                        <tfoot></tfoot>
+                    </table>
+
+                }
+            }
+                                }
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        }
+    }
+}
+@Scripts.Render("~/Content/css/customsweetswitcheryselect2js")
+
+<script>
+    var productionItems = [];
+    var btnMoveToProduction = "";
+    var btnCloseOrder = "";
+    var DispatchItem = "";
+    $(document).ready(function () {
+        $('body').on('change', '[data-movetodispatch]', function () {
+            if ($(this).is(':checked'))
+            {
+                DispatchItem = this;
+                swal({
+                    title: "Are you sure want to Move this item to Production?",
+                    text: "You will not be able to recover this action from here!",
+                    type: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#DD6B55",
+                    confirmButtonText: "Yes, Move it!",
+                    cancelButtonText: "No, Don't Move this!",
+                    closeOnConfirm: false,
+                    closeOnCancel: false
+                }, function (isConfirm) {
+                    if (isConfirm) {
+                        $.ajax({
+                            url: '@Url.Action("MoveToDispatch","Order")',
+                            data: { ID: $(DispatchItem).data('itemid') },
+                            type: "POST",
+                            success: function () {
+                                swal({
+                                    title: "Information",
+                                    text: "Item is moved to Dispatch successfully.",
+                                    type: "success"
+                                }, function () {
+                                    window.location.reload(true);
+                                });
+                            }
+                        })
+
+                    } else {
+                        $(DispatchItem).attr('checked', false);
+                        var event = document.createEvent('HTMLEvents');
+                        event.initEvent('change', true, true);
+                        DispatchItem.dispatchEvent(event);
+                        swal("Cancelled", "Item is safe :)", "error");
+                    }
+                });
+            }
+            
+        });
+        $('body').on('click', '[data-orderitemid]', function () {
+            if ($(this).parent().parent().parent().find('[data-dispatched]').length > 0)
+            {
+                swal({
+                    title: "Opppsss",
+                    text: "You can not close this order as one of its item is moved to dispatched",
+                    type: "error"
+                }, function () {
+                });
+                return false;
+            }
+            if ($(this).parent().parent().parent().find('[data-moved]').length > 0) {
+                swal({
+                    title: "Opppsss",
+                    text: "You can not close this order as one of its item is moved to production",
+                    type: "error"
+                }, function () {
+                });
+                return false;
+            }
+            
+            btnCloseOrder = this;
+            swal({
+                title: "Are you sure want to Close this order?",
+                text: "You will not be able to recover this action from here!",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "Yes, Close it!",
+                cancelButtonText: "No, Don't Close this!",
+                closeOnConfirm: false,
+                closeOnCancel: false
+            }, function (isConfirm) {
+                if (isConfirm) {
+
+                    $.ajax({
+                        url: '@Url.Action("Close","Order")',
+                        data: { ID: $(btnCloseOrder).data('orderitemid') },
+                        type: "POST",
+                        success: function () {
+                            swal({
+                                title: "Information",
+                                text: "Order is closed successfully.",
+                                type: "success"
+                            }, function () {
+                                window.location.reload(true);
+                            });
+                        }
+                    })
+
+                } else {
+                    swal("Cancelled", "Item is safe :)", "error");
+                }
+            });
+        });
+        $('body').on('click', '[data-movetoptoduction]', function () {
+            btnMoveToProduction = this;
+            swal({
+                title: "Are you sure want to Move this to production?",
+                text: "Once you will move, it will be shown to Batch Allocation screen!",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "Yes, Move it!",
+                cancelButtonText: "No, Don't do this!",
+                closeOnConfirm: false,
+                closeOnCancel: false
+            }, function (isConfirm) {
+                if (isConfirm) {
+                    $.ajax({
+                        url: '@Url.Action("MoveToProduction","Order")',
+                        data: { ID: $(btnMoveToProduction).data('itemid') },
+                        type: "POST",
+                        success: function () {
+                            swal({
+                                title: "Information",
+                                text: "Item is moved :)",
+                                type: "success"
+                            }, function () {
+                                var container = $(btnMoveToProduction).parent();
+                                $(btnMoveToProduction).remove();
+                                container.append('<label style="color: darkgray;">Moved To Production</label>');
+                            });
+                        }
+                    })
+
+                } else {
+                    swal("Cancelled", "Item is safe :)", "error");
+                }
+            });
+        });
+    });
+</script>

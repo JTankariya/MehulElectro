@@ -1,0 +1,779 @@
+﻿@model ViewModels.Order
+@Styles.Render("~/Content/css/customsweetcss")
+<link href="@Url.Content("~/Content/plugins/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css")" rel="stylesheet">
+@using (Html.BeginForm("Add", "Order", FormMethod.Post, new { @class = "form-horizontal m-t-20", @id = "frmOrder" }))
+{
+    <div class="row">
+        <div class="col-md-4">
+            <div class="form-group">
+                <label for="hori-pass1" class="col-sm-4 control-label">Order No</label>
+                <div class="col-sm-7">
+                    @Html.HiddenFor(x => x.ID, new { @class = "form-control" })
+                    @Html.TextBoxFor(x => x.OrderNo, new { @class = "form-control numeric", @placeholder = "Order No" })
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="form-group">
+                <label for="hori-pass1" class="col-sm-4 control-label">Date</label>
+                <div class="col-sm-7">
+                    @Html.TextBoxFor(x => x.OrderDate, "{0:dd/MM/yyyy}", new { @class = "datepicker form-control", @data_mask = "__/__/____", @placeholder = "Order Date" })
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="form-group">
+                <label for="hori-pass1" class="col-sm-4 control-label">Booking At</label>
+                <div class="col-sm-7">
+                    @Html.TextBoxFor(x => x.BookingAt, new { @class = "form-control", @placeholder = "Booking At" })
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4">
+            <div class="form-group">
+                <label for="hori-pass1" class="col-sm-4 control-label">Party Order No</label>
+                <div class="col-sm-7">
+                    @Html.TextBoxFor(x => x.PartyOrderNo, new { @class = "form-control", @placeholder = "Party Order No" })
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="form-group">
+                <label for="hori-pass1" class="col-sm-4 control-label">Party Order Date</label>
+                <div class="col-sm-7">
+                    @Html.TextBoxFor(x => x.PartyOrderDate, "{0:dd/MM/yyyy}", new { @class = "datepicker form-control", @data_mask = "__/__/____", @placeholder = "Party Order Date" })
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="form-group">
+                <label for="hori-pass1" class="col-sm-4 control-label">Party Booking City</label>
+                <div class="col-sm-7">
+                    @Html.TextBoxFor(x => x.PartyBookingCity, new { @class = "form-control", @placeholder = "Party Booking City" })
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="inputEmail3" class="col-sm-4 control-label">Party</label>
+        <div class="col-sm-7">
+            @if (ViewBag.Parties != null)
+            {
+                @Html.DropDownListFor(x => x.PartyID, new SelectList(ViewBag.Parties, "ID", "Name"), "-- Select Party --", new { @class = (ViewBag.Dispatch ? "form-control disabled" : "form-control") })
+            }
+            else
+            {
+                @Html.DropDownListFor(x => x.PartyID, new List<SelectListItem>(), new { @class = "form-control" })
+            }
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="inputEmail3" class="col-sm-4 control-label">Delivery Address</label>
+        <div class="col-sm-7">
+            @if (ViewBag.Addresses != null)
+            {
+                @Html.DropDownListFor(x => x.DeliveryAddressID, new SelectList(ViewBag.Addresses, "ID", "Address1", Model.DeliveryAddressID), "-- Select Address --", new { @class = "form-control" })
+            }
+            else
+            {
+                @Html.DropDownListFor(x => x.DeliveryAddressID, new List<SelectListItem>(), new { @class = "form-control" })
+            }
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="inputEmail3" class="col-sm-4 control-label">Transport</label>
+        <div class="col-sm-7">
+            @if (ViewBag.Transports != null)
+            {
+                @Html.DropDownListFor(x => x.TransportID, new SelectList(ViewBag.Transports, "ID", "Name"), "-- Select Transport --", new { @class = "form-control" })
+            }
+            else
+            {
+                @Html.DropDownListFor(x => x.TransportID, new List<SelectListItem>(), new { @class = "form-control" })
+            }
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <table id="tblOrderDetails" class="table table-striped table-bordered">
+                <thead>
+                    <tr>
+                        <td>
+                            Delete?
+                        </td>
+                        <td>
+                            Product
+                        </td>
+                        <td>
+                            Shade
+                        </td>
+                        <td>
+                            Packings
+                        </td>
+                        <td>
+                            Total
+                        </td>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.ID == 0)
+                    {
+                        <tr>
+
+                            <td>
+                                <button data-deldetail type="button" class="btn btn-sm btn-danger waves-effect waves-light m-l-5">
+                                    <i class="ti-trash"></i>&nbsp;&nbsp;Delete
+                                </button>
+                            </td>
+                            <td class="col-md-2">
+                                @if (ViewBag.Products != null)
+                                {
+                                    @Html.DropDownList("ddlProduct", new SelectList(ViewBag.Products, "ID", "Name"), "-- Select Product --", new { @class = "form-control" })
+                                }
+                                else
+                                {
+                                    @Html.DropDownList("ddlProduct", new List<SelectListItem>(), new { @class = "form-control" })
+                                }
+                            </td>
+                            <td class="col-md-2">
+                                @if (ViewBag.Shades != null)
+                                {
+                                    @Html.DropDownList("ddlShade", new SelectList(ViewBag.Shades, "ID", "Name"), "-- Select Shade --", new { @class = "form-control" })
+                                }
+                                else
+                                {
+                                    @Html.DropDownList("ddlShade", new List<SelectListItem>(), new { @class = "form-control" })
+                                }
+                            </td>
+                            <td class="col-md-7">
+                                <table id="tblPackings" class="table table-striped table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <td>
+                                                Name (Closing)
+                                            </td>
+                                            <td>
+                                                Qty
+                                            </td>
+                                            <td>
+                                                Rate
+                                            </td>
+                                            <td>
+                                                Total
+                                            </td>
+                                            <td style="display:none">
+                                                Available
+                                            </td>
+                                            <td style="display:none">
+                                                In Order
+                                            </td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr data-issoftdispatched="false" data-ismovedtoproduction="false">
+                                            <td class="col-md-4"></td>
+                                            <td class="col-md-3">
+                                                <input type="text" class="numeric form-control" />
+                                            </td>
+                                            <td class="col-md-3">
+                                                <input type="text" class="numeric form-control" />
+                                            </td>
+                                            <td class="col-md-2"></td>
+                                            <td style="display:none"></td>
+                                            <td style="display:none"></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </td>
+                            <td class="col-md-1"></td>
+                        </tr>
+                    }
+                    else
+                    {
+                        var packings = Model.orderDetail.Select(x => new { ProductID = x.ProductID, ShadeID = x.ShadeID }).Distinct();
+                        foreach (var detail in packings)
+                        {
+                            <tr>
+                                <td>
+                                    <button data-deldetail type="button" class="btn btn-sm btn-danger waves-effect waves-light m-l-5">
+                                        <i class="ti-trash"></i>&nbsp;&nbsp;Delete
+                                    </button>
+                                </td>
+                                <td class="col-md-2">
+                                    @if (ViewBag.Products != null)
+                                    {
+                                        @Html.DropDownList("ddlProduct", new SelectList(ViewBag.Products, "ID", "Name", detail.ProductID), "-- Select Product --", new { @class = "form-control" })
+                                    }
+                                    else
+                                    {
+                                        @Html.DropDownList("ddlProduct", new List<SelectListItem>(), new { @class = "form-control" })
+                                    }
+                                </td>
+                                <td class="col-md-2">
+                                    @{
+                            var productShades = BAL.ShadeLogic.GetShadeByProductID(detail.ProductID).Select(x => new { ShadeID = x.ShadeID, ShadeName = x.ShadeName }).Distinct();
+                                    }
+                                    @if (productShades != null)
+                                    {
+                                        @Html.DropDownList("ddlShade", new SelectList(productShades, "ShadeID", "ShadeName", detail.ShadeID), "-- Select Shade --", new { @class = "form-control" })
+                                    }
+                                    else
+                                    {
+                                        @Html.DropDownList("ddlShade", new List<SelectListItem>(), new { @class = "form-control" })
+                                    }
+                                </td>
+                                <td class="col-md-7">
+                                    <table id="tblPackings" class="table table-striped table-bordered">
+                                        <thead>
+                                            <tr>
+                                                <td>
+                                                    Name (Closing)
+                                                </td>
+                                                <td>
+                                                    Qty
+                                                </td>
+                                                <td>
+                                                    Rate
+                                                </td>
+                                                <td>
+                                                    Total
+                                                </td>
+                                                <td style="display:none">
+                                                    Available
+                                                </td>
+                                                <td style="display:none">
+                                                    In Order
+                                                </td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @{
+                                    var packingsDetail = Model.orderDetail.Where(x => x.ProductID == detail.ProductID && x.ShadeID == detail.ShadeID);
+                                    if (packingsDetail != null)
+                                    {
+                                        foreach (var packing in packingsDetail)
+                                        {
+                                            <tr data-recordid="@packing.ID" data-issoftdispatched="@packing.IsSoftDispatched" data-ismovedtoproduction="@packing.IsMovedToProduction">
+                                                <td class="col-md-4" data-packingid="@packing.PackingID">@packing.PackingName</td>
+                                                <td class="col-md-3">
+                                                    <input type="text" class="numeric form-control" @(packing.IsSoftDispatched || packing.IsMovedToProduction ? "disabled" : "") value="@packing.Qty" />
+                                                </td>
+                                                <td class="col-md-3">
+                                                    <input type="text" class="numeric form-control" @(packing.IsSoftDispatched || packing.IsMovedToProduction ? "disabled" : "") value="@packing.Rate" />
+                                                </td>
+                                                <td class="col-md-2">@(Convert.ToDecimal(packing.Qty) * Convert.ToDecimal(packing.Rate))</td>
+                                                <td style="display:none"></td>
+                                                <td style="display:none"></td>
+                                            </tr>
+                                        }
+                                    }
+                                    var productPackings = BAL.PackingLogic.GetPackingByProductID(detail.ProductID);
+                                    if (productPackings != null)
+                                    {
+                                        foreach (var packing in productPackings)
+                                        {
+                                            if (packingsDetail.Where(x => x.PackingID == packing.PackingID && x.ProductID == detail.ProductID).Count() == 0)
+                                            {
+                                                <tr data-recordid="@packing.ID" data-issoftdispatched="False" data-ismovedtoproduction="False">
+                                                    <td class="col-md-4" data-packingid="@packing.PackingID">@packing.PackingName</td>
+                                                    <td class="col-md-3">
+                                                        <input type="text" class="numeric form-control" value="0" />
+                                                    </td>
+                                                    <td class="col-md-3">
+                                                        <input type="text" class="numeric form-control" value="0" />
+                                                    </td>
+                                                    <td class="col-md-2">0</td>
+                                                    <td style="display:none"></td>
+                                                    <td style="display:none"></td>
+                                                </tr>
+                                            }
+                                        }
+                                    }
+                                            }
+
+
+                                        </tbody>
+                                    </table>
+                                </td>
+                                <td class="col-md-1"></td>
+                            </tr>
+                        }
+                        if (!ViewBag.Dispatch)
+                        {
+                            <tr>
+                                <td>
+                                    <button data-deldetail type="button" class="btn btn-sm btn-danger waves-effect waves-light m-l-5">
+                                        <i class="ti-trash"></i>&nbsp;&nbsp;Delete
+                                    </button>
+                                </td>
+                                <td class="col-md-2">
+                                    @if (ViewBag.Products != null)
+                                    {
+                                        @Html.DropDownList("ddlProduct", new SelectList(ViewBag.Products, "ID", "Name"), "-- Select Product --", new { @class = "form-control" })
+                                    }
+                                    else
+                                    {
+                                        @Html.DropDownList("ddlProduct", new List<SelectListItem>(), new { @class = "form-control" })
+                                    }
+                                </td>
+                                <td class="col-md-2">
+                                    @if (ViewBag.Shades != null)
+                                    {
+                                        @Html.DropDownList("ddlShade", new SelectList(ViewBag.Shades, "ID", "Name"), "-- Select Shade --", new { @class = "form-control" })
+                                    }
+                                    else
+                                    {
+                                        @Html.DropDownList("ddlShade", new List<SelectListItem>(), new { @class = "form-control" })
+                                    }
+                                </td>
+                                <td class="col-md-7">
+                                    <table id="tblPackings" class="table table-striped table-bordered">
+                                        <thead>
+                                            <tr>
+                                                <td>
+                                                    Name (Closing)
+                                                </td>
+                                                <td>
+                                                    Qty
+                                                </td>
+                                                <td>
+                                                    Rate
+                                                </td>
+                                                <td>
+                                                    Total
+                                                </td>
+                                                <td style="display:none">
+                                                    Available
+                                                </td>
+                                                <td style="display:none">
+                                                    In Order
+                                                </td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr data-issoftdispatched="false" data-ismovedtoproduction="false">
+                                                <td class="col-md-4"></td>
+                                                <td class="col-md-3">
+                                                    <input type="text" class="numeric form-control" />
+                                                </td>
+                                                <td class="col-md-3">
+                                                    <input type="text" class="numeric form-control" />
+                                                </td>
+                                                <td class="col-md-2"></td>
+                                                <td style="display:none"></td>
+                                                <td style="display:none"></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </td>
+                                <td class="col-md-1"></td>
+                            </tr>
+                        }
+
+                    }
+
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="2">
+                            Total
+                        </td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="hori-pass1" class="col-sm-4 control-label">Payment Instruction</label>
+                <div class="col-sm-7">
+                    @Html.TextAreaFor(x => x.PaymentNarr, new { @class = "form-control", @placeholder = "Payment Instruction", @rows = "2" })
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="hori-pass1" class="col-sm-4 control-label">Remarks 1</label>
+                <div class="col-sm-7">
+                    @Html.TextAreaFor(x => x.Remarks1, new { @class = "form-control", @placeholder = "Remarks 1", @rows = "2" })
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="hori-pass1" class="col-sm-4 control-label">Delivery Instruction</label>
+                <div class="col-sm-7">
+                    @Html.TextAreaFor(x => x.DeliveryNarr, new { @class = "form-control", @placeholder = "Delivery Instruction", @rows = "2" })
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="hori-pass1" class="col-sm-4 control-label">Remarks 2</label>
+                <div class="col-sm-7">
+                    @Html.TextAreaFor(x => x.Remarks2, new { @class = "form-control", @placeholder = "Remarks 2", @rows = "2" })
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="hori-pass1" class="col-sm-4 control-label">Billing Instruction</label>
+                <div class="col-sm-7">
+                    @Html.TextAreaFor(x => x.BillingNarr, new { @class = "form-control", @placeholder = "Billing Instruction", @rows = "2" })
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+    <div class="form-group">
+        <div class="col-sm-offset-4 col-sm-8">
+            <a href="@Url.Action("Add", (ViewBag.Dispatch ? "Dispatch" : "Order"), new { ID = 0 })" i id="btnAdd" type="button" class="btn btn-lg btn-default waves-effect waves-light m-l-5">
+                <i class="ti-plus"></i>&nbsp;&nbsp;Add
+            </a>
+            <button id="btnSave" type="submit" class="btn btn-lg btn-primary waves-effect waves-light">
+                <i class="ti-save"></i>&nbsp;&nbsp; Save
+            </button>
+            <button id="btnDelete" type="button" class="btn btn-lg btn-danger waves-effect waves-light m-l-5">
+                <i class="ti-trash"></i>&nbsp;&nbsp;Delete
+            </button>
+            <button id="btnView" type="button" class="btn btn-lg btn-warning waves-effect waves-light m-l-5">
+                <i class="ti-search"></i>&nbsp;&nbsp;View
+            </button>
+        </div>
+    </div>
+
+}
+@Scripts.Render("~/Content/css/customsweetjs")
+<script src="@Url.Content("~/Content/plugins/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js")"></script>
+<script src="@Url.Content("~/Content/plugins/bootstrap-inputmask/bootstrap-inputmask.min.js")" type="text/javascript"></script>
+<script>
+    var grandTotal = 0;
+    var blankOrderDetailRow = "", currProductDDL = "", blankPackingRow = "";
+    var currDetailRow = "";
+    function CheckDuplicate(ctrl) {
+        if (ctrl.id == 'ddlProduct') {
+            var currentShade = $(ctrl).parent().parent().find('>td:nth-child(3) select');
+            var products = $('#tblOrderDetails>tbody>tr td:nth-child(2) select').filter(function (index, element) { return $(element).val() == $(ctrl).val() });
+            $.each(products, function (index, element) {
+                if ($(element).parent().parent().find('>td:nth-child(3) select').filter(function (sindex, selement) { return $(selement).val() == $(currentShade).val() }).length > 0 &&
+                    $(element).parent().parent().index() != $(ctrl).parent().parent().index()) {
+                    $(ctrl).val("");
+                    return true;
+                }
+            });
+        }
+        else {
+            var currentProduct = $(ctrl).parent().parent().find('>td:nth-child(2) select');
+            var products = $('#tblOrderDetails>tbody>tr td:nth-child(2) select').filter(function (index, element) { return $(element).val() == $(currentProduct).val() });
+            $.each(products, function (index, element) {
+                if ($(element).parent().parent().find('>td:nth-child(3) select').filter(function (sindex, selement) { return $(selement).val() == $(ctrl).val() }).length > 0 &&
+                    $(element).parent().parent().index() != $(ctrl).parent().parent().index()) {
+                    $(ctrl).val("");
+                    return true;
+                }
+            });
+        }
+        return false;
+    }
+    function CalculateTotal() {
+        grandTotal = 0;
+        $.each($('#tblOrderDetails>tbody>tr:visible'), function (index, element) {
+            var productTotal = 0;
+            $.each($(element).find('table>tbody>tr'), function (packingIndex, packingElement) {
+                var packingTotal = GetNumericValue($(this).find('td:eq(1) input').val()) * GetNumericValue($(this).find('td:eq(2) input').val());
+                productTotal += packingTotal;
+                grandTotal += packingTotal;
+                $(this).find('td:eq(3)').text((isNaN(packingTotal) ? 0 : packingTotal));
+            });
+            $(this).find('>td:eq(4)').text((isNaN(productTotal) ? 0 : productTotal))
+        });
+        $('#tblOrderDetails tfoot tr td:eq(3)').text((isNaN(grandTotal) ? 0 : grandTotal));
+    }
+    $(document).ready(function () {
+        blankOrderDetailRow = $('#tblOrderDetails>tbody>tr:last')[0].outerHTML;
+        blankPackingRow = $('#tblOrderDetails>tbody>tr:last #tblPackings>tbody>tr:last');
+        $('body').on('click', '[data-deldetail]', function () {
+
+            currDetailRow = $(this).parent().parent();
+            if ($(currDetailRow).find('input[disabled]').length > 0) {
+                swal({
+                    title: "Opppssssss",
+                    text: "You can not delete this transaction because, One this item is either dispatched or Moved to Production.",
+                    type: "error"
+                });
+                return false;
+            }
+            $.each($(currDetailRow).find('table>tbody>tr'), function (packingIndex, packingElement) {
+                if ($(packingElement).data('issoftdispatched').toUpperCase() == "TRUE" ||
+                    $(packingElement).data('ismovedtoproduction').toUpperCase() == "TRUE") {
+                    swal({
+                        title: "Opppssssss",
+                        text: "You can not delete this transaction as it is already moved for dispatched or moved to transaction.",
+                        type: "error"
+                    });
+                    return false;
+                }
+            })
+
+            if (currDetailRow.index() != $('#tblOrderDetails>tbody>tr:last').index()) {
+                swal({
+                    title: "Are you sure want to delete this Transaction?",
+                    text: "You will not be able to recover this Transaction!",
+                    type: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#DD6B55",
+                    confirmButtonText: "Yes, delete it!",
+                    cancelButtonText: "No, cancel plz!",
+                    closeOnConfirm: false,
+                    closeOnCancel: false
+                }, function (isConfirm) {
+                    if (isConfirm) {
+                        currDetailRow.hide();
+                        CalculateTotal();
+                        swal("Success", "Detail is Deleted :)", "success");
+                    } else {
+                        swal("Cancelled", "Order is safe :)", "error");
+                    }
+                });
+            }
+        });
+
+        $('body').on('change', '#tblPackings tr td:nth-child(2) input,#tblPackings tr td:nth-child(3) input', function () {
+            CalculateTotal();
+        });
+        $('body').on('change', '#tblOrderDetails tr td:nth-child(3) select', function () {
+            if (CheckDuplicate(this) == true) {
+                return false;
+            }
+        });
+        $('body').on('change', '#tblOrderDetails tr td:nth-child(2) select', function () {
+            if (CheckDuplicate(this) == true) {
+                return false;
+            }
+            if ($('#tblOrderDetails>tbody>tr:last').index() == $(this).parent().parent().index() && $(this).val().length > 0) {
+                $('#tblOrderDetails>tbody').append(blankOrderDetailRow);
+            }
+            if ($(this).val().length > 0) {
+                currProductDDL = this;
+                $.ajax({
+                    type: "POST",
+                    url: "@Url.Action("GetProductShadesAndPackings", "Product")",
+                    data: { ID: $(this).val() },
+                    success: function (response) {
+                        if (response && response.IsSuccess && response.IsSuccess == true) {
+                            if (response.ResponseValue && response.ResponseValue.Shades != null) {
+                                var addedShade = [];
+                                strAdd = "<option selected>-- Select Shade --</option>";
+                                $.each(response.ResponseValue.Shades, function (index, element) {
+                                    if (addedShade.filter(function (item, index) { return item == element.ShadeID }).length == 0) {
+                                        strAdd += '<option value="' + element.ShadeID + '">' + element.ShadeName + '</option>';
+                                        addedShade.push(element.ShadeID);
+                                    }
+                                });
+                                $(currProductDDL).parent().next().find('select').html(strAdd);
+                            }
+                            if (response.ResponseValue && response.ResponseValue.Packings != null) {
+                                $(currProductDDL).parent().next().next().find('#tblPackings tbody').empty();
+                                $.each(response.ResponseValue.Packings, function (index, element) {
+                                    $(currProductDDL).parent().next().next().find('#tblPackings tbody').append(blankPackingRow.clone());
+                                    $(currProductDDL).parent().next().next().find('#tblPackings tbody tr:last td:eq(0)').text(element.PackingName);
+                                    $(currProductDDL).parent().next().next().find('#tblPackings tbody tr:last td:eq(0)').attr('data-packingid', element.PackingID);
+                                });
+                            }
+                            CalculateTotal();
+                        }
+                    }
+                });
+            }
+
+        });
+        $('#PartyID').on('change', function () {
+            if ($('#PartyID').val() != "" && parseInt($('#PartyID').val()) > 0) {
+                $.ajax({
+                    type: "POST",
+                    url: "@Url.Action("GetPartyAddresses", "Party")",
+                    data: { ID: $('#PartyID').val() },
+                    success: function (response) {
+                        if (response && response.IsSuccess && response.IsSuccess == true) {
+                            strAdd = "<option selected>-- Select Address --</option>";
+                            $.each(response.ResponseValue, function (index, element) {
+                                var addressString = GetStringValue(element.Address1) + (element.Address1 != null && element.Address1.length > 0 ? + "," + GetStringValue(element.Address2) : GetStringValue(element.Address2)) +
+                                    (element.Address2 != null && element.Address2.length > 0 ? + "," + GetStringValue(element.Address3) : GetStringValue(element.Address3)) +
+                                    (element.Address3 != null && element.Address3.length > 0 ? + "," + GetStringValue(element.City) : GetStringValue(element.City)) +
+                                    (element.City != null && element.City.length > 0 ? + "," + GetStringValue(element.State) : GetStringValue(element.State));
+                                if (addressString.length > 0) {
+                                    strAdd += '<option value="' + element.ID + '" data-Transport="' + element.TransportID + '">' + addressString
+                                     + '</option>';
+                                }
+                            });
+                            $('#DeliveryAddressID').html(strAdd);
+                        }
+                    }
+                });
+            }
+            else {
+                $('#DeliveryAddressID').empty();
+                $('#TransportID').empty();
+            }
+        });
+        $('#DeliveryAddressID').on('change', function () {
+            var transport = $('#DeliveryAddressID option:selected').data('transport');
+            if (transport && transport != null) {
+                $('#TransportID').val(transport);
+            }
+        });
+        $('#frmOrder').validate({
+            rules: {
+                OrderNo: {
+                    required: true,
+                    remote: {
+                        url: '@Url.Action("CheckDuplicateOrderNo", "Order")',
+                        data: { ID: $('#ID').val() },
+                        type: "POST"
+                    }
+                },
+                PartyID: {
+                    required: true
+                }
+            },
+            messages: {
+                OrderNo: {
+                    required: "Please enter Order Number",
+                    remote: "Order No is already entered, Please enter another Order No."
+                },
+                PartyID: {
+                    required: "Please select party"
+                }
+            },
+
+            submitHandler: function (form) {
+
+                if (grandTotal <= 0) {
+                    swal({
+                        title: "Information",
+                        text: "Please enter order details.",
+                        type: "error"
+                    }, function () {
+                    });
+                    return false;
+                }
+
+                if ($('#tblOrderDetails>tbody>tr').not(':last').find('[name="ddlShade"]').filter(function (index, element) { return element.value == "-- Select Shade --" }).length > 0) {
+                    swal({
+                        title: "Information",
+                        text: "Please select shade from all items.",
+                        type: "error"
+                    }, function () {
+                    });
+                    return false;
+                }
+
+                var order = {};
+                order.ID = $('#ID').val();
+                order.PartyOrderNo = $('#PartyOrderNo').val();
+                order.PartyOrderDate = new Date($('#PartyOrderDate').datepicker("getDate")).toISOString();
+                order.OrderNo = $('#OrderNo').val();
+                order.OrderDate = new Date($('#OrderDate').datepicker("getDate")).toISOString();
+                order.PartyID = $('#PartyID').val();
+                order.DeliveryAddressID = $('#DeliveryAddressID').val();
+                order.TransportID = $('#TransportID').val();
+                order.PartyBookingCity = $('#PartyBookingCity').val();
+                order.BookingAt = $('#BookingAt').val();
+                order.PaymentNarr = $('#PaymentNarr').val();
+                order.DeliveryNarr = $('#DeliveryNarr').val();
+                order.BillingNarr = $('#BillingNarr').val();
+                order.Remarks1 = $('#Remarks1').val();
+                order.Remarks2 = $('#Remarks2').val();
+                order.Total = grandTotal;
+                order.orderDetail = [];
+                $.each($('#tblOrderDetails>tbody>tr:not(:last-child)'), function (index, element) {
+                    var currProductRow = this;
+
+                    $.each($(element).find('table>tbody>tr'), function (packingIndex, packingElement) {
+                        var detail = {};
+                        detail.ID = $(this).data('recordid');
+                        detail.OrderID = $('#ID').val();
+                        detail.ProductID = $(currProductRow).find('>td:eq(1) select').val();
+                        detail.ShadeID = $(currProductRow).find('>td:eq(2) select').val();
+                        detail.PackingID = $(this).find('>td:eq(0)').data('packingid');
+                        detail.Qty = $(this).find('>td:eq(1) input').val();
+                        detail.Rate = $(this).find('>td:eq(2) input').val();
+                        detail.Total = $(this).find('>td:eq(3)').text();
+                        detail.TransactionLevel = ($(currProductRow).index() + 1);
+                        order.orderDetail.push(detail);
+                    });
+                });
+
+                $.ajax({
+                    url: "@Url.Action("Add","Order")",
+                    type: "POST",
+                    data: JSON.stringify(order),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (response) {
+                        if (response.IsSuccess) {
+                            OrderAdded();
+                        }
+                        else {
+                            swal("OOpsss", "There is some problem while saving data, Please try after sometime.", "error");
+                        }
+                    }
+                });
+
+                return false;
+            }
+        });
+
+        $('body').on('change', '#tblOrderDetails>tbody>tr [name="ddlShade"]', function () {
+            if ($(this).val() != "" && $(this).closest('#ddlProduct').val() != "") {
+                var packings = [];
+                $(this).parent().parent().find('#tblPackings tbody tr td:nth-child(1)').each(function () { packings.push($(this).data('packingid')) });
+                clickedShade = this;
+                $.ajax({
+                    url: "@Url.Action("GetClosingQty","Order")",
+                    type: "POST",
+                    data: { ProductID: $(this).parent().parent().find('#ddlProduct').val(), ShadeID: $(this).val(), PackingIDs: packings.join() },
+                    success: function (response) {
+                        if (response.IsSuccess) {
+                            $.each(response.ResponseValue, function (index, element) {
+                                $(clickedShade).parent().parent().find('#tblPackings tbody tr td[data-packingid="' + element.PackingID + '"]').html(
+                                    element.PackingName + "  (" + element.PackingID + ")"
+                                    );
+                            });
+                        }
+                        else {
+                            $.each($(clickedShade).parent().parent().find('#tblPackings tbody tr td[data-packingid]'), function (index, element) {
+                                $(this).html(
+                                    $(this).html().split('(')[0] + "  (0)"
+                                    );
+                            }); 
+                        }
+                    }
+                });
+            }
+        });
+        $('.disabled').attr('disabled', 'disabled');
+        $('.datepicker').datepicker({
+            autoclose: true,
+            format: 'dd/mm/yyyy',
+            forceParse: false
+        });
+        CalculateTotal();
+    });
+
+    var clickedShade = "";
+</script>

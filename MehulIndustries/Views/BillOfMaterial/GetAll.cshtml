@@ -1,0 +1,34 @@
+﻿@model IEnumerable<ViewModels.BillOfMaterial>
+@Styles.Render("~/Content/css/datatablecss")
+
+<table id="tblBillOfMaterial" class="table table-striped table-bordered">
+    <thead>
+        <tr>
+            <th>Product</th>
+            <th>Shade</th>
+            <th>Revision No</th>
+            <th>Remarks</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @if (Model != null)
+        {
+            foreach (var bom in Model)
+            {
+                <tr data-empid="@bom.ID">
+                    <td>@bom.ProductName</td>
+                    <td>@bom.ShadeName</td>
+                    <td>@bom.RevisionNo</td>
+                    <td>@bom.Remarks</td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+@Scripts.Render("~/Content/js/datatablejs")
+<script>
+    $(document).ready(function () {
+        $('#tblBillOfMaterial').DataTable();
+    });
+</script>

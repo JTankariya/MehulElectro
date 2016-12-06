@@ -1,0 +1,293 @@
+﻿@model IEnumerable<ViewModels.Batch>
+@{
+    ViewBag.Title = "QC";
+    Layout = "~/Views/Shared/_Dashboard.cshtml";
+}
+
+@Styles.Render("~/Content/css/customsweetswitcheryselect2css")
+<div class="row">
+    <div class="col-md-10 col-md-offset-1">
+        <div class="portlet">
+            <div class="portlet-heading bg-primary">
+                <h3 class="portlet-title">
+                    QC Process
+                </h3>
+                <div class="portlet-widgets">
+                    @*<button type="button" data-assignbatch class="btn btn-default waves-effect waves-light">Assign Selected Batch</button>*@
+                    <span class="divider"></span>
+                    <a data-toggle="collapse" data-parent="#accordion1" href="#bg-primary" class="" aria-expanded="true"><i class="ion-minus-round"></i></a>
+                </div>
+                <div class="clearfix"></div>
+            </div>
+            <div id="bg-primary" class="panel-collapse collapse in" aria-expanded="true">
+                <div class="portlet-body">
+                    <table class="table table-striped table-bordered" id="tblQC">
+                        <thead>
+                            <tr>
+                                <td>
+                                    Batch No
+                                </td>
+                                <td>
+                                    Batch Qty
+                                </td>
+                                <td>
+                                    Assigned Employee
+                                </td>
+                                <td>
+                                    Product
+                                </td>
+                                <td>
+                                    Shade
+                                </td>
+                                <td>
+                                    Is QC Done?
+                                </td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model != null)
+                            {
+                                foreach (var batch in Model)
+                                {
+                                    <tr data-itemid="@batch.ID">
+                                        <td style="font-weight:bold">
+                                            @batch.BatchNo
+                                        </td>
+                                        <td>
+                                            @batch.ProductionQty
+                                        </td>
+                                        <td style="font-weight:bold">
+                                            @batch.EmployeeName
+                                        </td>
+                                        <td style="font-weight:bold">
+                                            @batch.ProductName
+                                        </td>
+                                        <td style="font-weight:bold">
+                                            @batch.ShadeName
+                                        </td>
+                                        <td style="font-weight:bold">
+                                            @if (batch.QCStartDate.HasValue)
+                                            {
+                                                <button data-batchno="@batch.ID" type="button" data-assignbatch class="btn btn-success waves-effect waves-light">Done</button>
+                                            }
+                                            else
+                                            {
+                                                <button data-batchno="@batch.ID" type="button" data-startbatch class="btn btn-primary waves-effect waves-light">Start</button>
+                                            }
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="5">
+                                            <table class="table table-striped table-bordered" id="tblLabParameters">
+                                                <thead>
+                                                    <tr>
+                                                        <td>
+                                                            Sr No
+                                                        </td>
+                                                        <td>
+                                                            Perticular
+                                                        </td>
+                                                        <td>
+                                                            Standard
+                                                        </td>
+                                                        <td>
+                                                            Observed
+                                                        </td>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @{
+                                    var labParameters = BAL.BillOfMaterialLabParametersLogic.GetLabParameterByProductAndShadeID(batch.ProductID, batch.ShadeID);
+                                                    }
+                                                    @if (labParameters != null)
+                                                    {
+                                                        var i = 1;
+                                                        foreach (var param in labParameters)
+                                                        {
+                                                            <tr>
+                                                                <td>
+                                                                    @i
+                                                                </td>
+                                                                <td data-paramid="@param.ParameterID">
+                                                                    @param.LabParameterName
+                                                                </td>
+                                                                <td>
+                                                                    @if (string.IsNullOrEmpty(param.Standard))
+                                                                    {
+                                                                        @("Min : " + param.Min + ", Max : " + param.Max)
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        @param.Standard
+                                                                    }
+                                                                </td>
+                                                                <td>
+                                                                    <input data-min="@param.Min" data-max="@param.Max" data-batchno="@batch.ID" type="text" class="@(Convert.ToDecimal(param.Min)>0?"form-control numeric":"form-control")" />
+                                                                </td>
+                                                            </tr>
+
+                                                                    i++;
+                                                        }
+                                                    }
+                                                </tbody>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                        <tfoot></tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@Scripts.Render("~/Content/css/customsweetswitcheryselect2js")
+
+<script>
+    $(document).ready(function () {
+        $('button[data-assignbatch]').on('click', function () {
+            var isSucceed = true;
+            var params = [];
+            if ($('input[data-batchno="' + $(this).data('batchno') + '"]').length > 0) {
+                $.each($('input[data-batchno="' + $(this).data('batchno') + '"]'), function (index, element) {
+                    debugger;
+                    if ($(element).val() == "") {
+                        swal({
+                            title: "Opppsss",
+                            text: "Please fill oberved value for each of given parameter of this batch number.",
+                            type: "error"
+                        }, function () {
+                        });
+                        isSucceed = false;
+                        return false;
+                    }
+                    else if ($(element).hasClass('numeric') && ($(element).val() < $(element).data('min') || $(element).val() > $(element).data('max'))) {
+                        swal({
+                            title: "Opppsss",
+                            text: "Value should be in range of given min and max (" + $(element).data('min') + " - " + $(element).data('max') + ").",
+                            type: "error"
+                        }, function () {
+                            $(element).focus();
+                        });
+                        isSucceed = false;
+                        return false;
+                    }
+                    else {
+                        params.push({
+                            ParameterID: $(element).parent().parent().find('td[data-paramid]').data('paramid'),
+                            Standard: $(element).val()
+                        });
+                    }
+                });
+            }
+            else {
+                swal({
+                    title: "Opppsss",
+                    text: "Please enter proper information in lab parameter.",
+                    type: "error"
+                }, function () {
+                });
+                isSucceed = false;
+            }
+            if (isSucceed) {
+                $.ajax({
+                    type: "POST",
+                    data: JSON.stringify({ ID: $(this).data('batchno'), paramValue: params }),
+                    contentType: 'application/json',
+                    url: '@Url.Action("QCDone","Production")',
+                    success: function (result) {
+                        if (result.IsSuccess) {
+                            var _relativeBaseDirectory = '@(Url.Action("","")=="/"?"":Url.Action("",""))';
+                            window.open(
+                           _relativeBaseDirectory + result.ResponseValue,
+                          '_blank'
+                        );
+                            window.location.reload(true);
+                        }
+                        else {
+                            swal({
+                                title: "Opppsss",
+                                text: "Error while saving data, Please try after sometime.",
+                                type: "error"
+                            }, function () {
+                            });
+                        }
+                    }
+                })
+            }
+        });
+
+        var currRow = "";
+        $('#tblQC button[data-startbatch]').on('click', function () {
+            currRow = $(this).parent().parent();
+            swal({
+                title: "Please confirm?",
+                text: "Are you sure want to start this batch?",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "Yes, Start it!",
+                cancelButtonText: "No, cancel plz!",
+                closeOnConfirm: false,
+                closeOnCancel: false
+            }, function (isConfirm) {
+                if (isConfirm) {
+                    $.ajax({
+                        type: "GET",
+                        url: "@Url.Action("StartQC","Production")",
+                        data: { ID: $(currRow).data('itemid') },
+                        success: function (response) {
+                            if (response.IsSuccess == true) {
+                                swal({
+                                    title: "Started!",
+                                    text: "Batch is Started successfully.",
+                                    type: "success"
+                                }, function () {
+                                    window.location.reload(true);
+                                });
+                            }
+                            else {
+                                swal("Opssss!", response.ResponseValue, "error");
+                            }
+                        }
+                    });
+
+                } else {
+                    swal("Cancelled", "Batch is not Started :)", "error");
+                }
+            });
+        });
+
+        $('#tblGrinding button[data-assignbatch]').on('click', function () {
+            var batchData = {};
+            batchData.ID = $(this).parent().parent().data('itemid');
+
+            if ($(this).parent().parent().find('td:eq(5) input[type="checkbox"]').is(':checked')) {
+                batchData.HasHymenGuage = true;
+                batchData.MinHymenGuage = $(this).parent().parent().find('td:eq(6) input[type="text"]').val();
+                batchData.MaxHymenGuage = $(this).parent().parent().find('td:eq(7) input[type="text"]').val();
+            }
+            $.ajax({
+                type: "POST",
+                data: JSON.stringify({ batch: batchData }),
+                contentType: 'application/json',
+                url: '@Url.Action("QCDone","Production")',
+                success: function (result) {
+                    if (result.IsSuccess) {
+                        window.location.reload(true);
+                    }
+                    else {
+                        swal({
+                            title: "Opppsss",
+                            text: "Error while saving data, Please try after sometime.",
+                            type: "error"
+                        }, function () {
+                        });
+                    }
+                }
+            })
+        });
+    });
+</script>
