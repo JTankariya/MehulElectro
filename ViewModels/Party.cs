@@ -11,6 +11,7 @@ namespace ViewModels
         public string Name { get; set; }
         public string EmailId { get; set; }
         public string ContactPerson { get; set; }
+
         public string MobileNo { get; set; }
         public string CSTNo { get; set; }
         public string LICNo { get; set; }
