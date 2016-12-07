@@ -132,6 +132,10 @@ namespace BAL
 
             if (batchDetail != null)
             {
+                cell = new PdfPCell(new Phrase("L.T.R. No : " + batchDetail.BatchNo, CommonFunction.fontTitle13));
+                cell.Border = iTextSharp.text.Rectangle.NO_BORDER;
+                cell.Colspan = 2;
+                table.AddCell(cell);
                 cell = new PdfPCell(new Phrase("Product : " + batchDetail.ProductName, CommonFunction.fontTitle13));
                 cell.Border = iTextSharp.text.Rectangle.NO_BORDER;
                 cell.Colspan = 2;
@@ -146,6 +150,9 @@ namespace BAL
                 cell.Border = iTextSharp.text.Rectangle.NO_BORDER;
                 table.AddCell(cell);
                 cell = new PdfPCell(new Phrase("Qty : " + batchDetail.ProductionQty + " " + batchDetail.BatchUnit, CommonFunction.fontTitle13));
+                cell.Border = iTextSharp.text.Rectangle.NO_BORDER;
+                table.AddCell(cell);
+                cell = new PdfPCell(new Phrase("Party : ", CommonFunction.fontTitle13));
                 cell.Border = iTextSharp.text.Rectangle.NO_BORDER;
                 table.AddCell(cell);
             }
@@ -168,6 +175,7 @@ namespace BAL
                 paramTable.HorizontalAlignment = iTextSharp.text.Rectangle.ALIGN_LEFT;
                 paramTable.TotalWidth = (document.PageSize.Width - document.LeftMargin - document.RightMargin);
                 paramTable.LockedWidth = true;
+                paramTable.SetWidths(new float[] { 5f, 55f, 20f, 20f });
                 cell = new PdfPCell(new Phrase("No.", CommonFunction.font10));
                 paramTable.AddCell(cell);
                 cell = new PdfPCell(new Phrase("Perticular", CommonFunction.font10));
@@ -192,7 +200,7 @@ namespace BAL
                     paramTable.AddCell(innercell);
 
                     var observed = labParam.FirstOrDefault(x => x.ParameterID == param.ParameterID);
-                    innercell = new PdfPCell(new Phrase(observed.Standard, CommonFunction.font10Normal));
+                    innercell = new PdfPCell(new Phrase(observed.Standard + " " + param.Unit, CommonFunction.font10Normal));
                     innercell.HorizontalAlignment = iTextSharp.text.Rectangle.ALIGN_RIGHT;
                     paramTable.AddCell(innercell);
                 }

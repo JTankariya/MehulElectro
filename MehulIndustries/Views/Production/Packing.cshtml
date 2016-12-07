@@ -134,7 +134,7 @@
                                     });
                                 }
                                 else {
-                                    if ($(this).data('productionqty') != total) {
+                                    if ($('#txtActualQty').data('qty') != total) {
                                         swal({
                                             title: "Opppsss",
                                             text: "Packing Qty is greater then Batch Qty which can not be happen, Please correct your packing detail and then try to save it.",
@@ -145,11 +145,15 @@
                                     else {
                                         var packingDetails = [];
                                         $.each($('input:text').filter(function () { return $(this).val() != ""; }), function (index, element) {
-                                            packingDetails.push({
-                                                PackingID: $(element).data('packingid'),
-                                                ProductionQty: $(element).val(),
-                                                PackingProductID: $(element).parent().parent().find('select').val()
-                                            });
+                                            if (element.id != "txtActualQty")
+                                            {
+                                                packingDetails.push({
+                                                    PackingID: $(element).data('packingid'),
+                                                    ProductionQty: $(element).val(),
+                                                    PackingProductID: $(element).parent().parent().find('select').val()
+                                                });
+                                            }
+                                            
                                         });
                                         $.ajax({
                                             type: "POST",

@@ -2,10 +2,17 @@
 @if (Model != null)
 {
     <div class="row">
-        <div class="col-md-6">
-            <label>Batch Qty : @(Model.FirstOrDefault().ProductionQty + " " + Model.FirstOrDefault().BatchUnit) </label>
+        <div class="col-md-3">
+            <label>Batch Qty : @(Model.FirstOrDefault().ProductionQty + " Kg") </label>
         </div>
-        <div class="col-md-6">
+        <div class="col-md-3">
+            <label>WPL : @(Model.FirstOrDefault().WPL) </label>
+        </div>
+        <div class="col-md-3">
+            <label>Final Production Qty : </label>
+            <input type="text" class="numeric" readonly value="@(Math.Round((1 / Model.FirstOrDefault().WPL) * Convert.ToDecimal(Model.FirstOrDefault().ProductionQty),3) + " Ltr")" data-qty="@(Math.Round((1 / Model.FirstOrDefault().WPL) * Convert.ToDecimal(Model.FirstOrDefault().ProductionQty),3))"  id="txtActualQty"/>
+        </div>
+        <div class="col-md-3">
             <label>Ordered Qty : @(Model.FirstOrDefault().OrderedQty + " " + Model.FirstOrDefault().BatchUnit) </label>
         </div>
     </div>
