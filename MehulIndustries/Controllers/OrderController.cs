@@ -51,12 +51,12 @@ namespace MehulIndustries.Controllers
         {
             ResponseMsg response = new ResponseMsg();
             var packings = StockLogic.GetClosingQty(ProductID, ShadeID, PackingIDs);
-            if (packings!=null && packings.Count() > 0)
+            if (packings != null && packings.Count() > 0)
             {
                 response.IsSuccess = true;
                 response.ResponseValue = packings;
             }
-            return Json(response,JsonRequestBehavior.AllowGet);
+            return Json(response, JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost]
@@ -101,7 +101,8 @@ namespace MehulIndustries.Controllers
 
         public ActionResult GetAll()
         {
-            return PartialView("GetAll", OrderLogic.GetOrderByID(0).OrderByDescending(x => x.OrderDate));
+            var orders = OrderLogic.GetOrderByID(0);
+            return PartialView("GetAll", (orders != null ? orders.OrderByDescending(x => x.OrderDate) : orders));
         }
 
         public ActionResult ClosedOrders()
@@ -111,7 +112,7 @@ namespace MehulIndustries.Controllers
 
         public string CheckDuplicateOrderNo(string OrderNo, int ID)
         {
-            var order = OrderLogic.CheckDuplicateOrderNo(ID,OrderNo);
+            var order = OrderLogic.CheckDuplicateOrderNo(ID, OrderNo);
             if (order != null && order.Count() > 0)
             {
                 return "false";
@@ -124,7 +125,8 @@ namespace MehulIndustries.Controllers
 
         public ActionResult ReadyAvailable()
         {
-            return View(ReadyAvailableLogic.GetAllOrderTransactionStatus().OrderByDescending(x => x.OrderID));
+            var readyOrders = ReadyAvailableLogic.GetAllOrderTransactionStatus();
+            return View((readyOrders != null ? readyOrders.OrderByDescending(x => x.OrderID) : readyOrders));
         }
 
         public ActionResult MoveToProduction()

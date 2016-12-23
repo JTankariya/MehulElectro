@@ -10,3 +10,15 @@ E:\Jayesh\MehulIndustries\BAL\obj\Debug\BAL.pdb
 E:\Jayesh\MehulIndustries\BAL\bin\Debug\itextsharp.dll
 E:\Jayesh\MehulIndustries\BAL\bin\Debug\itextsharp.pdb
 E:\Jayesh\MehulIndustries\BAL\bin\Debug\itextsharp.xml
+E:\Jayesh\GitHub\MehulElectro\BAL\bin\Debug\BAL.dll
+E:\Jayesh\GitHub\MehulElectro\BAL\bin\Debug\BAL.pdb
+E:\Jayesh\GitHub\MehulElectro\BAL\bin\Debug\DAL.dll
+E:\Jayesh\GitHub\MehulElectro\BAL\bin\Debug\itextsharp.dll
+E:\Jayesh\GitHub\MehulElectro\BAL\bin\Debug\ViewModels.dll
+E:\Jayesh\GitHub\MehulElectro\BAL\bin\Debug\DAL.pdb
+E:\Jayesh\GitHub\MehulElectro\BAL\bin\Debug\ViewModels.pdb
+E:\Jayesh\GitHub\MehulElectro\BAL\bin\Debug\itextsharp.pdb
+E:\Jayesh\GitHub\MehulElectro\BAL\bin\Debug\itextsharp.xml
+E:\Jayesh\GitHub\MehulElectro\BAL\obj\Debug\BAL.csprojResolveAssemblyReference.cache
+E:\Jayesh\GitHub\MehulElectro\BAL\obj\Debug\BAL.dll
+E:\Jayesh\GitHub\MehulElectro\BAL\obj\Debug\BAL.pdb

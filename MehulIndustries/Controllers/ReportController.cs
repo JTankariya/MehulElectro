@@ -42,7 +42,9 @@ namespace MehulIndustries.Controllers
         {
             ViewBag.Parties = PartyLogic.GetPartyByID(0);
             ViewBag.Products = ProductLogic.GetFinishedProducts();
-            var orders = OrderLogic.GetOrderByID(0).OrderBy(x => x.OrderDate);
+            var orders = OrderLogic.GetOrderByID(0);
+            if (orders != null)
+                orders = orders.OrderBy(x => x.OrderDate);
             return View(orders);
         }
 
@@ -80,7 +82,9 @@ namespace MehulIndustries.Controllers
         {
             ViewBag.Parties = PartyLogic.GetPartyByID(0);
             ViewBag.Products = ProductLogic.GetFinishedProducts();
-            var dispatches = DispatchLogic.GetDispatchByID(0).OrderBy(x => x.DODate);
+            var dispatches = DispatchLogic.GetDispatchByID(0);
+            if (dispatches != null)
+                dispatches = dispatches.OrderBy(x => x.DODate);
             return View(dispatches);
         }
 
