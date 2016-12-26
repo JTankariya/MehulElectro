@@ -455,21 +455,21 @@
                                                 </td>
                                                 <td>
                                                     @{
-                                            int[] selectedParty = null;
-                                            if (Model.Parties != null)
-                                            {
-                                                var parties = Model.Parties.Where(x => x.ProductShadeID == shade.ID);
+                                                    int[] selectedParty = null;
+                                                    if (Model.Parties != null)
+                                                    {
+                                                        var parties = Model.Parties.Where(x => x.ProductShadeID == shade.ID);
 
-                                                if (parties != null && parties.Count() > 0)
-                                                {
-                                                    selectedParty = parties.Select(x => x.PartyID).ToArray();
-                                                }
-                                            }
-                                                   
+                                                        if (parties != null && parties.Count() > 0)
+                                                        {
+                                                            selectedParty = parties.Select(x => x.PartyID).ToArray();
+                                                        }
+                                                    }
+
                                                     }
                                                     @if (ViewBag.Parties != null)
                                                     {
-                                                        @Html.DropDownList("ddlParty", new SelectList(ViewBag.Parties, "ID", "Name", (selectedParty!=null && selectedParty.Length > 0 ? string.Join(",", selectedParty) : "")), new { @class = "select2 form-control", @multiple = "true", @style = "width:200px" })
+                                                        @Html.DropDownList("ddlParty", new SelectList(ViewBag.Parties, "ID", "Name", (selectedParty != null && selectedParty.Length > 0 ? string.Join(",", selectedParty) : "")), new { @class = "select2 form-control", @multiple = "true", @style = "width:200px" })
                                                     }
                                                     else
                                                     {
@@ -813,21 +813,21 @@
                     if (response.IsSuccess) {
                         if (response.ResponseValue[0].ProductGroupTypeID == 3 || response.ResponseValue[0].ProductGroupTypeID == 4) {
                             if (response.ResponseValue[0].ProductGroupTypeID == 4) {
-                                if (!$('#HasPacking').is(':checked')) {
-                                    $('#HasPacking').trigger('click');
-                                }
-                                if (!$('#HasShade').is(':checked')) {
-                                    $('#HasShade').trigger('click');
-                                }
+                                //if (!$('#HasPacking').is(':checked')) {
+                                //    $('#HasPacking').trigger('click');
+                                //}
+                                //if (!$('#HasShade').is(':checked')) {
+                                //    $('#HasShade').trigger('click');
+                                //}
                                 $('#pnlRawMaterial').hide();
                             }
                             else {
-                                if ($('#HasPacking').is(':checked')) {
-                                    $('#HasPacking').trigger('click');
-                                }
-                                if ($('#HasShade').is(':checked')) {
-                                    $('#HasShade').trigger('click');
-                                }
+                                //if ($('#HasPacking').is(':checked')) {
+                                //    $('#HasPacking').trigger('click');
+                                //}
+                                //if ($('#HasShade').is(':checked')) {
+                                //    $('#HasShade').trigger('click');
+                                //}
                                 $('#pnlRawMaterial').show();
                             }
                             $('#Gravity,#SolidGravity,#SolidPercentage').removeAttr('disabled');
@@ -835,12 +835,12 @@
 
                         }
                         else {
-                            if ($('#HasPacking').is(':checked')) {
-                                $('#HasPacking').trigger('click');
-                            }
-                            if ($('#HasShade').is(':checked')) {
-                                $('#HasShade').trigger('click');
-                            }
+                            //if ($('#HasPacking').is(':checked')) {
+                            //    $('#HasPacking').trigger('click');
+                            //}
+                            //if ($('#HasShade').is(':checked')) {
+                            //    $('#HasShade').trigger('click');
+                            //}
                             $('#Gravity,#SolidGravity,#SolidPercentage').attr('disabled', 'disabled');
                             $('#ddlBatchUnit,#BatchMin,#BatchIdeal,#BatchMax').removeAttr('disabled');
                             $('#pnlRawMaterial').hide();
@@ -1130,8 +1130,8 @@
                 }
             }
         });
-        $('#HasPacking').change();
-        $('#HasShade').change();
+        //$('#HasPacking').change();
+        //$('#HasShade').change();
         $('#btnDelete').click(function () {
             if ($('#ID').val() == "0") {
                 swal("Please select any record First!", "In order to delete Product, You need to select Product first.")
@@ -1251,7 +1251,7 @@
         $('body').on('change', '#tblShadeWithPacking tbody tr td:nth-child(1)', function () {
             var selectedShade = this;
             $.each($('#tblShadeWithPacking tbody tr td:nth-child(1)'), function (index, element) {
-                
+
                 if ($(element).parent().index() != $(selectedShade).parent().index() && $(element).find('select').val() == $(selectedShade).find('select').val()) {
                     swal("Duplicate", "Shade name is already exist, Please enter another Shade name.");
                     $(selectedShade).find('select').val("");

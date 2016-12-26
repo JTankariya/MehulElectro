@@ -751,7 +751,7 @@
                         if (response.IsSuccess) {
                             $.each(response.ResponseValue, function (index, element) {
                                 $(clickedShade).parent().parent().find('#tblPackings tbody tr td[data-packingid="' + element.PackingID + '"]').html(
-                                    element.PackingName + "  (" + element.PackingID + ")"
+                                    element.PackingName + "  (" + element.ClosingQty + ")"
                                     );
                             });
                         }
