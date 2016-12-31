@@ -83,36 +83,42 @@ namespace BAL
             {
                 file.Delete();
             }
-            var document = new iTextSharp.text.Document(PageSize.A4, 30f, 30f, 0f, 50f);
+            var document = new iTextSharp.text.Document(PageSize.A4, 30f, 30f, 0f, 40f);
             var pdffilename = "LabApprovalSlip" + DateTime.Now.ToString("h:mm:ss").Replace(":", "");
             var writer = PdfWriter.GetInstance(document, new FileStream(folderPath + "/" + pdffilename + ".PDF", FileMode.Create));
-            writer.PageEvent = new PDFFooter(CreatedBy);
+            writer.PageEvent = new QCPDFFooter(CreatedBy);
             document.Open();
 
             var widths = new float[] { 30f, 30f };
 
             var table = new PdfPTable(2);
-            table.HeaderRows = 5;
+            table.HeaderRows = 6;
             table.HorizontalAlignment = 0;
             table.TotalWidth = document.PageSize.Width - document.LeftMargin - document.RightMargin;
             table.LockedWidth = true;
             table.SetWidths(widths);
             table.DefaultCell.Border = iTextSharp.text.Rectangle.NO_BORDER;
 
-            var cell = new PdfPCell(new Phrase("Mehul Electro insulating industries", CommonFunction.fontTitle17));
+            var cell = new PdfPCell(new Phrase("MEHUL ELECTRO INSULATING INDUSTRIES", CommonFunction.fontTitle17));
             cell.HorizontalAlignment = iTextSharp.text.Rectangle.ALIGN_CENTER;
             cell.Border = iTextSharp.text.Rectangle.NO_BORDER;
             cell.Colspan = table.NumberOfColumns;
             table.AddCell(cell);
 
 
-            cell = new PdfPCell(new Phrase("2610/A, Ph-4, G.I.D.C., Vata, Ahmedabad 382 445", CommonFunction.font10));
+            cell = new PdfPCell(new Phrase("2610/A, Ph-4, G.I.D.C., Vatva, Ahmedabad 382 445", CommonFunction.font10));
             cell.HorizontalAlignment = iTextSharp.text.Rectangle.ALIGN_CENTER;
             cell.Border = iTextSharp.text.Rectangle.NO_BORDER;
             cell.Colspan = table.NumberOfColumns;
             table.AddCell(cell);
 
             cell = new PdfPCell(new Phrase("Phone : 2584 2331/2, Fax: 2584 0356", CommonFunction.font10));
+            cell.HorizontalAlignment = iTextSharp.text.Rectangle.ALIGN_CENTER;
+            cell.Border = iTextSharp.text.Rectangle.NO_BORDER;
+            cell.Colspan = table.NumberOfColumns;
+            table.AddCell(cell);
+
+            cell = new PdfPCell(new Phrase("Email : info@mehulelectro.com, sales@mehulelectro.com", CommonFunction.font10));
             cell.HorizontalAlignment = iTextSharp.text.Rectangle.ALIGN_CENTER;
             cell.Border = iTextSharp.text.Rectangle.NO_BORDER;
             cell.Colspan = table.NumberOfColumns;
@@ -134,25 +140,37 @@ namespace BAL
             {
                 cell = new PdfPCell(new Phrase("L.T.R. No : " + batchDetail.BatchNo, CommonFunction.fontTitle13));
                 cell.Border = iTextSharp.text.Rectangle.NO_BORDER;
+                cell.HorizontalAlignment = Rectangle.ALIGN_RIGHT;
                 cell.Colspan = 2;
                 table.AddCell(cell);
                 cell = new PdfPCell(new Phrase("Product : " + batchDetail.ProductName, CommonFunction.fontTitle13));
                 cell.Border = iTextSharp.text.Rectangle.NO_BORDER;
-                cell.Colspan = 2;
                 table.AddCell(cell);
-                cell = new PdfPCell(new Phrase("Shade : " + batchDetail.ShadeName, CommonFunction.fontTitle13));
+                cell = new PdfPCell(new Phrase("Code : " + batchDetail.PrintName, CommonFunction.fontTitle13));
                 cell.Border = iTextSharp.text.Rectangle.NO_BORDER;
                 table.AddCell(cell);
-                cell = new PdfPCell(new Phrase("Mfg. Date : " + DateTime.Now, CommonFunction.fontTitle13));
+                cell = new PdfPCell(new Phrase("Shade : " + batchDetail.ShadeName, CommonFunction.fontTitle13));
                 cell.Border = iTextSharp.text.Rectangle.NO_BORDER;
                 table.AddCell(cell);
                 cell = new PdfPCell(new Phrase("Batch No : " + batchDetail.BatchNo, CommonFunction.fontTitle13));
                 cell.Border = iTextSharp.text.Rectangle.NO_BORDER;
                 table.AddCell(cell);
+                cell = new PdfPCell(new Phrase("Party : ", CommonFunction.fontTitle13));
+                cell.Border = iTextSharp.text.Rectangle.NO_BORDER;
+                table.AddCell(cell);
+                cell = new PdfPCell(new Phrase(" ", CommonFunction.fontTitle13));
+                cell.Border = iTextSharp.text.Rectangle.BOTTOM_BORDER;
+                table.AddCell(cell);
+                cell = new PdfPCell(new Phrase(" ", CommonFunction.fontTitle13));
+                cell.Border = iTextSharp.text.Rectangle.NO_BORDER;
+                table.AddCell(cell);
                 cell = new PdfPCell(new Phrase("Qty : " + batchDetail.ProductionQty + " " + batchDetail.BatchUnit, CommonFunction.fontTitle13));
                 cell.Border = iTextSharp.text.Rectangle.NO_BORDER;
                 table.AddCell(cell);
-                cell = new PdfPCell(new Phrase("Party : ", CommonFunction.fontTitle13));
+                cell = new PdfPCell(new Phrase(" ", CommonFunction.fontTitle13));
+                cell.Border = iTextSharp.text.Rectangle.NO_BORDER;
+                table.AddCell(cell);
+                cell = new PdfPCell(new Phrase("Mfg. Date : " + DateTime.Now, CommonFunction.fontTitle13));
                 cell.Border = iTextSharp.text.Rectangle.NO_BORDER;
                 table.AddCell(cell);
             }

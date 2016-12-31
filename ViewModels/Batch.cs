@@ -15,6 +15,7 @@ namespace ViewModels
         public string EmployeeName { get; set; }
         public int ProductID { get; set; }
         public string ProductName { get; set; }
+        public string PrintName { get; set; }
         public int ShadeID { get; set; }
         public int CreatedBy { get; set; }
         public DateTime CreatedDate { get; set; }

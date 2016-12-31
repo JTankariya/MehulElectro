@@ -42,7 +42,7 @@ namespace BAL
             }
         }
 
-        public static IEnumerable<GrindingMaterial> Start(int ID,int EmployeeID)
+        public static IEnumerable<GrindingMaterial> Start(int ID, int EmployeeID)
         {
             Dictionary<string, object> param = new Dictionary<string, object>();
             param.Add("@ID", ID);
@@ -56,7 +56,7 @@ namespace BAL
                 return null;
         }
 
-        public static string PrintRawMaterial(IEnumerable<GrindingMaterial> materials, string folderPath, int ID, string CreatedBy,int EmployeeID)
+        public static string PrintRawMaterial(IEnumerable<GrindingMaterial> materials, string folderPath, int ID, string CreatedBy, int EmployeeID)
         {
             var employee = EmployeeLogic.GetEmployeeByID(EmployeeID).FirstOrDefault();
             var batchDetail = GrindingLogic.GetGrindingBatches(ID).FirstOrDefault();
@@ -77,30 +77,36 @@ namespace BAL
             writer.PageEvent = new PDFFooter(CreatedBy);
             document.Open();
 
-            var widths = new float[] { 30f, 40f, 30f };
+            var widths = new float[] { 30f, 40f, 30f, 30f };
 
-            var table = new PdfPTable(3);
-            table.HeaderRows = 5;
+            var table = new PdfPTable(4);
+            table.HeaderRows = 6;
             table.HorizontalAlignment = 0;
             table.TotalWidth = document.PageSize.Width - document.LeftMargin - document.RightMargin;
             table.LockedWidth = true;
             table.SetWidths(widths);
             table.DefaultCell.Border = iTextSharp.text.Rectangle.NO_BORDER;
 
-            var cell = new PdfPCell(new Phrase("Mehul Electro insulating industries", CommonFunction.fontTitle17));
+            var cell = new PdfPCell(new Phrase("MEHUL ELECTRO INSULATING INDUSTRIES", CommonFunction.fontTitle17));
             cell.HorizontalAlignment = iTextSharp.text.Rectangle.ALIGN_CENTER;
             cell.Border = iTextSharp.text.Rectangle.NO_BORDER;
             cell.Colspan = table.NumberOfColumns;
             table.AddCell(cell);
 
 
-            cell = new PdfPCell(new Phrase("2610/A, Ph-4, G.I.D.C., Vata, Ahmedabad 382 445", CommonFunction.font10));
+            cell = new PdfPCell(new Phrase("2610/A, Ph-4, G.I.D.C., Vatva, Ahmedabad 382 445", CommonFunction.font10));
             cell.HorizontalAlignment = iTextSharp.text.Rectangle.ALIGN_CENTER;
             cell.Border = iTextSharp.text.Rectangle.NO_BORDER;
             cell.Colspan = table.NumberOfColumns;
             table.AddCell(cell);
 
             cell = new PdfPCell(new Phrase("Phone : 2584 2331/2, Fax: 2584 0356", CommonFunction.font10));
+            cell.HorizontalAlignment = iTextSharp.text.Rectangle.ALIGN_CENTER;
+            cell.Border = iTextSharp.text.Rectangle.NO_BORDER;
+            cell.Colspan = table.NumberOfColumns;
+            table.AddCell(cell);
+
+            cell = new PdfPCell(new Phrase("Email : info@mehulelectro.com, sales@mehulelectro.com", CommonFunction.font10));
             cell.HorizontalAlignment = iTextSharp.text.Rectangle.ALIGN_CENTER;
             cell.Border = iTextSharp.text.Rectangle.NO_BORDER;
             cell.Colspan = table.NumberOfColumns;
@@ -120,28 +126,12 @@ namespace BAL
 
             if (batchDetail != null)
             {
-                cell = new PdfPCell(new Phrase("Batch No :" + batchDetail.BatchNo, CommonFunction.font10));
-                cell.HorizontalAlignment = iTextSharp.text.Rectangle.ALIGN_RIGHT;
-                cell.Border = iTextSharp.text.Rectangle.NO_BORDER;
-                table.AddCell(cell);
-                cell = new PdfPCell(new Phrase("Batch Start :" + DateTime.Now, CommonFunction.font10));
-                cell.HorizontalAlignment = iTextSharp.text.Rectangle.ALIGN_RIGHT;
-                cell.Border = iTextSharp.text.Rectangle.NO_BORDER;
-                table.AddCell(cell);
-                cell = new PdfPCell(new Phrase("Batch Qty :" + batchDetail.ProductionQty, CommonFunction.font10));
-                cell.HorizontalAlignment = iTextSharp.text.Rectangle.ALIGN_RIGHT;
-                cell.Border = iTextSharp.text.Rectangle.NO_BORDER;
-                table.AddCell(cell);
-                cell = new PdfPCell(new Phrase("Allocated To :" + employee.Name, CommonFunction.font10));
-                cell.Colspan = table.NumberOfColumns;
-                cell.Border = iTextSharp.text.Rectangle.NO_BORDER;
-                table.AddCell(cell);
                 cell = new PdfPCell(new Phrase("Product Name :" + batchDetail.ProductName, CommonFunction.font10));
-                cell.Colspan = table.NumberOfColumns;
+                cell.Colspan = table.NumberOfColumns / 2;
                 cell.Border = iTextSharp.text.Rectangle.NO_BORDER;
                 table.AddCell(cell);
                 cell = new PdfPCell(new Phrase("Product Code :" + ProductLogic.GetProductByID(batchDetail.ProductID).FirstOrDefault().PrintName, CommonFunction.font10));
-                cell.Colspan = table.NumberOfColumns;
+                cell.Colspan = table.NumberOfColumns / 2;
                 cell.Border = iTextSharp.text.Rectangle.NO_BORDER;
                 table.AddCell(cell);
                 cell = new PdfPCell(new Phrase("Customer Name :", CommonFunction.font10));
@@ -149,68 +139,133 @@ namespace BAL
                 cell.Border = iTextSharp.text.Rectangle.NO_BORDER;
                 table.AddCell(cell);
                 cell = new PdfPCell(new Phrase(" ", CommonFunction.font10));
-                cell.Colspan = 2;
+                cell.Colspan = 3;
                 cell.Border = iTextSharp.text.Rectangle.BOTTOM_BORDER;
                 table.AddCell(cell);
-                cell = new PdfPCell(new Phrase("Batch Completion Date & Time :", CommonFunction.font10));
+                cell = new PdfPCell(new Phrase("Batch Starting Date :" + DateTime.Now.ToString("dd/MM/yyyy"), CommonFunction.font10));
                 cell.Colspan = 2;
                 cell.Border = iTextSharp.text.Rectangle.NO_BORDER;
                 table.AddCell(cell);
-                cell = new PdfPCell(new Phrase(" ", CommonFunction.font10));
-                cell.Colspan = 1;
-                cell.Border = iTextSharp.text.Rectangle.BOTTOM_BORDER;
-                table.AddCell(cell);
-                cell = new PdfPCell(new Phrase("Remarks :", CommonFunction.font10));
-                cell.Colspan = table.NumberOfColumns;
+                cell = new PdfPCell(new Phrase("Time :" + DateTime.Now.ToString("hh:mm:ss tt"), CommonFunction.font10));
                 cell.Border = iTextSharp.text.Rectangle.NO_BORDER;
                 table.AddCell(cell);
-                cell = new PdfPCell(new Phrase(" ", CommonFunction.font10));
-                cell.Colspan = table.NumberOfColumns;
-                cell.Border = iTextSharp.text.Rectangle.BOTTOM_BORDER;
+                cell = new PdfPCell(new Phrase("Batch Qty :" + batchDetail.ProductionQty, CommonFunction.font10));
+                cell.Border = iTextSharp.text.Rectangle.NO_BORDER;
                 table.AddCell(cell);
-                cell = new PdfPCell(new Phrase(" ", CommonFunction.font10));
-                cell.Colspan = table.NumberOfColumns;
-                cell.Border = iTextSharp.text.Rectangle.BOTTOM_BORDER;
+                cell = new PdfPCell(new Phrase("Batch Completion Date :", CommonFunction.font10));
+                cell.Colspan = 2;
+                cell.Border = iTextSharp.text.Rectangle.NO_BORDER;
                 table.AddCell(cell);
+                cell = new PdfPCell(new Phrase("Time :", CommonFunction.font10));
+                cell.Border = iTextSharp.text.Rectangle.NO_BORDER;
+                table.AddCell(cell);
+                cell = new PdfPCell(new Phrase("Batch No :" + batchDetail.BatchNo, CommonFunction.font10));
+                cell.Border = iTextSharp.text.Rectangle.NO_BORDER;
+                table.AddCell(cell);
+
+                //cell = new PdfPCell(new Phrase("Allocated To :" + employee.Name, CommonFunction.font10));
+                //cell.Colspan = table.NumberOfColumns;
+                //cell.Border = iTextSharp.text.Rectangle.NO_BORDER;
+                //table.AddCell(cell);
+
+
+                //cell = new PdfPCell(new Phrase("Batch Completion Date & Time :", CommonFunction.font10));
+                //cell.Colspan = 3;
+                //cell.HorizontalAlignment = Rectangle.ALIGN_RIGHT;
+                //cell.Border = iTextSharp.text.Rectangle.NO_BORDER;
+                //table.AddCell(cell);
+                //cell = new PdfPCell(new Phrase(" ", CommonFunction.font10));
+                //cell.Colspan = 1;
+                //cell.Border = iTextSharp.text.Rectangle.BOTTOM_BORDER;
+                //table.AddCell(cell);
+                //cell = new PdfPCell(new Phrase("Remarks :", CommonFunction.font10));
+                //cell.Colspan = table.NumberOfColumns;
+                //cell.Border = iTextSharp.text.Rectangle.NO_BORDER;
+                //table.AddCell(cell);
+                //cell = new PdfPCell(new Phrase(" ", CommonFunction.font10));
+                //cell.Colspan = table.NumberOfColumns;
+                //cell.Border = iTextSharp.text.Rectangle.BOTTOM_BORDER;
+                //table.AddCell(cell);
+                //cell = new PdfPCell(new Phrase(" ", CommonFunction.font10));
+                //cell.Colspan = table.NumberOfColumns;
+                //cell.Border = iTextSharp.text.Rectangle.BOTTOM_BORDER;
+                //table.AddCell(cell);
             }
             cell = new PdfPCell(new Phrase(" ", CommonFunction.font10));
             cell.Colspan = table.NumberOfColumns;
             cell.Border = iTextSharp.text.Rectangle.NO_BORDER;
             table.AddCell(cell);
-            table.AddCell(new Phrase("Process", CommonFunction.font10));
-            table.AddCell(new Phrase("Product", CommonFunction.font10));
+            cell = new PdfPCell(new Phrase("Process", CommonFunction.font10));
+            cell.Border = iTextSharp.text.Rectangle.TOP_BORDER;
+            table.AddCell(cell);
+            cell = new PdfPCell(new Phrase("Product", CommonFunction.font10));
+            cell.Border = iTextSharp.text.Rectangle.TOP_BORDER;
+            table.AddCell(cell);
             cell = new PdfPCell(new Phrase("Qty", CommonFunction.font10));
-            cell.HorizontalAlignment = iTextSharp.text.Rectangle.ALIGN_RIGHT;
-            cell.Border = iTextSharp.text.Rectangle.NO_BORDER;
+            cell.Border = iTextSharp.text.Rectangle.TOP_BORDER;
+            cell.HorizontalAlignment = Rectangle.ALIGN_RIGHT;
             table.AddCell(cell);
-
-            cell = new PdfPCell(new Phrase("", CommonFunction.font10));
-            cell.Border = iTextSharp.text.Rectangle.ALIGN_CENTER;
-            cell.Colspan = table.NumberOfColumns;
+            cell = new PdfPCell(new Phrase("Remarks", CommonFunction.font10));
+            cell.Border = iTextSharp.text.Rectangle.TOP_BORDER;
+            cell.HorizontalAlignment = Rectangle.ALIGN_CENTER;
             table.AddCell(cell);
+            
+            //cell = new PdfPCell(new Phrase("", CommonFunction.font10));
+            //cell.Border = iTextSharp.text.Rectangle.ALIGN_CENTER;
+            //cell.Colspan = table.NumberOfColumns;
+            //table.AddCell(cell);
 
             materials = materials.OrderBy(x => x.OrderID);
+            var prevProcess = "";
             foreach (var material in materials)
             {
                 var innercell = new PdfPCell(new Phrase(" ", CommonFunction.font8));
+                if (string.IsNullOrEmpty(prevProcess) || !prevProcess.Equals(material.ProcessName))
+                {
+                    innercell = new PdfPCell(new Phrase(material.ProcessName, CommonFunction.font10Normal));
+                    innercell.Border = iTextSharp.text.Rectangle.TOP_BORDER;
+                    innercell.PaddingBottom = 4;
+                    table.AddCell(innercell);
 
-                innercell = new PdfPCell(new Phrase(material.ProcessName, CommonFunction.font10Normal));
-                innercell.Border = iTextSharp.text.Rectangle.BOTTOM_BORDER;
-                innercell.PaddingBottom = 4;
-                table.AddCell(innercell);
+                    innercell = new PdfPCell(new Phrase(material.ProductCode, CommonFunction.font10Normal));
+                    innercell.Border = iTextSharp.text.Rectangle.TOP_BORDER;
+                    table.AddCell(innercell);
 
-                innercell = new PdfPCell(new Phrase(material.ProductName, CommonFunction.font10Normal));
-                innercell.Border = iTextSharp.text.Rectangle.BOTTOM_BORDER;
-                table.AddCell(innercell);
+                    innercell = new PdfPCell(new Phrase(material.Qty.ToString(CommonFunction.QtyFormat), CommonFunction.font10Normal));
+                    innercell.Border = iTextSharp.text.Rectangle.TOP_BORDER;
+                    innercell.HorizontalAlignment = iTextSharp.text.Rectangle.ALIGN_RIGHT;
+                    table.AddCell(innercell);
 
-                innercell = new PdfPCell(new Phrase(material.Qty.ToString(CommonFunction.QtyFormat), CommonFunction.font10Normal));
-                innercell.Border = iTextSharp.text.Rectangle.BOTTOM_BORDER;
-                innercell.HorizontalAlignment = iTextSharp.text.Rectangle.ALIGN_RIGHT;
-                table.AddCell(innercell);
+                    innercell = new PdfPCell(new Phrase(" ", CommonFunction.font10Normal));
+                    innercell.Border = iTextSharp.text.Rectangle.TOP_BORDER;
+                    table.AddCell(innercell);
+                }
+                else
+                {
+                    innercell = new PdfPCell(new Phrase(" ", CommonFunction.font10Normal));
+                    innercell.Border = iTextSharp.text.Rectangle.NO_BORDER;
+                    innercell.PaddingBottom = 4;
+                    table.AddCell(innercell);
+
+                    innercell = new PdfPCell(new Phrase(material.ProductCode, CommonFunction.font10Normal));
+                    innercell.Border = iTextSharp.text.Rectangle.NO_BORDER;
+                    table.AddCell(innercell);
+
+                    innercell = new PdfPCell(new Phrase(material.Qty.ToString(CommonFunction.QtyFormat), CommonFunction.font10Normal));
+                    innercell.Border = iTextSharp.text.Rectangle.NO_BORDER;
+                    innercell.HorizontalAlignment = iTextSharp.text.Rectangle.ALIGN_RIGHT;
+                    table.AddCell(innercell);
+
+                    innercell = new PdfPCell(new Phrase(" ", CommonFunction.font10Normal));
+                    innercell.Border = iTextSharp.text.Rectangle.NO_BORDER;
+                    table.AddCell(innercell);
+                }
+                prevProcess = material.ProcessName;
+
             }
 
             cell = new PdfPCell(new Phrase(" ", CommonFunction.font8));
-            cell.Border = iTextSharp.text.Rectangle.NO_BORDER;
+            cell.Border = iTextSharp.text.Rectangle.TOP_BORDER;
             cell.Colspan = table.NumberOfColumns;
             table.AddCell(cell);
             cell = new PdfPCell(new Phrase(" ", CommonFunction.font8));

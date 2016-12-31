@@ -856,7 +856,11 @@
         $('#Name').on('change', function () {
             $('#PrintName').val($(this).val());
         });
-
+        if ($('#tblShadeWithPacking thead tr:first td').length > 4)
+        {
+            $('#tblShadeWithPacking').css('width', '140%');
+        }
+        
         $('#frmProduct').validate({
             rules: {
                 Name: {
@@ -1435,6 +1439,7 @@
                 $('#frmPacking').validate();
             }
         });
+        ShowHideShadeTables();
     });
 
     function ShowHideShadeTables() {
