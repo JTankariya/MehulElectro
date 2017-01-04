@@ -11,7 +11,8 @@
             <tr>
                 <th>Batch No</th>
                 <th>Production Qty</th>
-                <th>Product Name</th>
+                <th>Product</th>
+                <th>Shade</th>
                 <th>Batch Start Date</th>
                 <th>Ordered Qty</th>
                 <th>In Grinding?</th>
@@ -31,6 +32,7 @@
                         <td>@batch.BatchNo </td>
                         <td>@batch.ProductionQty</td>
                         <td>@batch.ProductName </td>
+                        <td>@batch.ShadeName</td>
                         <td>@(batch.GrindingStartDate.HasValue ? batch.GrindingStartDate.Value.ToString("dd/MM/yyyy") : "Not Started Yet") </td>
                         <td>@batch.OrderedQty</td>
                         <td><input type="checkbox" @(batch.GrindingStartDate.HasValue && !batch.GrindingDoneDate.HasValue ? "checked" : "") disabled /></td>

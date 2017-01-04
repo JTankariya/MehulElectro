@@ -3,3 +3,7 @@ E:\Jayesh\MehulIndustries\ViewModels\bin\Debug\ViewModels.pdb
 E:\Jayesh\MehulIndustries\ViewModels\obj\Debug\ViewModels.csprojResolveAssemblyReference.cache
 E:\Jayesh\MehulIndustries\ViewModels\obj\Debug\ViewModels.dll
 E:\Jayesh\MehulIndustries\ViewModels\obj\Debug\ViewModels.pdb
+E:\Jayesh\GitHub\MehulElectro\ViewModels\bin\Debug\ViewModels.dll
+E:\Jayesh\GitHub\MehulElectro\ViewModels\bin\Debug\ViewModels.pdb
+E:\Jayesh\GitHub\MehulElectro\ViewModels\obj\Debug\ViewModels.dll
+E:\Jayesh\GitHub\MehulElectro\ViewModels\obj\Debug\ViewModels.pdb

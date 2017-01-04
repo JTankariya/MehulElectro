@@ -10,6 +10,8 @@
         <thead>
             <tr>
                 <th>Batch No</th>
+                <th>Product</th>
+                <th>Shade</th>
                 <th>Production Qty</th>
                 <th>Ordered Qty</th>
                 <th>Grinding</th>
@@ -26,6 +28,8 @@
                 {
                     <tr data-empid="@batch.ID">
                         <td>@batch.BatchNo </td>
+                        <td>@batch.ProductName</td>
+                        <td>@batch.ShadeName</td>
                         <td>@batch.ProductionQty</td>
                         <td>@batch.OrderedQty</td>
                         <td>

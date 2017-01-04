@@ -43,6 +43,12 @@
                                     Shade Maching Type
                                 </td>
                                 <td>
+                                    Panel No
+                                </td>
+                                <td>
+                                    Rack No
+                                </td>
+                                <td>
                                     Is Shading Done?
                                 </td>
                             </tr>
@@ -70,15 +76,17 @@
                                             @batch.ShadeName
                                         </td>
                                         <td>
-                                            @if (batch.ShadeMaching == "Last Supply" || string.IsNullOrEmpty(batch.ShadeMaching))
+                                            @if (batch.ShadeMaching == "1")
                                             {
-                                                <span>@batch.ShadeMaching</span>
+                                                <span>Master Panel</span>
                                             }
                                             else
                                             {
-                                                <span>@(batch.ShadeMaching + " ( " + batch.PanelNumber + " - " + batch.RackNumber + ")")</span>
+                                                <span>Last Supply</span>
                                             }
                                         </td>
+                                        <td>@batch.PanelNumber</td>
+                                        <td>@batch.RackNumber</td>
                                         <td>
                                             @if (batch.ShadingStartDate.HasValue)
                                             {

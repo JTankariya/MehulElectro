@@ -139,39 +139,37 @@ namespace BAL
             if (batchDetail != null)
             {
                 cell = new PdfPCell(new Phrase("L.T.R. No : " + batchDetail.BatchNo, CommonFunction.fontTitle13));
-                cell.Border = iTextSharp.text.Rectangle.NO_BORDER;
+                cell.Border = iTextSharp.text.Rectangle.BOX;
                 cell.HorizontalAlignment = Rectangle.ALIGN_RIGHT;
                 cell.Colspan = 2;
                 table.AddCell(cell);
                 cell = new PdfPCell(new Phrase("Product : " + batchDetail.ProductName, CommonFunction.fontTitle13));
-                cell.Border = iTextSharp.text.Rectangle.NO_BORDER;
+                cell.Border = iTextSharp.text.Rectangle.BOX;
                 table.AddCell(cell);
                 cell = new PdfPCell(new Phrase("Code : " + batchDetail.PrintName, CommonFunction.fontTitle13));
-                cell.Border = iTextSharp.text.Rectangle.NO_BORDER;
+                cell.Border = iTextSharp.text.Rectangle.BOX;
                 table.AddCell(cell);
                 cell = new PdfPCell(new Phrase("Shade : " + batchDetail.ShadeName, CommonFunction.fontTitle13));
-                cell.Border = iTextSharp.text.Rectangle.NO_BORDER;
+                cell.Border = iTextSharp.text.Rectangle.BOX;
                 table.AddCell(cell);
                 cell = new PdfPCell(new Phrase("Batch No : " + batchDetail.BatchNo, CommonFunction.fontTitle13));
-                cell.Border = iTextSharp.text.Rectangle.NO_BORDER;
+                cell.Border = iTextSharp.text.Rectangle.BOX;
                 table.AddCell(cell);
                 cell = new PdfPCell(new Phrase("Party : ", CommonFunction.fontTitle13));
-                cell.Border = iTextSharp.text.Rectangle.NO_BORDER;
+                cell.Border = iTextSharp.text.Rectangle.BOX;
+                cell.Colspan = 2;
                 table.AddCell(cell);
                 cell = new PdfPCell(new Phrase(" ", CommonFunction.fontTitle13));
-                cell.Border = iTextSharp.text.Rectangle.BOTTOM_BORDER;
+                cell.Border = iTextSharp.text.Rectangle.BOX;
+                table.AddCell(cell);
+                cell = new PdfPCell(new Phrase("Batch Qty : " + batchDetail.ProductionQty + " " + batchDetail.BatchUnit, CommonFunction.fontTitle13));
+                cell.Border = iTextSharp.text.Rectangle.BOX;
                 table.AddCell(cell);
                 cell = new PdfPCell(new Phrase(" ", CommonFunction.fontTitle13));
-                cell.Border = iTextSharp.text.Rectangle.NO_BORDER;
-                table.AddCell(cell);
-                cell = new PdfPCell(new Phrase("Qty : " + batchDetail.ProductionQty + " " + batchDetail.BatchUnit, CommonFunction.fontTitle13));
-                cell.Border = iTextSharp.text.Rectangle.NO_BORDER;
-                table.AddCell(cell);
-                cell = new PdfPCell(new Phrase(" ", CommonFunction.fontTitle13));
-                cell.Border = iTextSharp.text.Rectangle.NO_BORDER;
+                cell.Border = iTextSharp.text.Rectangle.BOX;
                 table.AddCell(cell);
                 cell = new PdfPCell(new Phrase("Mfg. Date : " + DateTime.Now, CommonFunction.fontTitle13));
-                cell.Border = iTextSharp.text.Rectangle.NO_BORDER;
+                cell.Border = iTextSharp.text.Rectangle.BOX;
                 table.AddCell(cell);
             }
 
@@ -195,12 +193,16 @@ namespace BAL
                 paramTable.LockedWidth = true;
                 paramTable.SetWidths(new float[] { 5f, 55f, 20f, 20f });
                 cell = new PdfPCell(new Phrase("No.", CommonFunction.font10));
+                cell.Border = iTextSharp.text.Rectangle.BOX;
                 paramTable.AddCell(cell);
                 cell = new PdfPCell(new Phrase("Perticular", CommonFunction.font10));
+                cell.Border = iTextSharp.text.Rectangle.BOX;
                 paramTable.AddCell(cell);
-                cell = new PdfPCell(new Phrase("Standard/Yours SAMP", CommonFunction.font10));
+                cell = new PdfPCell(new Phrase("Standard", CommonFunction.font10));
+                cell.Border = iTextSharp.text.Rectangle.BOX;
                 paramTable.AddCell(cell);
                 cell = new PdfPCell(new Phrase("Observed", CommonFunction.font10));
+                cell.Border = iTextSharp.text.Rectangle.BOX;
                 paramTable.AddCell(cell);
                 foreach (var param in batchParams)
                 {
@@ -208,18 +210,22 @@ namespace BAL
                     var innercell = new PdfPCell(new Phrase(" ", CommonFunction.font8));
                     innercell = new PdfPCell(new Phrase(i.ToString(), CommonFunction.font10Normal));
                     innercell.PaddingBottom = 4;
+                    innercell.Border = iTextSharp.text.Rectangle.BOX;
                     paramTable.AddCell(innercell);
 
                     innercell = new PdfPCell(new Phrase(param.LabParameterName, CommonFunction.font10Normal));
+                    innercell.Border = iTextSharp.text.Rectangle.BOX;
                     paramTable.AddCell(innercell);
 
                     innercell = new PdfPCell(new Phrase(!string.IsNullOrEmpty(param.Standard) ? param.Standard : param.Min + " - " + param.Max + " " + param.Unit, CommonFunction.font10Normal));
                     innercell.HorizontalAlignment = iTextSharp.text.Rectangle.ALIGN_RIGHT;
+                    innercell.Border = iTextSharp.text.Rectangle.BOX;
                     paramTable.AddCell(innercell);
 
                     var observed = labParam.FirstOrDefault(x => x.ParameterID == param.ParameterID);
                     innercell = new PdfPCell(new Phrase(observed.Standard + " " + param.Unit, CommonFunction.font10Normal));
                     innercell.HorizontalAlignment = iTextSharp.text.Rectangle.ALIGN_RIGHT;
+                    innercell.Border = iTextSharp.text.Rectangle.BOX;
                     paramTable.AddCell(innercell);
                 }
             }
