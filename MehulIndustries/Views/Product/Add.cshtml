@@ -46,11 +46,11 @@
                                         <div class="col-sm-7">
                                             @if (ViewBag.ProductGroups != null)
                                             {
-                                                @Html.DropDownListFor(x => x.ProductGroupID, new SelectList(ViewBag.ProductGroups, "ID", "Name"), new { @class = "form-control", @placeholder = "Conversion Factor with litter" })
+                                                @Html.DropDownListFor(x => x.ProductGroupID, new SelectList(ViewBag.ProductGroups, "ID", "Name"), new { @class = "form-control" })
                                             }
                                             else
                                             {
-                                                @Html.DropDownListFor(x => x.ProductGroupID, new List<SelectListItem>(), new { @class = "form-control", @placeholder = "Conversion Factor with litter" })
+                                                @Html.DropDownListFor(x => x.ProductGroupID, new List<SelectListItem>(), new { @class = "form-control" })
                                             }
                                         </div>
                                     </div>
@@ -67,11 +67,11 @@
                                         <div class="col-sm-7">
                                             @if (ViewBag.RawMaterialTypes != null)
                                             {
-                                                @Html.DropDownListFor(x => x.RawMaterialTypeID, new SelectList(ViewBag.RawMaterialTypes, "ID", "Name"), new { @class = "form-control", @placeholder = "Conversion Factor with litter" })
+                                                @Html.DropDownListFor(x => x.RawMaterialTypeID, new SelectList(ViewBag.RawMaterialTypes, "ID", "Name"), new { @class = "form-control" })
                                             }
                                             else
                                             {
-                                                @Html.DropDownListFor(x => x.RawMaterialTypeID, new List<SelectListItem>(), new { @class = "form-control", @placeholder = "Conversion Factor with litter" })
+                                                @Html.DropDownListFor(x => x.RawMaterialTypeID, new List<SelectListItem>(), new { @class = "form-control" })
                                             }
                                         </div>
                                     </div>
@@ -86,11 +86,11 @@
                                         <div class="col-sm-7">
                                             @if (ViewBag.ProductUnits != null)
                                             {
-                                                @Html.DropDownListFor(x => x.ProductUnitID, new SelectList(ViewBag.ProductUnits, "ID", "Name"), new { @class = "form-control", @placeholder = "Conversion Factor with litter" })
+                                                @Html.DropDownListFor(x => x.ProductUnitID, new SelectList(ViewBag.ProductUnits, "ID", "Name"), new { @class = "form-control" })
                                             }
                                             else
                                             {
-                                                @Html.DropDownListFor(x => x.ProductUnitID, new List<SelectListItem>(), new { @class = "form-control", @placeholder = "Conversion Factor with litter" })
+                                                @Html.DropDownListFor(x => x.ProductUnitID, new List<SelectListItem>(), new { @class = "form-control" })
                                             }
                                         </div>
                                     </div>
@@ -181,7 +181,7 @@
                                         <div class="col-sm-7">
                                             @if (ViewBag.ProductUnits != null)
                                             {
-                                                @Html.DropDownList("ddlBatchUnit", new SelectList(ViewBag.ProductUnits, "ID", "Name"), new { @class = "form-control" })
+                                                @Html.DropDownList("ddlBatchUnit", new SelectList(ViewBag.ProductUnits, "ID", "Name",Model.BatchUnitID), new { @class = "form-control" })
                                             }
                                             else
                                             {

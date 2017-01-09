@@ -77,7 +77,7 @@ namespace BAL
             writer.PageEvent = new PDFFooter(CreatedBy);
             document.Open();
 
-            var widths = new float[] { 30f, 40f, 30f, 30f };
+            var widths = new float[] { 15f, 30f, 10f, 60f };
 
             var table = new PdfPTable(4);
             table.HeaderRows = 6;
@@ -158,7 +158,7 @@ namespace BAL
 
                 cell = new PdfPCell(new Phrase("Time :" + DateTime.Now.ToString("hh:mm:ss tt"), CommonFunction.font10));
                 batchstarttimetable.AddCell(cell);
-                cell = new PdfPCell(new Phrase("Batch Qty :" + batchDetail.ProductionQty, CommonFunction.font10));
+                cell = new PdfPCell(new Phrase("Batch Qty :" + batchDetail.ProductionQty + " Kg", CommonFunction.font10));
                 batchstarttimetable.AddCell(cell);
 
                 cell = new PdfPCell(batchstarttimetable);
@@ -208,7 +208,7 @@ namespace BAL
             cell.Border = iTextSharp.text.Rectangle.BOX;
             table.AddCell(cell);
             cell = new PdfPCell(new Phrase("Qty", CommonFunction.font10));
-            cell.Border = iTextSharp.text.Rectangle.TOP_BORDER;
+            cell.Border = iTextSharp.text.Rectangle.TOP_BORDER | iTextSharp.text.Rectangle.LEFT_BORDER;
             cell.HorizontalAlignment = Rectangle.BOX;
             table.AddCell(cell);
             cell = new PdfPCell(new Phrase("Remarks", CommonFunction.font10));
@@ -324,7 +324,7 @@ namespace BAL
             cell = new PdfPCell(new Phrase("Grinding Information", CommonFunction.fontTitle13));
             cell.Colspan = 2;
             othersTable.AddCell(cell);
-            cell = new PdfPCell(new Phrase("Has Hymenguage?", CommonFunction.font10Normal));
+            cell = new PdfPCell(new Phrase("Hegmanguage : ", CommonFunction.font10Normal));
             othersTable.AddCell(cell);
             cell = new PdfPCell(new Phrase(batchDetail.HasHymenGuage ? "Yes" : "No", CommonFunction.font10Normal));
             othersTable.AddCell(cell);
@@ -336,7 +336,7 @@ namespace BAL
             othersTable.AddCell(cell);
             cell = new PdfPCell(new Phrase(" ", CommonFunction.font10Normal));
             othersTable.AddCell(cell);
-            cell = new PdfPCell(new Phrase("Has Pigment Dispersion?", CommonFunction.font10Normal));
+            cell = new PdfPCell(new Phrase("Pigment Dispersion : ", CommonFunction.font10Normal));
             othersTable.AddCell(cell);
             cell = new PdfPCell(new Phrase(batchDetail.HasPigmentDispersion ? "Yes" : "No", CommonFunction.font10Normal));
             othersTable.AddCell(cell);
