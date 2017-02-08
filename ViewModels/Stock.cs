@@ -13,6 +13,7 @@ namespace ViewModels
         public string PrintName { get; set; }
         public string ShadeName { get; set; }
         public decimal OpeningQty { get; set; }
+        public decimal OpeningRate { get; set; }
         public decimal INQty { get; set; }
         public decimal OUTQty { get; set; }
         public decimal ClosingQty { get; set; }

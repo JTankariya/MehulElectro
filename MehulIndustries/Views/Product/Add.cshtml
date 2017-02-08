@@ -10,6 +10,15 @@
     span.select2 {
         width: 100% !important;
     }
+    #tblShadeWithPacking [data-qty],#tblShadeWithPacking [data-rate] {
+        width:80px;
+    }
+    #tblShadeWithPacking [data-value]{
+        width:100px;
+    }
+     #tblShadeWithPacking #ddlShade{
+         width:200px;
+     }
 </style>
 <div class="row">
     <div class="col-md-12">
@@ -588,11 +597,11 @@
                                                     }
                                                     @if (ViewBag.Parties != null)
                                                     {
-                                                        @Html.DropDownList("ddlshadepacking", new SelectList(ViewBag.Parties, "ID", "Name"), new { @class = "select2 form-control", @multiple = "true", @data_selectedparties = (selectedParty != null && selectedParty.Length > 0 ? string.Join(",", selectedParty.Distinct()) : "") })
+                                                        @Html.DropDownList("ddlshadepacking", new SelectList(ViewBag.Parties, "ID", "Name"), new { @class = "select2 form-control", @multiple = "true", @data_selectedparties = (selectedParty != null && selectedParty.Length > 0 ? string.Join(",", selectedParty.Distinct()) : ""),@style="width:300px;" })
                                                     }
                                                     else
                                                     {
-                                                        @Html.DropDownList("ddlshadepacking", new List<SelectListItem>(), new { @class = "select2 form-control", @multiple = "true", @data_selectedparties = @selectedParty })
+                                                        @Html.DropDownList("ddlshadepacking", new List<SelectListItem>(), new { @class = "select2 form-control", @multiple = "true", @data_selectedparties = @selectedParty, @style = "width:300px;" })
                                                     }
                                                 </td>
 
@@ -603,13 +612,13 @@
                                                         var shadePacking = Model.Shades.FirstOrDefault(x => x.ShadeID == shade && x.ProductPackingID == packing.ID);
                                                         if (shadePacking != null)
                                                         {
-                                                            <td class="col-md-1" data-packingtitle="@packing.PackingID">
+                                                            <td data-packingtitle="@packing.PackingID">
                                                                 <input type="text" data-qty class="numeric form-control" value="@shadePacking.OpeningQty" />
                                                             </td>
-                                                            <td class="col-md-1" data-packingtitle="@packing.PackingID">
+                                                            <td data-packingtitle="@packing.PackingID">
                                                                 <input type="text" data-rate class="numeric form-control" value="@shadePacking.OpeningRate" />
                                                             </td>
-                                                            <td class="col-md-1" data-packingtitle="@packing.PackingID">
+                                                            <td data-packingtitle="@packing.PackingID">
                                                                 <input type="text" data-value disabled class="numeric form-control" value="@shadePacking.OpeningValue" />
                                                             </td>
                                                         }
@@ -631,24 +640,24 @@
                                             <td>
                                                 @if (ViewBag.Parties != null)
                                                 {
-                                                    @Html.DropDownList("ddlshadepacking", new SelectList(ViewBag.Parties, "ID", "Name"), new { @class = "select2 form-control", @multiple = "true" })
+                                                    @Html.DropDownList("ddlshadepacking", new SelectList(ViewBag.Parties, "ID", "Name"), new { @class = "select2 form-control", @multiple = "true", @style = "width:300px;" })
                                                 }
                                                 else
                                                 {
-                                                    @Html.DropDownList("ddlshadepacking", new List<SelectListItem>(), new { @class = "select2 form-control", @multiple = "true" })
+                                                    @Html.DropDownList("ddlshadepacking", new List<SelectListItem>(), new { @class = "select2 form-control", @multiple = "true", @style = "width:300px;" })
                                                 }
                                             </td>
                                             @if (Model.Packings != null && Model.Packings.Count > 0)
                                             {
                                                 foreach (var packing in Model.Packings)
                                                 {
-                                                    <td class="col-md-1" data-packingtitle="@packing.PackingID">
+                                                    <td data-packingtitle="@packing.PackingID">
                                                         <input type="text" data-qty class="numeric form-control" value="" />
                                                     </td>
-                                                    <td class="col-md-1" data-packingtitle="@packing.PackingID">
+                                                    <td data-packingtitle="@packing.PackingID">
                                                         <input type="text" data-rate class="numeric form-control" value="" />
                                                     </td>
-                                                    <td class="col-md-1" data-packingtitle="@packing.PackingID">
+                                                    <td data-packingtitle="@packing.PackingID">
                                                         <input type="text" data-value disabled class="numeric form-control" value="" />
                                                     </td>
                                                 }
@@ -1082,7 +1091,8 @@
         });
         $(".select2").selectize({
             placeholder: 'Select parties',
-            multiple: true
+            multiple: true,
+            width:'resolve'
         });
         $('#ddlMainParty')[0].value = [5, 6];
         $('#HasShade').on('change', function () {
@@ -1134,8 +1144,8 @@
                 }
             }
         });
-        //$('#HasPacking').change();
-        //$('#HasShade').change();
+        $('#HasPacking').change();
+        $('#HasShade').change();
         $('#btnDelete').click(function () {
             if ($('#ID').val() == "0") {
                 swal("Please select any record First!", "In order to delete Product, You need to select Product first.")
