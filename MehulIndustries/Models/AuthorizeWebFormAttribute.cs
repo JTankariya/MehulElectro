@@ -37,7 +37,9 @@ namespace MehulIndustries.Models
             }
             var session = filterContext.HttpContext.Session;
             if (session["User"] != null)
+            {
                 return;
+            }
             else
                 filterContext.Result = new RedirectResult(loginUrl);
         }

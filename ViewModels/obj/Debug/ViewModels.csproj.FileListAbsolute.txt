@@ -7,3 +7,4 @@ E:\Jayesh\GitHub\MehulElectro\ViewModels\bin\Debug\ViewModels.dll
 E:\Jayesh\GitHub\MehulElectro\ViewModels\bin\Debug\ViewModels.pdb
 E:\Jayesh\GitHub\MehulElectro\ViewModels\obj\Debug\ViewModels.dll
 E:\Jayesh\GitHub\MehulElectro\ViewModels\obj\Debug\ViewModels.pdb
+E:\Jayesh\GitHub\MehulElectro\ViewModels\obj\Debug\ViewModels.csprojResolveAssemblyReference.cache
