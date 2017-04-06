@@ -586,6 +586,9 @@
                                 });
                                 $(currProductDDL).parent().next().find('select').html(strAdd);
                             }
+                            else {
+                                $(currProductDDL).parent().next().find('select').empty();
+                            }
                             if (response.ResponseValue && response.ResponseValue.Packings != null) {
                                 $(currProductDDL).parent().next().next().find('#tblPackings tbody').empty();
                                 $.each(response.ResponseValue.Packings, function (index, element) {
@@ -593,6 +596,9 @@
                                     $(currProductDDL).parent().next().next().find('#tblPackings tbody tr:last td:eq(0)').text(element.PackingName);
                                     $(currProductDDL).parent().next().next().find('#tblPackings tbody tr:last td:eq(0)').attr('data-packingid', element.PackingID);
                                 });
+                            }
+                            else {
+                                $(currProductDDL).parent().next().next().find('#tblPackings tbody').empty();
                             }
                             CalculateTotal();
                         }
@@ -750,7 +756,6 @@
                 return false;
             }
         });
-       
         $('body').on('change', '#tblOrderDetails>tbody>tr [name="ddlShade"]', function () {
             if ($(this).val() != "" && $(this).closest('#ddlProduct').val() != "") {
                 var packings = [];

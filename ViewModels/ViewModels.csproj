@@ -72,6 +72,7 @@
     <Compile Include="ProductShade.cs" />
     <Compile Include="RawMaterialType.cs" />
     <Compile Include="ReadyAvailableOrder.cs" />
+    <Compile Include="ReorderStatus.cs" />
     <Compile Include="Shade.cs" />
     <Compile Include="Stock.cs" />
     <Compile Include="Transport.cs" />

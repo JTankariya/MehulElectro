@@ -9,6 +9,7 @@
             <td>@stock.DODate.ToString("dd/MM/yyyy")</td>
             <td>@stock.PartyName</td>
             <td>@stock.Total</td>
+            <td>@Html.ActionLink("Print Challan", "Print", "Dispatch", new { ID = stock.ID }, new { @class = "btn btn-primary waves-effect waves-light" })</td>
         </tr>
     }
 }

@@ -1,0 +1,323 @@
+﻿@{
+    ViewBag.Title = "Conversion";
+    Layout = "~/Views/Shared/_Dashboard.cshtml";
+}
+@Styles.Render("~/Content/css/customsweetswitcheryselect2css")
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <label>Convert From :</label>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-3">
+            <label>Product : </label>
+            @if (ViewBag.Products != null)
+            {
+                @Html.DropDownList("ddlFromProduct", new SelectList(ViewBag.Products, "ID", "Name"), new { @class = "form-control" })
+            }
+            else
+            {
+                @Html.DropDownList("ddlFromProduct", new List<SelectListItem>(), new { @class = "form-control" })
+            }
+        </div>
+        <div class="col-md-3">
+            <label>Shade : </label>
+            @if (ViewBag.Shades != null)
+            {
+                @Html.DropDownList("ddlFromShade", new SelectList(ViewBag.Shades, "ID", "Name"), new { @class = "form-control" })
+            }
+            else
+            {
+                @Html.DropDownList("ddlFromShade", new List<SelectListItem>(), new { @class = "form-control" })
+            }
+        </div>
+       
+        <div class="col-md-3">
+            <label>Packing (<label id="lblFromAvailableQty"></label>) : </label>
+            <label id="lblFromConversionFactor" style="display:none"></label>
+            @if (ViewBag.Packings != null)
+            {
+                @Html.DropDownList("ddlFromPacking", new SelectList(ViewBag.Packings, "ID", "Name"), new { @class = "form-control" })
+            }
+            else
+            {
+                @Html.DropDownList("ddlFromPacking", new List<SelectListItem>(), new { @class = "form-control" })
+            }
+        </div>
+        <div class="col-md-3">
+            <label>Convert Qty : </label>
+            <input type="text" class="form-control" id="txtFromQty"/>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <label>Convert To :</label>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-3">
+            <label>Product : </label>
+            @if (ViewBag.Products != null)
+            {
+                @Html.DropDownList("ddlToProduct", new SelectList(ViewBag.Products, "ID", "Name"), new { @class = "form-control" })
+            }
+            else
+            {
+                @Html.DropDownList("ddlToProduct", new List<SelectListItem>(), new { @class = "form-control" })
+            }
+        </div>
+        <div class="col-md-3">
+            <label>Shade : </label>
+            @if (ViewBag.Shades != null)
+            {
+                @Html.DropDownList("ddlToShade", new SelectList(ViewBag.Shades, "ID", "Name"), new { @class = "form-control" })
+            }
+            else
+            {
+                @Html.DropDownList("ddlToShade", new List<SelectListItem>(), new { @class = "form-control" })
+            }
+        </div>
+       
+        <div class="col-md-3">
+            <label>Packing (<label id="lblToAvailableQty"></label>): </label>
+            <label id="lblToConversionFactor" style="display:none"></label>
+            @if (ViewBag.Packings != null)
+            {
+                @Html.DropDownList("ddlToPacking", new SelectList(ViewBag.Packings, "ID", "Name"), new { @class = "form-control" })
+            }
+            else
+            {
+                @Html.DropDownList("ddlToPacking", new List<SelectListItem>(), new { @class = "form-control" })
+            }
+        </div>
+        <div class="col-md-3">
+            <label>Convert Qty : </label>
+            <input type="text" class="form-control" id="txtToQty"/>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <button id="btnSave" type="button" class="btn btn-lg btn-primary waves-effect waves-light">
+                <i class="ti-save"></i>&nbsp;&nbsp; Convert
+            </button>
+        </div>
+    </div>
+</div>
+@Scripts.Render("~/Content/css/customsweetswitcheryselect2js")
+<script>
+    $(document).ready(function () {
+        $('#ddlFromProduct').on('change', function () {
+            $.ajax({
+                type: "GET",
+                url: '@Url.Action("GetProductShadesAndPackings", "Product")',
+                data: {
+                    ID: $(this).val()
+                },
+                success: function (data) {
+                    $('#ddlFromShade').empty();
+                    $('#ddlFromPacking').empty();
+                    if (data.IsSuccess == true && data.ResponseValue != null && data.ResponseValue.Shades!=null) {
+                        var html = "";
+                        var addedShade = [];
+                        $.each(data.ResponseValue.Shades, function (index, element) {
+                            if (addedShade.filter(function (item, index) { return item == element.ShadeID }).length == 0) {
+                                html += '<option value="' + element.ShadeID + '">' + element.ShadeName + '</option>';
+                                addedShade.push(element.ShadeID);
+                            }
+                        });
+                        html += '<option value="" selected>-- All --</option>';
+                        $('#ddlFromShade').html(html);
+                    }
+                    if (data.IsSuccess == true && data.ResponseValue != null && data.ResponseValue.Packings != null) {
+                        var html = "";
+                        $.each(data.ResponseValue.Packings, function (index, item) {
+                            html += '<option value="' + item.PackingID + '">' + item.PackingName + '</option>';
+                        });
+                        html += '<option value="" selected>-- All --</option>';
+                        $('#ddlFromPacking').html(html);
+                    }
+                    getStock($('#ddlFromProduct').val(), $('#ddlFromShade').val(), $('#ddlFromPacking').val(), true);
+                }
+            });           
+        });
+        $('#ddlToProduct').on('change', function () {
+            $.ajax({
+                type: "GET",
+                url: '@Url.Action("GetProductShadesAndPackings", "Product")',
+                data: {
+                    ID: $(this).val()
+                },
+                success: function (data) {
+                    $('#ddlToShade').empty();
+                    $('#ddlToPacking').empty();
+                    if (data.IsSuccess == true && data.ResponseValue != null && data.ResponseValue.Shades != null) {
+                        var html = "";
+                        var addedShade = [];
+                        $.each(data.ResponseValue.Shades, function (index, element) {
+                            if (addedShade.filter(function (item, index) { return item == element.ShadeID }).length == 0) {
+                                html += '<option value="' + element.ShadeID + '">' + element.ShadeName + '</option>';
+                                addedShade.push(element.ShadeID);
+                            }
+                        });
+                        html += '<option value="" selected>-- All --</option>';
+                        $('#ddlToShade').html(html);
+                    }
+                    if (data.IsSuccess == true && data.ResponseValue != null && data.ResponseValue.Packings != null) {
+                        var html = "";
+                        $.each(data.ResponseValue.Packings, function (index, item) {
+                            html += '<option value="' + item.PackingID + '">' + item.PackingName + '</option>';
+                        });
+                        html += '<option value="" selected>-- All --</option>';
+                        $('#ddlToPacking').html(html);
+                    }
+                    getStock($('#ddlToProduct').val(), $('#ddlToShade').val(), $('#ddlToPacking').val(), true);
+                }
+            });
+        });
+        $('#ddlToShade,#ddlToPacking').on('change', function () {
+            getStock($('#ddlToProduct').val(), $('#ddlToShade').val(), $('#ddlToPacking').val(), false);
+        });
+        $('#ddlFromShade,#ddlFromPacking').on('change', function () {
+            getStock($('#ddlFromProduct').val(), $('#ddlFromShade').val(), $('#ddlFromPacking').val(), true);
+        });
+        $('#btnSave').on('click', function () {
+            if ($('#ddlFromProduct').val() == "0" || $('#ddlFromProduct').val() == "")
+            {
+                swal({
+                    title: "Stop",
+                    text: "Please select product.",
+                    type: "error"
+                }, function () {
+                    $('#ddlFromProduct').focus();
+                });
+                return;
+            }
+            if ($('#ddlFromShade').val() == "0" || $('#ddlFromShade').val() == "") {
+                swal({
+                    title: "Stop",
+                    text: "Please select shade.",
+                    type: "error"
+                }, function () {
+                    $('#ddlFromShade').focus();
+                });
+                return;
+            }
+            if ($('#ddlFromPacking').val() == "0" || $('#ddlFromPacking').val() == "") {
+                swal({
+                    title: "Stop",
+                    text: "Please select packing.",
+                    type: "error"
+                }, function () {
+                    $('#ddlFromPacking').focus();
+                });
+                return;
+            }
+            if ($('#ddlToProduct').val() == "0" || $('#ddlToProduct').val() == "") {
+                swal({
+                    title: "Stop",
+                    text: "Please select product.",
+                    type: "error"
+                }, function () {
+                    $('#ddlToProduct').focus();
+                });
+                return;
+            }
+            if ($('#ddlToShade').val() == "0" || $('#ddlToShade').val() == "") {
+                swal({
+                    title: "Stop",
+                    text: "Please select shade.",
+                    type: "error"
+                }, function () {
+                    $('#ddlToShade').focus();
+                });
+                return;
+            }
+            if ($('#ddlToPacking').val() == "0" || $('#ddlToPacking').val() == "") {
+                swal({
+                    title: "Stop",
+                    text: "Please select packing.",
+                    type: "error"
+                }, function () {
+                    $('#ddlToPacking').focus();
+                });
+                return;
+            }
+            if ($('#txtFromQty').val() == "0" || $('#txtFromQty').val() == "") {
+                swal({
+                    title: "Stop",
+                    text: "Please enter Convert Qty.",
+                    type: "error"
+                }, function () {
+                    $('#txtFromQty').focus();
+                });
+                return;
+            }
+            if ($('#txtToQty').val() == "0" || $('#txtToQty').val() == "") {
+                swal({
+                    title: "Stop",
+                    text: "Please enter Convert Qty.",
+                    type: "error"
+                }, function () {
+                    $('#txtToQty').focus();
+                });
+                return;
+            }
+            if ($('#ddlFromProduct').val() == $('#ddlToProduct').val() &&
+                $('#ddlFromShade').val() == $('#ddlToShade').val() &&
+                $('#ddlFromPacking').val() == $('#ddlToPacking').val())
+            {
+                swal({
+                    title: "Stop",
+                    text: "You can not select same product, shade & packing.",
+                    type: "error"
+                }, function () {
+                    
+                });
+                return;
+            }
+            var fromQty = $('#txtFromQty').val() * $('#lblFromConversionFactor').text();
+            var toQty = $('#txtToQty').val() * $('#lblToConversionFactor').text();
+            if (fromQty == toQty) {
+                alert("success");
+            }
+            else {
+                swal({
+                    title: "Stop",
+                    text: "Can not convert '" + $('#txtFromQty').val() + "' qty of '" + $('#ddlFromPacking option:selected').text() + "' packing to '" + $('#txtToQty').val() + "' qty of '" + $('#ddlToPacking option:selected').text() + "'.",
+                    type: "error"
+                }, function () {
+
+                });
+                return;
+            }
+        });
+        $('#ddlFromProduct,#ddlToProduct').change();
+    });
+
+    function getStock(productId, shadeId, packingId, isFrom) {
+        if (productId > 0 && shadeId > 0 && packingId > 0) {
+            $.ajax({
+                type: "GET",
+                url: '@Url.Action("GetStock", "Report")',
+                data: {
+                    ProductID: productId,
+                    ShadeID: shadeId,
+                    PackingID: packingId,
+                },
+                success: function (data) {
+                    if (data.IsSuccess == true) {
+                        if (isFrom) {
+                            $('#lblFromAvailableQty').text(data.ResponseValue.StockData[0].ClosingQty);
+                            $('#lblFromConversionFactor').text(data.ResponseValue.Factor.ConversionFactorWithLtr);
+                        }
+                        else {
+                            $('#lblToAvailableQty').text(data.ResponseValue.StockData[0].ClosingQty);
+                            $('#lblToConversionFactor').text(data.ResponseValue.Factor.ConversionFactorWithLtr);
+                        }
+                    }
+                }
+            });
+        }
+    }
+</script>

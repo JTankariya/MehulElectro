@@ -22,6 +22,7 @@ namespace MehulIndustries.Controllers
             ViewBag.BOMProcessList = BOMProcessLogic.BOMProcessByID(0);
             ViewBag.UnitList = ProductUnitLogic.GetProductUnitByID(0);
             ViewBag.LabParameters = LabParameterLogic.GetLabParameterByID(0);
+            ViewBag.UserType = currUser.Type;
             if (Convert.ToInt32(ID) > 0)
             {
                 var bom = BillOfMaterialLogic.GetBillOfMaterialByID(Convert.ToInt32(ID)).FirstOrDefault();

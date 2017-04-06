@@ -50,6 +50,7 @@
     <Compile Include="BillOfMaterialLogic.cs" />
     <Compile Include="BOMProcessLogic.cs" />
     <Compile Include="CommonFunction.cs" />
+    <Compile Include="DispatchFooter.cs" />
     <Compile Include="DispatchLogic.cs" />
     <Compile Include="EmployeeLogic.cs" />
     <Compile Include="EmployeeTypeLogic.cs" />
@@ -75,6 +76,7 @@
     <Compile Include="QCLogic.cs" />
     <Compile Include="RawMaterialTypeLogic.cs" />
     <Compile Include="ReadyAvailableLogic.cs" />
+    <Compile Include="ReorderLogic.cs" />
     <Compile Include="ShadeLogic.cs" />
     <Compile Include="ShadingLogic.cs" />
     <Compile Include="StockLogic.cs" />

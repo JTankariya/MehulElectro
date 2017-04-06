@@ -19,6 +19,7 @@ namespace ViewModels
         public string Qty { get; set; }
         public string Rate { get; set; }
         public string Total { get; set; }
+        public decimal AvailableQty { get; set; }
         public bool IsDeleted { get; set; }
     }
 }

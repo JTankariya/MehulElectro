@@ -2,6 +2,7 @@
 using MehulIndustries.Models;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -69,6 +70,7 @@ namespace MehulIndustries.Controllers
             if (DispatchLogic.SaveDispatch(dispatch))
             {
                 response.IsSuccess = true;
+                response.ResponseValue = DispatchLogic.GetDispatchByDONo(dispatch.DONo);
             }
             else
             {
@@ -122,6 +124,12 @@ namespace MehulIndustries.Controllers
         {
             var order = DispatchLogic.GetDispatchByID(Convert.ToInt32(ID)).FirstOrDefault();
             return PartialView("_DispatchDetailForRegister", order);
+        }
+
+        public FileContentResult Print(int ID)
+        {
+            var filename = DispatchLogic.Print(ID, Server.MapPath(ConfigurationManager.AppSettings["ReportFolderPath"]), currUser.Name);
+            return File(System.IO.File.ReadAllBytes(Server.MapPath(ConfigurationManager.AppSettings["ReportFolderPath"] + "/" + filename)), "application/pdf");
         }
     }
 }

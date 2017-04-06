@@ -1,4 +1,5 @@
-﻿using MehulIndustries.Models;
+﻿using BAL;
+using MehulIndustries.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,6 +16,8 @@ namespace MehulIndustries.Controllers
 
         public ActionResult Index()
         {
+            ViewBag.BatchStatus = BatchLogic.GetBatchStatus();
+            ViewBag.ReorderStatus = ReorderLogic.GetReorderStatus();
             return View();
         }
 

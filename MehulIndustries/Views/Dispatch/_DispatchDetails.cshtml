@@ -179,7 +179,7 @@
                                                     <tr data-odetailid="@packing.OrderDetailID" data-recordid="@packing.ID">
                                                         <td class="col-md-4" data-packingid="@packing.PackingID">@packing.PackingName</td>
                                                         <td class="col-md-3">
-                                                            <input type="text" class="numeric form-control" value="@packing.Qty" />
+                                                            <input type="text" class="numeric form-control" data-availableqty="@packing.AvailableQty" value="@packing.Qty" />
                                                         </td>
                                                         <td class="col-md-3">
                                                             <input type="text" class="numeric form-control" value="@packing.Rate" />
@@ -214,138 +214,6 @@
                     </tfoot>
                 </table>
             }
-            @*else
-            {
-                <table id="tblOrderDetails" class="table table-striped table-bordered">
-                    <thead>
-                        <tr>
-                            <td>
-                                Delete?
-                            </td>
-                            <td>
-                                Product
-                            </td>
-                            <td>
-                                Shade
-                            </td>
-                            <td>
-                                Packings
-                            </td>
-                            <td>
-                                Total
-                            </td>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @{
-                var packings = Model.order.orderDetail.Select(x => new { ProductID = x.ProductID, ShadeID = x.ShadeID }).Distinct();
-                        }
-
-                        @foreach (var pShade in packings)
-                        {
-                            <tr>
-                                <td>
-                                    <button data-deldetail type="button" class="btn btn-sm btn-danger waves-effect waves-light m-l-5">
-                                        <i class="ti-trash"></i>&nbsp;&nbsp;Delete
-                                    </button>
-                                </td>
-                                <td class="col-md-2">
-                                    @if (ViewBag.Products != null)
-                                    {
-                                        @Html.DropDownList("ddlProduct", new SelectList(ViewBag.Products, "ID", "Name", pShade.ProductID), "-- Select Product --", new { @class = "form-control disabled" })
-                                    }
-                                    else
-                                    {
-                                        @Html.DropDownList("ddlProduct", new List<SelectListItem>(), new { @class = "form-control disabled" })
-                                    }
-                                </td>
-                                <td class="col-md-2">
-                                    @{
-                            var productShades = BAL.ShadeLogic.GetShadeByProductID(pShade.ProductID).Select(x => new { ShadeID = x.ShadeID, ShadeName = x.ShadeName }).Distinct();
-                                    }
-                                    @if (productShades != null)
-                                    {
-                                        @Html.DropDownList("ddlShade", new SelectList(productShades, "ShadeID", "ShadeName", pShade.ShadeID), "-- Select Shade --", new { @class = "form-control disabled" })
-                                    }
-                                    else
-                                    {
-                                        @Html.DropDownList("ddlShade", new List<SelectListItem>(), new { @class = "form-control disabled" })
-                                    }
-                                </td>
-                                <td class="col-md-7">
-                                    <table id="tblPackings" class="table table-striped table-bordered">
-                                        <thead>
-                                            <tr>
-                                                <td>
-                                                    Name
-                                                </td>
-                                                <td>
-                                                    Qty
-                                                </td>
-                                                <td>
-                                                    Rate
-                                                </td>
-                                                <td>
-                                                    Total
-                                                </td>
-                                                <td style="display:none">
-                                                    Available
-                                                </td>
-                                                <td style="display:none">
-                                                    In Order
-                                                </td>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            @{
-                            var packingsDetail = Model.order.orderDetail.Where(x => x.ProductID == pShade.ProductID && x.ShadeID == pShade.ShadeID);
-                                    if (packingsDetail != null)
-                                    {
-                                        foreach (var packing in packingsDetail)
-                                        {
-                                            if (Convert.ToDecimal(packing.Qty) > 0)
-                                            {
-                                                <tr data-odetailid="@packing.ID" data-recordid="0">
-                                                    <td class="col-md-4" data-packingid="@packing.PackingID">@packing.PackingName</td>
-                                                    <td class="col-md-3">
-                                                        <input type="text" class="numeric form-control" value="@packing.Qty" />
-                                                    </td>
-                                                    <td class="col-md-3">
-                                                        <input type="text" class="numeric form-control" value="@packing.Rate" />
-                                                    </td>
-                                                    <td class="col-md-2">@(Convert.ToDecimal(packing.Qty) * Convert.ToDecimal(packing.Rate))</td>
-                                                    <td style="display:none"></td>
-                                                    <td style="display:none"></td>
-                                                </tr>
-                                            }
-
-                                        }
-                                    }
-                                            }
-                                        </tbody>
-                                    </table>
-                                </td>
-                                <td class="col-md-1"></td>
-                            </tr>
-                        }
-                        }
-
-                        }
-
-
-                    </tbody>
-                    <tfoot>
-                        <tr>
-                            <td colspan="2">
-                                Total
-                            </td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                        </tr>
-                    </tfoot>
-                </table>
-            }*@
         </div>
     </div>
 
@@ -502,81 +370,7 @@
         $('body').on('change', '#tblPackings tr td:nth-child(2) input,#tblPackings tr td:nth-child(3) input', function () {
             CalculateTotal();
         });
-        //$('body').on('change', '#tblOrderDetails tr td:nth-child(3) select', function () {
-        //    if (CheckDuplicate(this) == true) {
-        //        return false;
-        //    }
-        //});
-        @*$('body').on('change', '#tblOrderDetails tr td:nth-child(2) select', function () {
-            if (CheckDuplicate(this) == true) {
-                return false;
-            }
-            if ($('#tblOrderDetails>tbody>tr:last').index() == $(this).parent().parent().index() && $(this).val().length > 0) {
-                $('#tblOrderDetails>tbody').append(blankOrderDetailRow);
-            }
-            if ($(this).val().length > 0) {
-                currProductDDL = this;
-                $.ajax({
-                    type: "POST",
-                    url: "@Url.Action("GetProductShadesAndPackings", "Product")",
-                    data: { ID: $(this).val() },
-                    success: function (response) {
-                        if (response && response.IsSuccess && response.IsSuccess == true) {
-                            if (response.ResponseValue && response.ResponseValue.Shades != null) {
-                                var addedShade = [];
-                                strAdd = "<option selected>-- Select Shade --</option>";
-                                $.each(response.ResponseValue.Shades, function (index, element) {
-                                    if (addedShade.filter(function (item, index) { return item == element.ShadeID }).length == 0) {
-                                        strAdd += '<option value="' + element.ShadeID + '">' + element.ShadeName + '</option>';
-                                        addedShade.push(element.ShadeID);
-                                    }
-                                });
-                                $(currProductDDL).parent().next().find('select').html(strAdd);
-                            }
-                            if (response.ResponseValue && response.ResponseValue.Packings != null) {
-                                $(currProductDDL).parent().next().next().find('#tblPackings tbody').empty();
-                                $.each(response.ResponseValue.Packings, function (index, element) {
-                                    $(currProductDDL).parent().next().next().find('#tblPackings tbody').append(blankPackingRow.clone());
-                                    $(currProductDDL).parent().next().next().find('#tblPackings tbody tr:last td:eq(0)').text(element.PackingName);
-                                    $(currProductDDL).parent().next().next().find('#tblPackings tbody tr:last td:eq(0)').attr('data-packingid', element.PackingID);
-                                });
-                            }
-                            CalculateTotal();
-                        }
-                    }
-                });
-            }
-
-        });*@
-        @*$('#PartyID').on('change', function () {
-            if ($('#PartyID').val() != "" && parseInt($('#PartyID').val()) > 0) {
-                $.ajax({
-                    type: "POST",
-                    url: "@Url.Action("GetPartyAddresses", "Party")",
-                    data: { ID: $('#PartyID').val() },
-                    success: function (response) {
-                        if (response && response.IsSuccess && response.IsSuccess == true) {
-                            strAdd = "<option selected>-- Select Address --</option>";
-                            $.each(response.ResponseValue, function (index, element) {
-                                var addressString = GetStringValue(element.Address1) + (element.Address1 != null && element.Address1.length > 0 ? + "," + GetStringValue(element.Address2) : GetStringValue(element.Address2)) +
-                                    (element.Address2 != null && element.Address2.length > 0 ? + "," + GetStringValue(element.Address3) : GetStringValue(element.Address3)) +
-                                    (element.Address3 != null && element.Address3.length > 0 ? + "," + GetStringValue(element.City) : GetStringValue(element.City)) +
-                                    (element.City != null && element.City.length > 0 ? + "," + GetStringValue(element.State) : GetStringValue(element.State));
-                                if (addressString.length > 0) {
-                                    strAdd += '<option value="' + element.ID + '" data-Transport="' + element.TransportID + '">' + addressString
-                                     + '</option>';
-                                }
-                            });
-                            $('#DeliveryAddressID').html(strAdd);
-                        }
-                    }
-                });
-            }
-            else {
-                $('#DeliveryAddressID').empty();
-                $('#TransportID').empty();
-            }
-        });*@
+      
         $('#DeliveryAddressID').on('change', function () {
             var transport = $('#DeliveryAddressID option:selected').data('transport');
             if (transport && transport != null) {
@@ -619,6 +413,27 @@
                     return false;
                 }
                 else {
+                    var isGood = true;
+                    $.each($('[data-availableqty]'), function (element, index) {
+                        if (parseFloat($(this).val()) > parseFloat($(this).data('availableqty')))
+                        {
+                            var packing = $(this).parent().siblings('td:eq(0)').text();
+                            var product = $(this).parent().parent().parent().parent().parent().siblings('td:eq(1)').find('select option:selected').text();
+                            var shade = $(this).parent().parent().parent().parent().parent().siblings('td:eq(2)').find('select option:selected').text();
+                            swal({
+                                title: "Information",
+                                text: "Dispatch qty can not be more then '" + $(this).data('availableqty') + "' from product - '" + product + "',shade - '" + shade + "',packing - '" + packing + "'.",
+                                type: "error"
+                            }, function () {
+                            });
+                            isGood = false;
+                            return;
+                        }
+                    });
+                    if (!isGood)
+                    {
+                        return;
+                    }
                     $('.disabled').removeAttr('disabled');
                     var dispatch = {};
                     dispatch.ID = $('#DispatchID').val();
@@ -662,7 +477,7 @@
                         dataType: "json",
                         success: function (response) {
                             if (response.IsSuccess) {
-                                DispatchAdded();
+                                DispatchAdded(response.ResponseValue);
                             }
                             else {
                                 swal("OOpsss", "There is some problem while saving data, Please try after sometime.", "error");

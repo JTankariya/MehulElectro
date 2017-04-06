@@ -59,6 +59,14 @@
                                         <li><a href="@Url.Action("Add", "LabParameter", new { ID=0})">Lab Parameters</a></li>
                                         <li><a href="@Url.Action("Add", "BillOfMaterial", new { ID=0})">Bill Of Material</a></li>
                                         break;
+                                    case "2":
+                                    <li><a href="@Url.Action("Add", "Transport", new { ID=0})">Transport</a></li>
+                                    <li><a href="@Url.Action("Add", "Shade", new { ID=0})">Shade</a></li>
+                                    <li><a href="@Url.Action("Add", "Packing", new { ID=0})">Packing</a></li>
+                                    <li><a href="@Url.Action("Add", "ProductGroup", new { ID=0})">Product Group</a></li>
+                                    <li><a href="@Url.Action("Add", "Party", new { ID=0})">Party</a></li>
+                                    <li><a href="@Url.Action("Add", "Product", new { ID=0})">Product</a></li>
+                                        break;
                                     case "3":
                                     <li><a href="@Url.Action("Add", "Transport", new { ID=0})">Transport</a></li>
                                     <li><a href="@Url.Action("Add", "Shade", new { ID=0})">Shade</a></li>
@@ -70,6 +78,12 @@
                                     case "5":
                                     <li><a href="@Url.Action("Add", "LabParameter", new { ID=0})">Lab Parameters</a></li>
                                     <li><a href="@Url.Action("Add", "BillOfMaterial", new { ID=0})">Bill Of Material</a></li>
+                                        break;
+                                    case "6":
+                                    <li><a href="@Url.Action("Add", "Shade", new { ID=0})">Shade</a></li>
+                                    <li><a href="@Url.Action("Add", "Packing", new { ID=0})">Packing</a></li>
+                                    <li><a href="@Url.Action("Add", "ProductGroup", new { ID=0})">Product Group</a></li>
+                                    <li><a href="@Url.Action("Add", "Product", new { ID=0})">Product</a></li>
                                         break;
                                 }
                             </ul>
@@ -86,16 +100,25 @@
                                         <li><a href="@Url.Action("ClosedOrders", "Order")">Closed Orders</a></li>
                                         <li><a href="@Url.Action("Add", "Dispatch", new { ID = 0 })">Dispatch</a></li>
                                         <li><a href="@Url.Action("Add", "Inward", new { ID = 0 })">Inward Raw Material</a></li>
+                                        <li><a href="@Url.Action("Conversion", "Product")">Product Conversion</a></li>
+                                        break;
+                                    case "2":
+                                    <li><a href="@Url.Action("Add", "Order", new { ID=0})">Order Form</a></li>
+                                    <li><a href="@Url.Action("ReadyAvailable", "Order")">Ready Available Orders</a></li>
+                                    <li><a href="@Url.Action("ClosedOrders", "Order")">Closed Orders</a></li>
+                                    <li><a href="@Url.Action("Add", "Dispatch", new { ID = 0 })">Dispatch</a></li>
                                         break;
                                     case "3":
                                     <li><a href="@Url.Action("Add", "Inward", new { ID = 0 })">Inward Raw Material</a></li>
                                         break;
                                     case "6":
+                                    <li><a href="@Url.Action("Add", "BillOfMaterial", new { ID=0})">Bill Of Material</a></li>
                                     <li><a href="@Url.Action("BatchAllocation", "Production")">Batch Allocation</a></li>
                                         break;
                                     case "7":
                                     <li><a href="@Url.Action("Add", "Dispatch", new { ID = 0 })">Dispatch</a></li>
                                         break;
+
                                 }
 
                             </ul>
@@ -111,12 +134,15 @@
                                         <li><a href="@Url.Action("QC", "Production")">QC</a></li>
                                         <li><a href="@Url.Action("Packing", "Production")">Packing</a></li>
                                         break;
+
                                     case "4":
                                     <li><a href="@Url.Action("QC", "Production")">QC</a></li>
                                         break;
                                     case "6":
                                     <li><a href="@Url.Action("Grinding", "Production")">Grinding</a></li>
                                     <li><a href="@Url.Action("Shading", "Production")">Shading</a></li>
+                                    <li><a href="@Url.Action("QC", "Production")">QC</a></li>
+                                    <li><a href="@Url.Action("Packing", "Production")">Packing</a></li>
                                         break;
                                     case "8":
                                     <li><a href="@Url.Action("Packing", "Production")">Packing</a></li>
@@ -136,6 +162,16 @@
                                         <li><a href="@Url.Action("BatchCompletionTime", "Report")">Batch Completion Time</a></li>
                                         <li><a href="@Url.Action("OrderRegister", "Report")">Order Register</a></li>
                                         <li><a href="@Url.Action("DispatchRegister", "Report")">Dispatch Register</a></li>
+                                        break;
+                                    case "2":
+                                    <li><a href="@Url.Action("Stock", "Report")">Stock</a></li>
+                                    <li><a href="@Url.Action("BatchStatus", "Report")">Batch Status</a></li>
+                                    <li><a href="@Url.Action("BatchCompletionTime", "Report")">Batch Completion Time</a></li>
+                                    <li><a href="@Url.Action("OrderRegister", "Report")">Order Register</a></li>
+                                    <li><a href="@Url.Action("DispatchRegister", "Report")">Dispatch Register</a></li>
+                                        break;
+                                    case "4":
+                                    <li><a href="@Url.Action("Stock", "Report")">Stock</a></li>
                                         break;
                                     case "7":
                                     <li><a href="@Url.Action("Stock", "Report")">Stock</a></li>

@@ -26,6 +26,16 @@ namespace MehulIndustries.Controllers
             return PartialView("_StockDetail", StockLogic.GetStockReport(FromDate, ToDate, ProductID, ShadeID, PackingID));
         }
 
+        public JsonResult GetStock(string ProductID, string ShadeID, string PackingID)
+        {
+            var responseValue = new
+            {
+                StockData = StockLogic.GetStockReport(null, null, ProductID, ShadeID, PackingID),
+                Factor = PackingLogic.GetPackingByProductID(Convert.ToInt32(ProductID)).FirstOrDefault(x => x.PackingID == Convert.ToInt32(PackingID))
+            };
+            return Json(new ResponseMsg { IsSuccess = true, ResponseValue = responseValue }, JsonRequestBehavior.AllowGet);
+        }
+
         public ActionResult BatchStatus()
         {
             var batches = BatchLogic.GetBatchStatus();

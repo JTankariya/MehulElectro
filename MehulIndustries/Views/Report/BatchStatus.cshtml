@@ -5,6 +5,7 @@
 }
 
 @Styles.Render("~/Content/css/datatablecss")
+
 <div class="container">
     <table id="tblBatchStatus" class="table table-striped table-bordered">
         <thead>
@@ -35,9 +36,9 @@
                         <td>@batch.ShadeName</td>
                         <td>@(batch.GrindingStartDate.HasValue ? batch.GrindingStartDate.Value.ToString("dd/MM/yyyy") : "Not Started Yet") </td>
                         <td>@batch.OrderedQty</td>
-                        <td><input type="checkbox" @(batch.GrindingStartDate.HasValue && !batch.GrindingDoneDate.HasValue ? "checked" : "") disabled /></td>
-                        <td><input type="checkbox" @(batch.ShadingStartDate.HasValue && !batch.ShadingDoneDate.HasValue ? "checked" : "") disabled /></td>
-                        <td><input type="checkbox" @(batch.QCStartDate.HasValue && !batch.QCDoneDate.HasValue ? "checked" : "") disabled /></td>
+                        <td><input type="checkbox" @((batch.GrindingStartDate.HasValue && !batch.GrindingDoneDate.HasValue) || (!batch.ShadingStartDate.HasValue) ? "checked" : "") disabled /></td>
+                        <td><input type="checkbox" @((batch.ShadingStartDate.HasValue && !batch.ShadingDoneDate.HasValue) || (!batch.QCStartDate.HasValue) ? "checked" : "") disabled /></td>
+                        <td><input type="checkbox" @((batch.QCStartDate.HasValue && !batch.QCDoneDate.HasValue) || (!batch.PackingStartDate.HasValue) ? "checked" : "") disabled /></td>
                         <td><input type="checkbox" @(batch.PackingStartDate.HasValue && !batch.PackingDoneDate.HasValue ? "checked" : "") disabled /></td>
                         <td><input type="checkbox" @(batch.PackingDoneDate.HasValue ? "checked" : "") disabled /></td>
                     </tr>

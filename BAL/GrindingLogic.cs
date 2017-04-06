@@ -144,6 +144,9 @@ namespace BAL
                 headertable.AddCell(cell);
                 cell = new PdfPCell(new Phrase("Product Code :" + ProductLogic.GetProductByID(batchDetail.ProductID).FirstOrDefault().PrintName, CommonFunction.font10));
                 headertable.AddCell(cell);
+                cell = new PdfPCell(new Phrase("Shade :" + batchDetail.ShadeName, CommonFunction.font10));
+                cell.Colspan = 2;
+                headertable.AddCell(cell);
                 cell = new PdfPCell(new Phrase("Customer Name :", CommonFunction.font10));
                 cell.Colspan = 2;
                 headertable.AddCell(cell);

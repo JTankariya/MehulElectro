@@ -52,7 +52,7 @@ namespace MehulIndustries.Controllers
         [HttpPost]
         public string CheckDuplicateName(string Name, string ID)
         {
-            var products = ProductLogic.CheckDuplicateProduct(Convert.ToInt32(ID),Name);
+            var products = ProductLogic.CheckDuplicateProduct(Convert.ToInt32(ID), Name);
             if (products != null && products.Count() > 0)
             {
                 return "false";
@@ -136,6 +136,12 @@ namespace MehulIndustries.Controllers
                 };
             }
             return Json(response, JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult Conversion()
+        {
+            ViewBag.Products = ProductLogic.GetFinishedProducts();
+            return View();
         }
     }
 }

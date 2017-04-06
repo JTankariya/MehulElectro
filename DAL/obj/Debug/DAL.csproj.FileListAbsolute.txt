@@ -7,3 +7,4 @@ E:\Jayesh\GitHub\MehulElectro\DAL\bin\Debug\DAL.dll
 E:\Jayesh\GitHub\MehulElectro\DAL\bin\Debug\DAL.pdb
 E:\Jayesh\GitHub\MehulElectro\DAL\obj\Debug\DAL.dll
 E:\Jayesh\GitHub\MehulElectro\DAL\obj\Debug\DAL.pdb
+E:\Jayesh\GitHub\MehulElectro\DAL\obj\Debug\DAL.csprojResolveAssemblyReference.cache

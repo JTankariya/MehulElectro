@@ -500,7 +500,7 @@
     <Content Include="Views\Report\Stock.cshtml" />
     <Content Include="Views\Report\BatchStatus.cshtml" />
     <Content Include="Views\Report\BatchCompletionTime.cshtml" />
-    <Content Include="Views\Report\_StockDetail.cshtml" />
+    <Content Include="Views\Shared\_StockDetail.cshtml" />
     <Content Include="Views\Production\_GrindingStock.cshtml" />
     <Content Include="Views\Report\OrderRegister.cshtml" />
     <Content Include="Views\Report\_OrderRegisterDetail.cshtml" />
@@ -508,6 +508,7 @@
     <Content Include="Views\Report\DispatchRegister.cshtml" />
     <Content Include="Views\Report\_DispatchRegisterDetail.cshtml" />
     <Content Include="Views\Dispatch\_DispatchDetailForRegister.cshtml" />
+    <Content Include="Views\Product\Conversion.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

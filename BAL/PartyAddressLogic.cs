@@ -22,5 +22,17 @@ namespace BAL
             else
                 return null;
         }
+
+        public static PartyAddress GetAddressById(int addressId)
+        {
+            Dictionary<string, object> param = new Dictionary<string, object>();
+            param.Add("@ID", addressId);
+            DataTable dt = DBHelper.GetDataTable("GetAddressById", param, true);
+
+            if (dt != null && dt.Rows.Count > 0)
+                return DBHelper.ConvertToList<PartyAddress>(dt).FirstOrDefault();
+            else
+                return null;
+        }
     }
 }
