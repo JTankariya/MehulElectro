@@ -18,6 +18,7 @@
                         <label for="hori-pass1" class="col-sm-4 control-label">Name</label>
                         <div class="col-sm-7">
                             @Html.HiddenFor(x => x.ID, new { @class = "form-control" })
+                            @Html.Hidden("hiddenPacking", Model.PackingName)
                             @Html.TextBoxFor(x => x.Name, new { @class = "form-control", @placeholder = "Packing Name" })
                         </div>
                     </div>
@@ -94,7 +95,7 @@
             messages: {
                 Name: {
                     required: "Please enter Name",
-                    remote:"Packing name is already entered, Please enter another packing name."
+                    remote: "Packing name is already entered, Please enter another packing name."
                 },
                 ConversionFactorWithLtr: {
                     required: "Please enter Conversion Factor with litter",
@@ -104,14 +105,15 @@
             },
 
             submitHandler: function (form) {
-                $.ajax({
-                    type: "POST",
-                    url: "@Url.Action("Add","Packing")",
-                    data: $('#frmPacking').serialize(),
-                    success: function (response) {
-                        PackingAdded();
-                    }
-                });
+                if ($('#txt'))
+                    $.ajax({
+                        type: "POST",
+                        url: "@Url.Action("Add","Packing")",
+                        data: $('#frmPacking').serialize(),
+                        success: function (response) {
+                            PackingAdded();
+                        }
+                    });
                 return false;
             }
         });
@@ -140,39 +142,61 @@
                 swal("Please select any record First!", "In order to delete emplyee, You need to select an Packing first.")
             }
             else {
-                swal({
-                    title: "Are you sure want to delete this Packing?",
-                    text: "You will not be able to recover this record!",
-                    type: "warning",
-                    showCancelButton: true,
-                    confirmButtonColor: "#DD6B55",
-                    confirmButtonText: "Yes, delete it!",
-                    cancelButtonText: "No, cancel plz!",
-                    closeOnConfirm: false,
-                    closeOnCancel: false
-                }, function (isConfirm) {
-                    if (isConfirm) {
-                        $.ajax({
-                            type: "GET",
-                            url: "@Url.Action("Delete","Packing")",
-                            data: { ID: $('#ID').val() },
-                            success: function (response) {
-                                if (response.IsSuccess == true) {
-                                    swal("Deleted!", "Packing is deleted Successfully.", "success");
-                                    setTimeout(5000, function () {
-                                        $('#btnAdd')[0].click();
-                                    });
-                                }
-                                else {
-                                    swal("Opssss!", "Something seems wrong while deleting Packing.", "error");
-                                }
-                            }
-                        });
+                if ($('#hiddenPacking').val().toUpperCase() == "LOOSE") {
+                    $.ajax({
+                        url: "@Url.Action("CheckRef","Packing")",
+                        data: { ID: $('#ID').val() },
+                        success: function (data) {
+                            if (data.IsSuccess) {
+                                swal({
+                                    title: "Stop",
+                                    text: "You can not delete this packing as it is in use by products.",
+                                    type: "error"
+                                }, function () {
 
-                    } else {
-                        swal("Cancelled", "Packing is safe :)", "error");
-                    }
-                });
+                                });
+                            }
+                            else {
+                                swal({
+                                    title: "Are you sure want to delete this Packing?",
+                                    text: "You will not be able to recover this record!",
+                                    type: "warning",
+                                    showCancelButton: true,
+                                    confirmButtonColor: "#DD6B55",
+                                    confirmButtonText: "Yes, delete it!",
+                                    cancelButtonText: "No, cancel plz!",
+                                    closeOnConfirm: false,
+                                    closeOnCancel: false
+                                }, function (isConfirm) {
+                                    if (isConfirm) {
+                                        $.ajax({
+                                            type: "GET",
+                                            url: "@Url.Action("Delete","Packing")",
+                                            data: { ID: $('#ID').val() },
+                                            success: function (response) {
+                                                if (response.IsSuccess == true) {
+                                                    swal("Deleted!", "Packing is deleted Successfully.", "success");
+                                                    setTimeout(5000, function () {
+                                                        $('#btnAdd')[0].click();
+                                                    });
+                                                }
+                                                else {
+                                                    swal("Opssss!", "Something seems wrong while deleting Packing.", "error");
+                                                }
+                                            }
+                                        });
+
+                                    } else {
+                                        swal("Cancelled", "Packing is safe :)", "error");
+                                    }
+                                });
+                            }
+                        }
+                    });
+                }
+                else {
+                    swal("Opssss!", "This packing can not be deleted, as it is system reserved.", "error");
+                }
             }
         });
     });

@@ -1,0 +1,45 @@
+﻿@model IEnumerable<ViewModels.ProductConversion>
+@Styles.Render("~/Content/css/datatablecss")
+<table id="tblProductConversion" class="table table-striped table-bordered">
+    <thead>
+        <tr>
+            <th>Doc No</th>
+            <th>Doc Date</th>
+            <th>From Product</th>
+            <th>From Shade</th>
+            <th>From Packing</th>
+            <th>From Qty</th>
+            <th>To Product</th>
+            <th>To Shade</th>
+            <th>To Packing</th>
+            <th>To Qty</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @if (Model != null)
+        {
+            foreach (var product in Model)
+            {
+                <tr data-empid="@product.ID">
+                    <td>@product.DocNo</td>
+                    <td>@product.DocDate.ToString("dd/MM/yyyy")</td>
+                    <td>@product.FromProductName</td>
+                    <td>@product.FromShadeName</td>
+                    <td>@product.FromPackingName</td>
+                    <td>@product.FromConvertQty</td>
+                    <td>@product.ToProductName</td>
+                    <td>@product.ToShadeName</td>
+                    <td>@product.ToPackingName</td>
+                    <td>@product.ToConvertQty</td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+@Scripts.Render("~/Content/js/datatablejs")
+<script>
+    $(document).ready(function () {
+        $('#tblProductConversion').DataTable();
+    });
+</script>

@@ -207,5 +207,74 @@ namespace BAL
             else
                 return null;
         }
+
+        public static bool Convert(ProductConversion conversion)
+        {
+            Dictionary<string, object> param = new Dictionary<string, object>();
+            param.Add("@ID", conversion.ID);
+            param.Add("@DocNo", conversion.DocNo);
+            param.Add("@DocDate", conversion.DocDate);
+            param.Add("@FromProductId", conversion.FromProductId);
+            param.Add("@FromShadeId", conversion.FromShadeId);
+            param.Add("@FromPackingId", conversion.FromPackingId);
+            param.Add("@FromConvertQty", conversion.FromConvertQty);
+            param.Add("@ToProductId", conversion.ToProductId);
+            param.Add("@ToShadeId", conversion.ToShadeId);
+            param.Add("@ToPackingId", conversion.ToPackingId);
+            param.Add("@ToConvertQty", conversion.ToConvertQty);
+
+            if (DBHelper.ExecuteNonQuery("SaveProductConversion", param, true) > 0)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        public static List<ProductConversion> GetConversionByID(int ID)
+        {
+            Dictionary<string, object> param = new Dictionary<string, object>();
+            param.Add("@ID", ID);
+            DataTable dt = DBHelper.GetDataTable("GetConversionByID", param, true);
+
+            if (dt != null && dt.Rows.Count > 0)
+                return DBHelper.ConvertToList<ProductConversion>(dt);
+            else
+                return null;
+        }
+
+        public static int GetNewConverstionDocNo()
+        {
+            DataTable dt = DBHelper.GetDataTable("GetNewConverstionDocNo", null, true);
+
+            if (dt != null && dt.Rows.Count > 0)
+                return System.Convert.ToInt32(dt.Rows[0][0].ToString()) + 1;
+            else
+                return 1;
+        }
+
+        public static bool DeleteConversionByID(int ID)
+        {
+            Dictionary<string, object> param = new Dictionary<string, object>();
+            param.Add("@ID", ID);
+            DataSet ds = DBHelper.GetDataSet("DeleteConversionByID", param, true);
+            if (ds != null && ds.Tables != null && ds.Tables.Count > 1)
+            {
+                return false;
+            }
+            else
+            {
+                if (ds != null && ds.Tables != null && ds.Tables.Count > 0 && (ds.Tables[0].Rows.Count > 1 || ds.Tables[0].Columns.Count > 1))
+                {
+                    return false;
+                }
+                else
+                {
+                    return true;
+                }
+            }
+        }
     }
 }

@@ -2,6 +2,7 @@
 using MehulIndustries.Models;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -59,12 +60,36 @@ namespace MehulIndustries.Controllers
 
         public ActionResult GetRawMaterialDetails(int ProductID, int ShadeID, string RevisionNo)
         {
+            ResponseMsg response = new ResponseMsg();
             ViewBag.RawMaterialProductList = ProductLogic.GetRawMaterialProducts();
             ViewBag.BOMProcessList = BOMProcessLogic.BOMProcessByID(0);
             var lastReivision = BillOfMaterialDetailLogic.GetRawMaterialDetails(ProductID, ShadeID, RevisionNo);
             if (lastReivision != null)
             {
-                return PartialView("_BOMRawMaterials", lastReivision);
+                var rmHtml = "";
+                var labHtml = "";
+                using (var sw = new StringWriter())
+                {
+                    PartialViewResult result = PartialView("_BOMRawMaterials", lastReivision);
+                    result.View = ViewEngines.Engines.FindPartialView(ControllerContext, "_BOMRawMaterials").View;
+                    ViewContext vc = new ViewContext(ControllerContext, result.View, result.ViewData, result.TempData, sw);
+                    result.View.Render(vc, sw);
+                    rmHtml = sw.GetStringBuilder().ToString();
+                }
+                using (var sw = new StringWriter())
+                {
+                    var bom = BillOfMaterialLogic.GetBillOfMaterialByPSR(ProductID, ShadeID, RevisionNo);
+                    ViewBag.LabParameters = LabParameterLogic.GetLabParameterByID(0);
+                    PartialViewResult result = PartialView("_BOMLabParameters", bom);
+                    result.View = ViewEngines.Engines.FindPartialView(ControllerContext, "_BOMLabParameters").View;
+                    ViewContext vc = new ViewContext(ControllerContext, result.View, result.ViewData, result.TempData, sw);
+                    result.View.Render(vc, sw);
+                    labHtml = sw.GetStringBuilder().ToString();
+                }
+                response.IsSuccess = true;
+                response.ResponseValue = new { RMData = rmHtml, LABData = labHtml };
+                return Json(response, JsonRequestBehavior.AllowGet);
+
             }
             else
             {

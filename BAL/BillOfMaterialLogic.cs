@@ -145,5 +145,29 @@ namespace BAL
             param.Add("@ID", ID);
             DBHelper.ExecuteNonQuery("DeleteBillOfMaterialByID", param, true);
         }
+
+        public static BillOfMaterial GetBillOfMaterialByPSR(int ProductID, int ShadeID, string RevisionNo)
+        {
+            Dictionary<string, object> param = new Dictionary<string, object>();
+            param.Add("@ProductID", ProductID);
+            param.Add("@ShadeID", ShadeID);
+            param.Add("@RevisionNo", RevisionNo);
+            DataTable dt = DBHelper.GetDataTable("GetBillOfMaterialByPSR", param, true);
+            if (dt != null && dt.Rows.Count > 0)
+            {
+                var boms = DBHelper.ConvertToList<BillOfMaterial>(dt);
+                if (boms != null)
+                {
+                    foreach (var bom in boms)
+                    {
+                        //bom.details = BillOfMaterialDetailLogic.GetRawMaterialDetails(bom.ProductID, bom.ShadeID, "");
+                        bom.labParameters = BillOfMaterialLabParametersLogic.GetLabParamaters(bom.ID);
+                    }
+                }
+                return boms.FirstOrDefault();
+            }
+            else
+                return null;
+        }
     }
 }

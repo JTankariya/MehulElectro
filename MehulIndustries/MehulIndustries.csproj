@@ -509,6 +509,8 @@
     <Content Include="Views\Report\_DispatchRegisterDetail.cshtml" />
     <Content Include="Views\Dispatch\_DispatchDetailForRegister.cshtml" />
     <Content Include="Views\Product\Conversion.cshtml" />
+    <Content Include="Views\Product\GetAllConversion.cshtml" />
+    <Content Include="Views\Shared\_BOMLabParameters.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

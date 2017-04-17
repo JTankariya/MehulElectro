@@ -41,6 +41,54 @@ namespace BAL
             PdfPCell cell;
             tabFot.TotalWidth = document.PageSize.Width - document.LeftMargin - document.RightMargin;
 
+            cell = new PdfPCell(new Phrase("GST TIN:24075700414 DT.14/09/2005", CommonFunction.font10));
+            cell.Border = iTextSharp.text.Rectangle.NO_BORDER;
+            cell.HorizontalAlignment = Rectangle.ALIGN_LEFT;
+            tabFot.AddCell(cell);
+
+            cell = new PdfPCell(new Phrase("E. & O.E.", CommonFunction.font10));
+            cell.Border = iTextSharp.text.Rectangle.NO_BORDER;
+            cell.HorizontalAlignment = Rectangle.ALIGN_RIGHT;
+            tabFot.AddCell(cell);
+
+            cell = new PdfPCell(new Phrase("CST TIN:24575700414 DT.14/09/2005", CommonFunction.font10));
+            cell.Border = iTextSharp.text.Rectangle.NO_BORDER;
+            cell.HorizontalAlignment = Rectangle.ALIGN_LEFT;
+            tabFot.AddCell(cell);
+
+            cell = new PdfPCell(new Phrase("For, MEHUL ELECTRO INSULTING INDUSTRIES", CommonFunction.font10));
+            cell.Border = iTextSharp.text.Rectangle.NO_BORDER;
+            cell.HorizontalAlignment = Rectangle.ALIGN_RIGHT;
+            tabFot.AddCell(cell);
+
+            cell = new PdfPCell(new Phrase("* Received in good condition ", CommonFunction.font8));
+            cell.Border = iTextSharp.text.Rectangle.NO_BORDER;
+            cell.Colspan = 2;
+            cell.HorizontalAlignment = Rectangle.ALIGN_LEFT;
+            tabFot.AddCell(cell);
+
+            cell = new PdfPCell(new Phrase("* Complaint should be made within 24 hours of supply.", CommonFunction.font8));
+            cell.Border = iTextSharp.text.Rectangle.NO_BORDER;
+            cell.Colspan = 2;
+            cell.HorizontalAlignment = Rectangle.ALIGN_LEFT;
+            tabFot.AddCell(cell);
+
+            cell = new PdfPCell(new Phrase("* Subject to Ahmedabad Jurisdication", CommonFunction.font8));
+            cell.Border = iTextSharp.text.Rectangle.NO_BORDER;
+            cell.Colspan = 2;
+            cell.HorizontalAlignment = Rectangle.ALIGN_LEFT;
+            tabFot.AddCell(cell);
+
+            cell = new PdfPCell(new Phrase("Please put your rubber stamp & Sign", CommonFunction.font10));
+            cell.Border = iTextSharp.text.Rectangle.NO_BORDER;
+            cell.HorizontalAlignment = Rectangle.ALIGN_LEFT;
+            tabFot.AddCell(cell);
+
+            cell = new PdfPCell(new Phrase("AUTHORIZED SIGNATURY", CommonFunction.font10));
+            cell.Border = iTextSharp.text.Rectangle.NO_BORDER;
+            cell.HorizontalAlignment = Rectangle.ALIGN_RIGHT;
+            tabFot.AddCell(cell);
+
             cell = new PdfPCell(new Phrase("MEHUL ELECTRO INSULATING INDUSTRIES", CommonFunction.fontTitle17));
             cell.HorizontalAlignment = Rectangle.ALIGN_CENTER;
             cell.Border = Rectangle.TOP_BORDER;

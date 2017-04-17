@@ -89,5 +89,12 @@ namespace MehulIndustries.Controllers
             }
             return Json(response, JsonRequestBehavior.AllowGet);
         }
+
+        public JsonResult CheckRef(string ID)
+        {
+            ResponseMsg response = new ResponseMsg();
+            response.IsSuccess = PackingLogic.CheckReference(ID);
+            return Json(response, JsonRequestBehavior.AllowGet);
+        }
     }
 }

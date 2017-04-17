@@ -27,5 +27,6 @@ namespace ViewModels
         public decimal Qty { get; set; }
         public bool InOut { get; set; }
         public DateTime InOutDate { get; set; }
+        public string Remarks { get; set; }
     }
 }

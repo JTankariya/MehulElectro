@@ -64,6 +64,7 @@
     <Compile Include="PartyGroup.cs" />
     <Compile Include="Product.cs" />
     <Compile Include="ProductCategory.cs" />
+    <Compile Include="ProductConversion.cs" />
     <Compile Include="ProductGroup.cs" />
     <Compile Include="ProductGroupType.cs" />
     <Compile Include="ProductParty.cs" />

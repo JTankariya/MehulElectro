@@ -88,5 +88,26 @@ namespace BAL
                 return false;
             }
         }
+
+        public static bool CheckReference(string ID)
+        {
+            Dictionary<string, object> param = new Dictionary<string, object>();
+            param.Add("@ID", ID);
+            DataSet dt = DBHelper.GetDataSet("GetPackingReference", param, true);
+
+            if (dt != null && dt.Tables.Count > 0)
+            {
+                foreach (DataTable table in dt.Tables)
+                {
+                    if (table.Rows.Count > 0)
+                    {
+                        return true;
+                    }
+                }
+                return false;
+            }
+            else
+                return false;
+        }
     }
 }

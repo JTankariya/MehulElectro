@@ -1,4 +1,5 @@
-﻿@{
+﻿@model ViewModels.ProductConversion
+@{
     ViewBag.Title = "Conversion";
     Layout = "~/Views/Shared/_Dashboard.cshtml";
 }
@@ -11,43 +12,60 @@
     </div>
     <div class="row">
         <div class="col-md-3">
+            <label>Doc No : </label>
+            @Html.Hidden("ID", @Model.ID)
+            @Html.TextBoxFor(x => x.DocNo, new { @disabled = "disabled", @class = "numeric form-control" })
+        </div>
+        <div class="col-md-3">
+
+        </div>
+        <div class="col-md-3">
+
+        </div>
+        <div class="col-md-3">
+            <label>Doc Date : </label>
+            @Html.TextBoxFor(x => x.DocDate, new { @class = "datepicker form-control" })
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-3">
             <label>Product : </label>
             @if (ViewBag.Products != null)
             {
-                @Html.DropDownList("ddlFromProduct", new SelectList(ViewBag.Products, "ID", "Name"), new { @class = "form-control" })
+                @Html.DropDownListFor(x => x.FromProductId, new SelectList(ViewBag.Products, "ID", "Name"), new { @id = "ddlFromProduct", @class = "form-control" })
             }
             else
             {
-                @Html.DropDownList("ddlFromProduct", new List<SelectListItem>(), new { @class = "form-control" })
+                @Html.DropDownListFor(x => x.FromProductId, new List<SelectListItem>(), new { @id = "ddlFromProduct", @class = "form-control" })
             }
         </div>
         <div class="col-md-3">
             <label>Shade : </label>
-            @if (ViewBag.Shades != null)
+            @if (ViewBag.FromShades != null)
             {
-                @Html.DropDownList("ddlFromShade", new SelectList(ViewBag.Shades, "ID", "Name"), new { @class = "form-control" })
+                @Html.DropDownListFor(x => x.FromShadeId, new SelectList(ViewBag.FromShades, "ShadeID", "ShadeName"), new { @id = "ddlFromShade", @class = "form-control" })
             }
             else
             {
-                @Html.DropDownList("ddlFromShade", new List<SelectListItem>(), new { @class = "form-control" })
+                @Html.DropDownListFor(x => x.FromShadeId, new List<SelectListItem>(), new { @id = "ddlFromShade", @class = "form-control" })
             }
         </div>
-       
+
         <div class="col-md-3">
             <label>Packing (<label id="lblFromAvailableQty"></label>) : </label>
             <label id="lblFromConversionFactor" style="display:none"></label>
-            @if (ViewBag.Packings != null)
+            @if (ViewBag.FromPackings != null)
             {
-                @Html.DropDownList("ddlFromPacking", new SelectList(ViewBag.Packings, "ID", "Name"), new { @class = "form-control" })
+                @Html.DropDownListFor(x => x.FromPackingId, new SelectList(ViewBag.FromPackings, "PackingID", "PackingName"), new { @id = "ddlFromPacking", @class = "form-control" })
             }
             else
             {
-                @Html.DropDownList("ddlFromPacking", new List<SelectListItem>(), new { @class = "form-control" })
+                @Html.DropDownListFor(x => x.FromPackingId, new List<SelectListItem>(), new { @id = "ddlFromPacking", @class = "form-control" })
             }
         </div>
         <div class="col-md-3">
             <label>Convert Qty : </label>
-            <input type="text" class="form-control" id="txtFromQty"/>
+            @Html.TextBoxFor(x => x.FromConvertQty, new { @class = "numeric form-control", @id = "txtFromQty" })
         </div>
     </div>
     <div class="row">
@@ -60,53 +78,122 @@
             <label>Product : </label>
             @if (ViewBag.Products != null)
             {
-                @Html.DropDownList("ddlToProduct", new SelectList(ViewBag.Products, "ID", "Name"), new { @class = "form-control" })
+                @Html.DropDownListFor(x => x.ToProductId, new SelectList(ViewBag.Products, "ID", "Name"), new { @id = "ddlToProduct", @class = "form-control" })
             }
             else
             {
-                @Html.DropDownList("ddlToProduct", new List<SelectListItem>(), new { @class = "form-control" })
+                @Html.DropDownListFor(x => x.ToProductId, new List<SelectListItem>(), new { @id = "ddlToProduct", @class = "form-control" })
             }
         </div>
         <div class="col-md-3">
             <label>Shade : </label>
-            @if (ViewBag.Shades != null)
+            @if (ViewBag.ToShades != null)
             {
-                @Html.DropDownList("ddlToShade", new SelectList(ViewBag.Shades, "ID", "Name"), new { @class = "form-control" })
+                @Html.DropDownListFor(x => x.ToShadeId, new SelectList(ViewBag.ToShades, "ShadeID", "ShadeName"), new { @id = "ddlToShade", @class = "form-control" })
             }
             else
             {
-                @Html.DropDownList("ddlToShade", new List<SelectListItem>(), new { @class = "form-control" })
+                @Html.DropDownListFor(x => x.ToShadeId, new List<SelectListItem>(), new { @id = "ddlToShade", @class = "form-control" })
             }
         </div>
-       
+
         <div class="col-md-3">
             <label>Packing (<label id="lblToAvailableQty"></label>): </label>
             <label id="lblToConversionFactor" style="display:none"></label>
-            @if (ViewBag.Packings != null)
+            @if (ViewBag.ToPackings != null)
             {
-                @Html.DropDownList("ddlToPacking", new SelectList(ViewBag.Packings, "ID", "Name"), new { @class = "form-control" })
+                @Html.DropDownListFor(x => x.ToPackingId, new SelectList(ViewBag.ToPackings, "PackingID", "PackingName"), new { @id = "ddlToPacking", @class = "form-control" })
             }
             else
             {
-                @Html.DropDownList("ddlToPacking", new List<SelectListItem>(), new { @class = "form-control" })
+                @Html.DropDownListFor(x => x.ToPackingId, new List<SelectListItem>(), new { @id = "ddlToPacking", @class = "form-control" })
             }
         </div>
         <div class="col-md-3">
             <label>Convert Qty : </label>
-            <input type="text" class="form-control" id="txtToQty"/>
+            @Html.TextBoxFor(x => x.ToConvertQty, new { @class = "numeric form-control", @id = "txtToQty" })
         </div>
     </div>
+    <br /><br />
     <div class="row">
-        <div class="col-md-12">
-            <button id="btnSave" type="button" class="btn btn-lg btn-primary waves-effect waves-light">
+        <div class="col-md-12 text-center">
+            <a href="@Url.Action("Conversion", "Product", new { ID=0})" i id="btnAdd" type="button" class="btn btn-lg btn-default waves-effect waves-light m-l-5">
+                <i class="ti-plus"></i>&nbsp;&nbsp;Add
+            </a>
+            <button id="btnSave" type="submit" class="btn btn-lg btn-primary waves-effect waves-light">
                 <i class="ti-save"></i>&nbsp;&nbsp; Convert
+            </button>
+            <button id="btnDelete" type="button" class="btn btn-lg btn-danger waves-effect waves-light m-l-5">
+                <i class="ti-trash"></i>&nbsp;&nbsp;Delete
+            </button>
+            <button id="btnView" type="button" class="btn btn-lg btn-warning waves-effect waves-light m-l-5">
+                <i class="ti-search"></i>&nbsp;&nbsp;View
             </button>
         </div>
     </div>
 </div>
+<div id="custom-modal" class="modal-demo">
+    <button type="button" class="close" onclick="Custombox.close();">
+        <span>&times;</span><span class="sr-only">Close</span>
+    </button>
+    <h4 class="custom-modal-title">Conversions</h4>
+    <div class="custom-modal-text" id="AllConversion" style="max-height:500px;overflow:auto;">
+
+    </div>
+</div>
 @Scripts.Render("~/Content/css/customsweetswitcheryselect2js")
+<script src="@Url.Content("~/Content/plugins/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js")"></script>
+<script src="@Url.Content("~/Content/plugins/bootstrap-inputmask/bootstrap-inputmask.min.js")" type="text/javascript"></script>
 <script>
     $(document).ready(function () {
+        $('#btnDelete').click(function () {
+            if ($('#ID').val() == "0") {
+                swal("Please select any record First!", "In order to delete conversion, You need to select conversion first.")
+            }
+            else {
+                swal({
+                    title: "Are you sure want to delete this Conversion?",
+                    text: "You will not be able to recover this record!",
+                    type: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#DD6B55",
+                    confirmButtonText: "Yes, delete it!",
+                    cancelButtonText: "No, cancel plz!",
+                    closeOnConfirm: false,
+                    closeOnCancel: false
+                }, function (isConfirm) {
+                    if (isConfirm) {
+                        $.ajax({
+                            type: "GET",
+                            url: "@Url.Action("DeleteConversion", "Product")",
+                            data: { ID: $('#ID').val() },
+                            success: function (response) {
+                                if (response.IsSuccess == true) {
+                                    swal({
+                                        title: "Deleted!",
+                                        text: "Conversion is deleted Successfully.",
+                                        type: "success"
+                                    }, function () {
+                                        window.location.reload(true);
+                                    });
+                                }
+                                else {
+                                    swal("Opssss!", "Something seems wrong while deleting Conversion.", "error");
+                                }
+                            }
+                        });
+
+                    } else {
+                        swal("Cancelled", "Conversion is safe :)", "error");
+                    }
+                });
+
+            }
+        });
+        $('.datepicker').datepicker({
+            format: 'dd/mm/yyyy'
+        });
+
         $('#ddlFromProduct').on('change', function () {
             $.ajax({
                 type: "GET",
@@ -117,7 +204,7 @@
                 success: function (data) {
                     $('#ddlFromShade').empty();
                     $('#ddlFromPacking').empty();
-                    if (data.IsSuccess == true && data.ResponseValue != null && data.ResponseValue.Shades!=null) {
+                    if (data.IsSuccess == true && data.ResponseValue != null && data.ResponseValue.Shades != null) {
                         var html = "";
                         var addedShade = [];
                         $.each(data.ResponseValue.Shades, function (index, element) {
@@ -139,7 +226,7 @@
                     }
                     getStock($('#ddlFromProduct').val(), $('#ddlFromShade').val(), $('#ddlFromPacking').val(), true);
                 }
-            });           
+            });
         });
         $('#ddlToProduct').on('change', function () {
             $.ajax({
@@ -182,8 +269,7 @@
             getStock($('#ddlFromProduct').val(), $('#ddlFromShade').val(), $('#ddlFromPacking').val(), true);
         });
         $('#btnSave').on('click', function () {
-            if ($('#ddlFromProduct').val() == "0" || $('#ddlFromProduct').val() == "")
-            {
+            if ($('#ddlFromProduct').val() == "0" || $('#ddlFromProduct').val() == "") {
                 swal({
                     title: "Stop",
                     text: "Please select product.",
@@ -265,21 +351,47 @@
             }
             if ($('#ddlFromProduct').val() == $('#ddlToProduct').val() &&
                 $('#ddlFromShade').val() == $('#ddlToShade').val() &&
-                $('#ddlFromPacking').val() == $('#ddlToPacking').val())
-            {
+                $('#ddlFromPacking').val() == $('#ddlToPacking').val()) {
                 swal({
                     title: "Stop",
                     text: "You can not select same product, shade & packing.",
                     type: "error"
                 }, function () {
-                    
+
                 });
                 return;
             }
             var fromQty = $('#txtFromQty').val() * $('#lblFromConversionFactor').text();
             var toQty = $('#txtToQty').val() * $('#lblToConversionFactor').text();
             if (fromQty == toQty) {
-                alert("success");
+                $.ajax({
+                    type: "POST",
+                    url: "@Url.Action("Conversion","Product")",
+                    data: {
+                        ID: $('#ID').val(),
+                        DocNo: $('#DocNo').val(),
+                        DocDate: new Date($('#DocDate').datepicker("getDate")).toISOString(),
+                        FromProductID: $('#ddlFromProduct').val(),
+                        FromShadeID: $('#ddlFromShade').val(),
+                        FromPackingID: $('#ddlFromPacking').val(),
+                        ToProductID: $('#ddlToProduct').val(),
+                        ToShadeID: $('#ddlToShade').val(),
+                        ToPackingID: $('#ddlToPacking').val(),
+                        FromConvertQty: $('#txtFromQty').val(),
+                        ToConvertQty: $('#txtToQty').val()
+                    },
+                    success: function (response) {
+                        if (response.IsSuccess == true) {
+                            swal({
+                                title: "Information",
+                                text: "Conversion is done successfully.",
+                                type: "success"
+                            }, function () {
+                                window.location.reload(true);
+                            });
+                        }
+                    }
+                });
             }
             else {
                 swal({
@@ -292,7 +404,29 @@
                 return;
             }
         });
-        $('#ddlFromProduct,#ddlToProduct').change();
+        $('#btnView').click(function () {
+            $.ajax({
+                type: "GET",
+                url: "@Url.Action("GetAllConversion","Product")",
+                success: function (response) {
+                    $('#AllConversion').html(response);
+                    Custombox.open({
+                        animation: 'rotatedown',
+                        plugin: 'custommodal',
+                        overlayspeed: '100',
+                        overlaycolor: '#36404a',
+                        target: '#custom-modal'
+                    });
+                    $('body').on('dblclick', '#tblProductConversion tbody tr', function () {
+                        window.location.href = '@Url.Action("Conversion", "Product", new { Id="REPLACE"})'.replace('REPLACE', $(this).data('empid'));
+                    });
+                }
+            });
+        });
+        if ($('#ID').val() == "0") {
+            $('#DocDate').datepicker('setValue', new Date());
+            $('#ddlFromProduct,#ddlToProduct').change();
+        }
     });
 
     function getStock(productId, shadeId, packingId, isFrom) {
@@ -308,12 +442,22 @@
                 success: function (data) {
                     if (data.IsSuccess == true) {
                         if (isFrom) {
-                            $('#lblFromAvailableQty').text(data.ResponseValue.StockData[0].ClosingQty);
-                            $('#lblFromConversionFactor').text(data.ResponseValue.Factor.ConversionFactorWithLtr);
+                            if (data.ResponseValue.StockData != null) {
+                                $('#lblFromAvailableQty').text("Cl. Stock : " + data.ResponseValue.StockData[0].ClosingQty);                               
+                            }
+                            else {
+                                $('#lblFromAvailableQty').text("Cl. Stock : 0");
+                            }
+                            $('#lblFromConversionFactor').text(data.ResponseValue.Factor[0].ConversionFactorWithLtr);
                         }
                         else {
-                            $('#lblToAvailableQty').text(data.ResponseValue.StockData[0].ClosingQty);
-                            $('#lblToConversionFactor').text(data.ResponseValue.Factor.ConversionFactorWithLtr);
+                            if (data.ResponseValue.StockData != null) {
+                                $('#lblToAvailableQty').text("Cl. Stock : " + data.ResponseValue.StockData[0].ClosingQty);
+                            }
+                            else {
+                                $('#lblToAvailableQty').text("Cl. Stock : 0");
+                            }
+                            $('#lblToConversionFactor').text(data.ResponseValue.Factor[0].ConversionFactorWithLtr);
                         }
                     }
                 }

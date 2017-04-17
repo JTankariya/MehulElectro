@@ -83,6 +83,10 @@ namespace MehulIndustries.Controllers
         {
             return View(ProductLogic.GetProductsForView());
         }
+        public ActionResult GetAllConversion()
+        {
+            return View(ProductLogic.GetConversionByID(0));
+        }
 
         public JsonResult GetAllParties()
         {
@@ -123,6 +127,20 @@ namespace MehulIndustries.Controllers
             return Json(response, JsonRequestBehavior.AllowGet);
         }
 
+        public ActionResult DeleteConversion(int ID)
+        {
+            ResponseMsg response = new ResponseMsg();
+            if (ID > 0)
+            {
+                if (!ProductLogic.DeleteConversionByID(ID))
+                {
+                    response.IsSuccess = true;
+                    response.ResponseValue = "";
+                }
+            }
+            return Json(response, JsonRequestBehavior.AllowGet);
+        }
+
         public ActionResult GetProductShadesAndPackings(string ID)
         {
             ResponseMsg response = new ResponseMsg();
@@ -138,10 +156,39 @@ namespace MehulIndustries.Controllers
             return Json(response, JsonRequestBehavior.AllowGet);
         }
 
-        public ActionResult Conversion()
+        public ActionResult Conversion(int ID)
         {
             ViewBag.Products = ProductLogic.GetFinishedProducts();
-            return View();
+            if (ID > 0)
+            {
+                var conversion = ProductLogic.GetConversionByID(ID).FirstOrDefault();
+                ViewBag.FromShades = ShadeLogic.GetShadeByProductID(conversion.FromProductId);
+                ViewBag.FromPackings = PackingLogic.GetPackingByProductID(Convert.ToInt32(conversion.FromProductId));
+                if (conversion.FromProductId == conversion.ToProductId)
+                {
+                    ViewBag.ToShades = ViewBag.FromShades;
+                }
+                else
+                {
+                    ViewBag.ToShades = ShadeLogic.GetShadeByProductID(conversion.ToProductId);
+                }
+                ViewBag.ToPackings = ViewBag.FromPackings;
+                return View(conversion);
+            }
+            else
+            {
+                var conversion = new ProductConversion();
+                conversion.DocNo = ProductLogic.GetNewConverstionDocNo();
+                return View(conversion);
+            }
+        }
+
+        [HttpPost]
+        public JsonResult Conversion(ProductConversion conversion)
+        { 
+            ResponseMsg response = new ResponseMsg();
+            response.IsSuccess = ProductLogic.Convert(conversion);
+            return Json(response);
         }
     }
 }
