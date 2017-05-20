@@ -1,4 +1,7 @@
 ﻿@model IEnumerable<ViewModels.Batch>
+           @{
+               var actualQty = (Model.FirstOrDefault().WPL != 0 ? Math.Round((1 / Model.FirstOrDefault().WPL) * Convert.ToDecimal(Model.FirstOrDefault().ProductionQty), 3) : Convert.ToDecimal(Model.FirstOrDefault().ProductionQty)) + " Ltr";
+           }
 @if (Model != null)
 {
     <div class="row">
@@ -10,7 +13,7 @@
         </div>
         <div class="col-md-3">
             <label>Final Production Qty : </label>
-            <input type="text" class="numeric" readonly value="@(Math.Round((1 / Model.FirstOrDefault().WPL) * Convert.ToDecimal(Model.FirstOrDefault().ProductionQty),3) + " Ltr")" data-qty="@(Math.Round((1 / Model.FirstOrDefault().WPL) * Convert.ToDecimal(Model.FirstOrDefault().ProductionQty),3))"  id="txtActualQty"/>
+            <input type="text" class="numeric" readonly value="@actualQty" data-qty="@actualQty"  id="txtActualQty"/>
         </div>
         <div class="col-md-3">
             <label>Ordered Qty : @(Model.FirstOrDefault().OrderedQty + " " + Model.FirstOrDefault().BatchUnit) </label>
